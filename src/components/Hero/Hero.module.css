@@ -1,0 +1,34 @@
+.Hero {
+    background-image: url('../../assets/images/hero.jpg');
+    background-size: cover;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.Hero h1 {
+    margin: 6px 0;
+}
+
+.Hero h3 {
+    margin: 6px 0;
+}
+
+@media (min-width: 500px) {
+    .Hero {
+        padding: 100px 0;
+    }       
+}
+
+.Hero hr {
+    width: 60%;
+}
+
+.Hero Button {
+    color: #111;
+}

@@ -1,0 +1,17 @@
+.Footer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.Links a {
+    color: #333;
+}
+
+.ShoutOutCCL {
+    margin-top: 1em;
+}
+
+.ShoutOutCCL a {
+    color: #333;
+}

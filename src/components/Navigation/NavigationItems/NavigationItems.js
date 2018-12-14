@@ -8,8 +8,6 @@ const navigationitems = (props) => {
     return (
         <ul className={styles.NavigationItems}>
             <NavigationItem link="/"> Home</NavigationItem>
-            <NavigationItem link="/#about">About</NavigationItem>
-            <NavigationItem link="/#info">Info</NavigationItem>
             <NavigationItem link="/signup">Sign Up</NavigationItem>
         </ul>
     );

@@ -1,0 +1,20 @@
+.ImageSection {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.ImageSection img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.TextSection {
+}
+
+.CTAWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}

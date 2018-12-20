@@ -1,5 +1,6 @@
 .Hero {
-    background-image: url('../../assets/images/hero.jpg');
+    /* radial-gradient(rgba(0,0,0,1),rgba(0,0,0,0)) */
+    background-image: radial-gradient(#222, rgba(0,0,0,0), rgba(256,256,256,0.1)), url('../../assets/images/hero.jpg');
     background-size: cover;
     width: 100%;
     display: flex;
@@ -7,16 +8,9 @@
     align-items: center;
     justify-content: center;
     padding: 40px 0;
-    color: whitesmoke;
+    color: white;
     text-align: center;
-}
-
-.Hero h1 {
-    margin: 6px 0;
-}
-
-.Hero h3 {
-    margin: 6px 0;
+    font-weight: 400;
 }
 
 @media (min-width: 500px) {
@@ -27,8 +21,4 @@
 
 .Hero hr {
     width: 60%;
-}
-
-.Hero Button {
-    color: #111;
 }

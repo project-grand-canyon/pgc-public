@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import styles from './Landing.module.css';
+import { Link } from 'react-router-dom';
+
+import BottomHero from '../../components/BottomHero/BottomHero';
+import Hero from '../../components/Hero/Hero';
+import PitchSections from '../../components/PitchSections/PitchSections';
 
 class Landing extends Component {
     render() {
-        return <h1>Landing</h1>
+        const SignupLink = props => <Link to="/signup" {...props} />
+        return (
+            <>
+                <Hero actioned={SignupLink} />
+                <PitchSections actioned={SignupLink} />
+                <BottomHero actioned={SignupLink} />
+            </>
+        );
     }
 }
 

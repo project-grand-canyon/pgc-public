@@ -33,12 +33,12 @@ const imagepitchsection = (props) => {
             <Divider variant='fullWidth'/>
             {props.children}
             <div className={styles.CTAWrapper}>
-                <Button 
+                {/* <Button 
                     component={props.actioned} 
                     variant="contained" 
                     color="default">
                     Sign Up
-                </Button>
+                </Button> */}
             </div>
         </Grid>
     );

@@ -5,6 +5,7 @@ import Layout from '../Layout/Layout';
 import Landing from '../Landing/Landing';
 import SignUp from '../SignUp/SignUp';
 
+import 'typeface-roboto';
 import styles from './App.module.css';
 
 class App extends Component {
@@ -12,7 +13,6 @@ class App extends Component {
     return (
       <div className={styles.App}>
         <Layout>
-          <h1>Project Grand Canyon Folks</h1>
           <Switch>
             <Route path="/" exact component={Landing} />
             <Route path="/signup" component={SignUp} />

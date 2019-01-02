@@ -1,36 +1,36 @@
 import React from 'react';
-import { Divider, Grid, Button } from '@material-ui/core';
+import { Col, Divider, Row } from 'antd';
 
 import PitchSection from '../PitchSection/PitchSection';
 
 import styles from './ImagePitchSection.module.css';
 
-const imagepitchsection = (props) => {
+const imagePitchSection = (props) => {
     const imageSection = (
-        <Grid 
-            item
-            xs={12} 
-            sm={6} 
-            md={4} 
-            lg={4}
+        <Col 
+            xs={24} 
+            sm={12} 
+            md={8} 
+            lg={8}
+            order={props.position % 2 ? 2 : 1}
             className={styles.ImageSection}
             style={{ flexDirection: props.position % 2 ? 'row' : 'row-reverse' }}>
             <div className={styles.ImageContainer}>
                 <img src={props.location} alt={props.alt} />
             </div>
-        </Grid>
+        </Col>
     );
 
     const textSection = (
-        <Grid 
-            item 
-            xs={12} 
-            sm={6} 
-            md={8}
-            lg={8} 
+        <Col 
+            xs={24} 
+            sm={12} 
+            md={16}
+            lg={16} 
+            order={props.position % 2 ? 1 : 2}
             className={styles.TextSection}>
             <h3>{props.title}</h3>
-            <Divider variant='fullWidth'/>
+            <Divider/>
             {props.children}
             <div className={styles.CTAWrapper}>
                 {/* <Button 
@@ -40,23 +40,21 @@ const imagepitchsection = (props) => {
                     Sign Up
                 </Button> */}
             </div>
-        </Grid>
+        </Col>
     );
 
     return (
         <PitchSection {...props}>
-            <Grid 
-                container 
-                spacing={24} 
-                justify='space-between'
-                direction= {props.position % 2 ? 'row' : 'row-reverse'}
-                alignContent= 'space-between'
+            <Row 
+                gutter={24} 
+                justify="space-between"
+                type="flex"
                 className={styles.ImagePitchSection}>
                 {imageSection}
                 {textSection}
-            </Grid>
+            </Row>
         </PitchSection>
     );
 };
 
-export default imagepitchsection;
+export default imagePitchSection;

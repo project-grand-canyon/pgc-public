@@ -7,18 +7,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 0;
-    color: white;
+    padding: 40px;
+    color: #fff !important;
     text-align: center;
     font-weight: 400;
 }
 
-@media (min-width: 500px) {
-    .Hero {
-        padding: 100px 0;
-    }       
+.Hero h1,
+.Hero h3 {
+    color: #fff;
 }
 
-.Hero hr {
-    width: 60%;
+@media (min-width: 500px) {
+    .Hero {
+        padding: 100px;
+    }       
 }

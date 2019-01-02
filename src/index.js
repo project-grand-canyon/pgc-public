@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 
 
 import App from './containers/App/App';
@@ -12,7 +12,7 @@ import './index.css';
 const app = (
     <BrowserRouter>
         <>
-            <CssBaseline />
+            {/* <CssBaseline /> */}
             <App />
         </>
     </BrowserRouter>

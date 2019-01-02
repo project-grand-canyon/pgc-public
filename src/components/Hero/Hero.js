@@ -1,17 +1,16 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import { Button, Divider } from 'antd';
 
 import styles from './Hero.module.css';
-import { Typography } from '@material-ui/core';
 
 const hero = (props) => {
     return (
         <div className={styles.Hero}>
-            <Typography gutterBottom color="inherit" variant="h5">Citizens' Climate Lobby's</Typography>
-            <Typography gutterBottom color="inherit" variant="h2">Project Grand Canyon</Typography>
-            <Typography gutterBottom color="inherit" variant="h5">Make a Difference on Climate Change With a Phone Call</Typography>
-            <hr />
-            <Button component={props.actioned} variant="contained" color="default">Sign Up</Button>
+            <h3>Citizens' Climate Lobby's</h3>
+            <h1>Project Grand Canyon</h1>
+            <h3>Make a Difference on Climate Change With a Phone Call</h3>
+            <Divider style={{width:"50%"}} />
+            <Button className={styles.CTA} onClick={props.actioned} size="large" type="default">Sign Up</Button>
         </div>
     );
 };

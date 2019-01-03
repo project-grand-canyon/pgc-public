@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Layout, Menu, Popover } from 'antd';
+import { Icon, Layout, Popover } from 'antd';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
 

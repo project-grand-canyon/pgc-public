@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Cascader, Checkbox, Col, Form, Icon, Input, Row, Tooltip } from 'antd';
+import { Button, Cascader, Checkbox, Col, Form, Input, Row } from 'antd';
 
 import congressionalDistricts from '../../../util/CongressionalDistrictProvider';
-
-import ResponsiveLayout from '../../Layout/ResponsiveLayout';
 
 import styles from './SignUpForm.module.css';
 
@@ -32,7 +30,7 @@ class SignUpForm extends Component {
         const fieldsErrors = this.props.form.getFieldsError();
         const errors = Object.keys(fieldsErrors).map(key => fieldsErrors[key] ).filter((value) => value)
         if(errors.length === 0) {
-            console.log(this.props.form.getFieldsValue())
+            this.props.onSuccessfulSubmit(this.props.form.getFieldsValue());
         }
     }
 

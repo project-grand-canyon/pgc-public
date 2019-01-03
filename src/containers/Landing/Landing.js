@@ -9,7 +9,6 @@ import PitchSections from '../../components/PitchSections/PitchSections';
 class Landing extends Component {
     render() {
         const SignupLink = props => {
-            console.log('hi');
             return (<Link to="/signup" {...props} />);
         }
         return (

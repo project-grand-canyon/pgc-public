@@ -1,0 +1,23 @@
+.ThankYou {
+    margin: 20px 10px;
+}
+
+.Heading {
+    text-align: center;
+    margin: 20px auto;
+}
+
+.StatsHero {
+    height: 220px;
+    object-fit: cover;
+    object-position: 50% 20%;
+}
+
+.Stat {
+    color: #267326;
+    font-weight: bold;
+}
+
+.Card {
+    margin-bottom: 10px;
+}

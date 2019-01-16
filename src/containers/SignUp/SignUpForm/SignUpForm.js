@@ -1,28 +1,52 @@
 import React, { Component } from 'react';
-import { Button, Cascader, Checkbox, Col, Form, Input, Row } from 'antd';
+import { Button, Cascader, Checkbox, Empty, Col, Form, Input, Modal, Row, Spin } from 'antd';
 
-import congressionalDistricts from '../../../util/CongressionalDistrictProvider';
+import axios from '../../../util/axios-api';
+import groupBy from '../../../util/groupBy';
 
 import styles from './SignUpForm.module.css';
 
 class SignUpForm extends Component {
 
     state={
-        communicationMethods: new Set([])
+        communicationMethods: new Set([]),
+        congressionalDistricts: null,
+        congressionalDistrictsError: null
     };
 
-    congressionalDistrictSelectChoices = congressionalDistricts.map((state) => {
-      return {
-            value: state.abbreviation,
-            label: state.name,
-            children: state.districts.map((district)=>{
+    componentDidMount = () => {
+        axios.get('congressional-districts').then((response)=>{
+            const districtsByState = groupBy(response.data, 'state');
+            console.log(districtsByState);
+            const districts = Object.keys(districtsByState).sort().map((state)=>{
                 return {
-                    value: district.label, 
-                    label: `${state.abbreviation}-${district.label} (${district.rep})`
-                };
+                    value: state,
+                    label: state,
+                    children: districtsByState[state].sort((a, b)=> {
+                        return parseInt(a.district) - parseInt(b.district)
+                    }).map((district) =>{
+                        return {
+                            value: district.district, 
+                            label: `${state}-${district.district} (${district.repLastName})`
+                        }
+                    })
+                }
             })
-        };
-    });
+
+            this.setState({
+                congressionalDistricts: districts
+            });
+        })
+        .catch((error) =>{
+            this.setState({
+                congressionalDistrictsError: error
+            });
+            Modal.error({
+                title: 'There was an error loading the form',
+                content: `${error.message}`,
+              });
+        });
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -32,10 +56,6 @@ class SignUpForm extends Component {
         if(errors.length === 0) {
             this.props.onSuccessfulSubmit(this.props.form.getFieldsValue());
         }
-    }
-
-    handleCongressionalDistrictSelection = (event) => {
-        console.log(event);
     }
 
     handleToggleSMS = (e) => {
@@ -55,40 +75,25 @@ class SignUpForm extends Component {
         } else {
             newCommunicationMethods.delete(method);
         }
-        console.log(newCommunicationMethods);
         this.setState({ communicationMethods: newCommunicationMethods });
     }
 
-    handleCommunicationSelection = (value) => {
-        console.log(value);
-    }
+    render() {
+        if (this.state.congressionalDistrictsError !== null) {
+            return <Empty description="There was an error loading this form. Please try again later." />
+        }
 
-    inputChangedHandler = (event, inputIdentifier) => {
-        console.log('input changed');
-        const updatedInput = { ...this.state.formInputs[inputIdentifier] };
-        updatedInput.value = event.target.value;
-        updatedInput.error = this.validateInput(updatedInput.value, inputIdentifier);
-        // if (Object.keys(updatedFormElement).indexOf('error') !== -1) {
-            
-        // }
-        updatedInput.touched = true;
-        const updatedInputs = { ...this.state.formInputs };
-        updatedInputs[inputIdentifier] = updatedInput;
-        this.setState({
-            formInputs: updatedInputs
-        });
-    }
+        if (this.state.congressionalDistricts === null) {
+            return <div className={styles.SpinContainer}><Spin size="large" /></div>;
+        }
 
-    render() {  
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: {
-              xs: { span: 24 },
               sm: { span: 24 },
               md: { span: 8 }
             },
             wrapperCol: {
-              xs: { span: 24 },
               sm: { span: 24 },
               md: { span: 8 }
             },
@@ -174,7 +179,7 @@ class SignUpForm extends Component {
                             {getFieldDecorator('congressionalDistrict', {
                                 rules: [{required: true, message: 'Please select your congressional district.'}]
                             })(
-                                <Cascader options={this.congressionalDistrictSelectChoices} onChange={this.handleCongressionalDistrictSelection} placeholder="Please select" />
+                                <Cascader options={this.state.congressionalDistricts} onChange={this.handleCongressionalDistrictSelection} placeholder="Please select" />
                             )}
                         </Form.Item>
                         <Form.Item {...tailFormItemLayout}>

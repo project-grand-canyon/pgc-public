@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-import ResponsiveLayout from '../Layout/ResponsiveLayout';
+import ResponsiveLayout from '../Layout/ResponsiveLayout/ResponsiveLayout';
 import BottomHero from '../../components/BottomHero/BottomHero';
 import Hero from '../../components/Hero/Hero';
 import PitchSections from '../../components/PitchSections/PitchSections';
 
 class Landing extends Component {
+    
+    state = {
+        didActionCTA: false
+    }
+
+    didActionCTA = () => {
+        this.setState({
+            didActionCTA: true
+        });
+    }
+
     render() {
-        const SignupLink = props => {
-            return (<Link to="/signup" {...props} />);
+
+        if (this.state.didActionCTA) {
+            return <Redirect to="/signup" />
         }
+
         return (
             <ResponsiveLayout activeLinkKey="/">
-                <Hero actioned={SignupLink} />
-                <PitchSections actioned={SignupLink} />
-                <BottomHero actioned={SignupLink} />
+                <Hero actioned={this.didActionCTA} />
+                <PitchSections actioned={this.didActionCTA} />
+                <BottomHero actioned={this.didActionCTA} />
             </ResponsiveLayout>
         );
     }

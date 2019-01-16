@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Row, Col } from 'antd';
 import { Redirect } from 'react-router-dom';
 
-import ResponsiveLayout from '../../Layout/ResponsiveLayout';
+import ResponsiveLayout from '../../Layout/ResponsiveLayout/ResponsiveLayout';
 
 import capitol from '../../../assets/images/ccl-capitol.jpg'
 import styles from './ThankYou.module.css';

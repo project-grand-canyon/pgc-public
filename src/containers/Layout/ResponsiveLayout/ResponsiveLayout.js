@@ -4,10 +4,10 @@ import { Icon, Layout, Popover } from 'antd';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
 
-import NavMenu from '../../components/Navigation/NavMenu/NavMenu';
-import PGCFooter from '../../components/Navigation/Footer/Footer';
+import NavMenu from '../../../components/Navigation/NavMenu/NavMenu';
+import PGCFooter from '../../../components/Navigation/Footer/Footer';
 
-import logoImage from '../../assets/images/logo.png'
+import logoImage from '../../../assets/images/logo.png'
 import styles from './ResponsiveLayout.module.css';
 
 const MOBILE_BREAKPOINT = 768;

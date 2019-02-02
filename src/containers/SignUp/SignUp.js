@@ -22,17 +22,26 @@ class SignUp extends Component {
         const {congressionalDistrict} = {...fieldsValues};
         const state = congressionalDistrict[0];
         const district = congressionalDistrict[1];
-        const usesSms = fieldsValues.phone !== undefined;
-        const usesEmail = fieldsValues.email !== undefined;
+        
+        const caller = {
+            districtId: fieldsValues.districtId,
+            zipCode: fieldsValues.zipCode,
+            firstName: fieldsValues.firstName,
+            lastName: fieldsValues.lastName,
+        }
+        
         const communicationMethods = [];
-        if (usesSms) {
+        if (fieldsValues.phone) {
             communicationMethods.push('sms');
+            caller['phone'] = fieldsValues.phone;
         }
-        if (usesEmail) {
+        if (fieldsValues.email) {
             communicationMethods.push('email');
+            caller['email'] = fieldsValues.email;
         }
-
-        axios.post('caller').then((response)=>{
+        caller['contactMethods'] = communicationMethods;
+        console.log(caller);
+        axios.post('callers', caller).then((response)=>{
             this.setState({
                 state: state,
                 district: district,
@@ -40,6 +49,10 @@ class SignUp extends Component {
                 didSignUp: true
             });
         }).catch((error)=>{
+
+            // TODO: Error.response.data for failure description
+
+            console.error(error);
             Modal.error({
                 title: 'There was an error submitting the form',
                 content: (

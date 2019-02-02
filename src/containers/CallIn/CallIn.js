@@ -23,8 +23,12 @@ class CallIn extends Component {
     }
 
     handleICalled = () => {
-        const reportBody = this.state.identifier ? { identifier: this.state.identifier } : {};
-            axios.put('report-call', reportBody).then((response) => {
+        const reportBody = this.state.identifier ? { 
+            callerId: this.state.identifier,
+            districtId: this.state.district,
+            talkingPointId: this.state.talkingPoints 
+        } : {};
+            axios.post('calls', reportBody).then((response) => {
                 // nothing for now
             }).catch((error) => {
                //nothing for now 

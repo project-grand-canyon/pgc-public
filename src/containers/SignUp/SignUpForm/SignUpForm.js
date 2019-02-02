@@ -15,26 +15,33 @@ class SignUpForm extends Component {
     };
 
     componentDidMount = () => {
-        axios.get('congressional-districts').then((response)=>{
-            const districtsByState = groupBy(response.data, 'state');
+        axios.get('districts').then((response)=>{
+
+            const houseOfRepDistricts = response.data.filter((district) => { return parseInt(district.number) > 0 });
+
+            this.setState({
+                congressionalDistricts: houseOfRepDistricts
+            });
+
+            const districtsByState = groupBy(houseOfRepDistricts, 'state');
             console.log(districtsByState);
-            const districts = Object.keys(districtsByState).sort().map((state)=>{
+            const cascaderDistricts = Object.keys(districtsByState).sort().map((state)=>{
                 return {
                     value: state,
                     label: state,
                     children: districtsByState[state].sort((a, b)=> {
-                        return parseInt(a.district) - parseInt(b.district)
+                        return parseInt(a.number) - parseInt(b.number)
                     }).map((district) =>{
                         return {
-                            value: district.district, 
-                            label: `${state}-${district.district} (${district.repLastName})`
+                            value: district.number,
+                            label: `${state}-${district.number} (${district.repLastName})`
                         }
                     })
                 }
             })
 
             this.setState({
-                congressionalDistricts: districts
+                cascaderDistricts: cascaderDistricts
             });
         })
         .catch((error) =>{
@@ -53,8 +60,18 @@ class SignUpForm extends Component {
         this.props.form.validateFieldsAndScroll();
         const fieldsErrors = this.props.form.getFieldsError();
         const errors = Object.keys(fieldsErrors).map(key => fieldsErrors[key] ).filter((value) => value)
-        if(errors.length === 0) {
-            this.props.onSuccessfulSubmit(this.props.form.getFieldsValue());
+        if(errors.length !== 0) {
+            return;
+            
+        }
+        const fieldValues = this.props.form.getFieldsValue();
+        fieldValues['districtId'] = this.state.congressionalDistricts.find((district)=>{
+            return district.state === fieldValues.congressionalDistrict[0] && district.number === fieldValues.congressionalDistrict[1];
+        }).districtId;
+        console.log(fieldValues)
+        if (fieldValues.districtId) {
+            console.log(fieldValues)
+            this.props.onSuccessfulSubmit(fieldValues);
         }
     }
 
@@ -83,7 +100,7 @@ class SignUpForm extends Component {
             return <Empty description="There was an error loading this form. Please try again later." />
         }
 
-        if (this.state.congressionalDistricts === null) {
+        if (this.state.cascaderDistricts === null) {
             return <div className={styles.SpinContainer}><Spin size="large" /></div>;
         }
 
@@ -179,7 +196,13 @@ class SignUpForm extends Component {
                             {getFieldDecorator('congressionalDistrict', {
                                 rules: [{required: true, message: 'Please select your congressional district.'}]
                             })(
-                                <Cascader options={this.state.congressionalDistricts} onChange={this.handleCongressionalDistrictSelection} placeholder="Please select" />
+                                <Cascader options={this.state.cascaderDistricts} onChange={(value, selectedOptions) => {
+                                    const values = {...value}
+                                    console.log(value);
+                                    console.log(selectedOptions);
+                                    values.state = value[0];
+                                    values.districtNumber = value[1];
+                                }} placeholder="Please select" />
                             )}
                         </Form.Item>
                         <Form.Item {...tailFormItemLayout}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactGA from 'react-ga'
 import { BrowserRouter } from 'react-router-dom';
 // import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -18,6 +19,7 @@ const app = (
     </BrowserRouter>
 );
 
+ReactGA.initialize('UA-140402020-1'); // Google Analytics
 ReactDOM.render(app, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

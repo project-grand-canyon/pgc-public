@@ -17,8 +17,7 @@ const pitchsections = (props) => {
         <div className={styles.PitchSections}>
             <TextPitchSection title="About" position={1}>
                 <p>Congressional staffers and representatives have told us nothing is more powerful in helping a representative know what their constituents want than written letters and phone calls.</p>
-                <p>Based on this fact, an effort called Project Grand Canyon was born. Just as the Grand Canyon was excavated one water drop at a time, our Members of Congress’ resistance to climate solutions will be worn down by the drip, drip, drip of 100 phone calls per month.</p>
-                <p>Project Grand Canyon is currently operating in Central Texas and South Minnesota.</p>
+                <p>Based on this fact, an effort called Project Grand Canyon was born. Just as the Grand Canyon was excavated one water drop at a time, our Members of Congress’ resistance to climate solutions will be worn down by the drip, drip, drip of hundreds of phone calls per month.</p>
             </TextPitchSection>
             <Divider style={{margin: 0}} />
             <ImagePitchSection actioned={props.actioned} title="Who are you?" position={2} location={CCLLogoImage} alt="ccl logo">
@@ -28,13 +27,13 @@ const pitchsections = (props) => {
             </ImagePitchSection>
             <Divider style={{margin: 0}}  />
             <ImagePitchSection actioned={props.actioned} title="How does it work?" position={3} location={HowWorkImage} alt="pretty river image">
-                <p>Each month, hundreds of Central Texans call their U.S. Congressperson respectfully urging congressional action on climate change.</p>
+                <p>Each month, thousands of Americans call their U.S. Congressperson respectfully urging congressional action on climate change.</p>
                 <p>Together, volunteers form a slow, steady stream of calls, day after day, eroding their Congressperson’s resistance to climate solutions.</p>
             </ImagePitchSection>
             <Divider style={{margin: 0}}  />
             <ImagePitchSection actioned={props.actioned} title="What do I do?" position={4} location={CallersImage} alt="callers image">
-                <p>Each month, you will receive an email with a call-in date and a discussion topic (with plenty of supporting information).</p>
-                <p>On your scheduled day, you'll call your Congressperson's office and respectfully urge climate action by discussing your topic.</p>
+                <p>Each month, you will receive an email or text message that links to your call-in guide.</p>
+                <p>You'll call your Congressperson's office and respectfully urge climate action by discussing your topic.</p>
             </ImagePitchSection>
             <Divider style={{margin: 0}}  />
             <ImagePitchSection actioned={props.actioned} title="Does it work?" position={5} location={MNGroupImage} alt="minnesota chapter image">

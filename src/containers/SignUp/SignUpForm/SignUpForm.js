@@ -16,7 +16,6 @@ class SignUpForm extends Component {
 
     componentDidMount = () => {
         axios.get('districts').then((response)=>{
-
             const houseOfRepDistricts = response.data.filter((district) => { return parseInt(district.number) > 0 });
 
             this.setState({
@@ -24,7 +23,6 @@ class SignUpForm extends Component {
             });
 
             const districtsByState = groupBy(houseOfRepDistricts, 'state');
-            console.log(districtsByState);
             const cascaderDistricts = Object.keys(districtsByState).sort().map((state)=>{
                 return {
                     value: state,

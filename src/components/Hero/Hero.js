@@ -1,14 +1,14 @@
 import React from 'react';
-import { Button, Divider } from 'antd';
+import { Button, Divider, Typography } from 'antd';
 
 import styles from './Hero.module.css';
 
 const hero = (props) => {
     return (
         <div className={styles.Hero}>
-            <h3>Citizens' Climate Lobby's</h3>
-            <h1>Project Grand Canyon</h1>
-            <h3>Make a Difference on Climate Change With a Phone Call</h3>
+            <Typography.Title level={3}>Citizens' Climate Lobby's</Typography.Title>
+            <Typography.Title level={1}>Project Grand Canyon</Typography.Title>
+            <Typography.Title level={3}>Make a Difference on Climate Change With a Phone Call</Typography.Title>
             <Divider style={{width:"50%"}} />
             <Button className={styles.CTA} onClick={props.actioned} size="large" type="default">Sign Up</Button>
         </div>

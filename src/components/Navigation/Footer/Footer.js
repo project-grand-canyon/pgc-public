@@ -17,6 +17,9 @@ const footer = (props) => {
                     A project of <a href="http://www.cclusa.org" target="_blank" rel="noopener noreferrer">Citizens' Climate Lobby</a> volunteers.
                 </span>
             </div>
+            <div>
+                <span>Questions or feedback? <a href="https://forms.gle/yq6vXYnaf3EbKKZS6" target="_blank">Contact Us</a></span>
+            </div>
         </footer>
     );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Divider, Row } from 'antd';
+import { Col, Divider, Row, Typography } from 'antd';
 
 import PitchSection from '../PitchSection/PitchSection';
 
@@ -29,7 +29,7 @@ const imagePitchSection = (props) => {
             lg={16} 
             order={props.position % 2 ? 1 : 2}
             className={styles.TextSection}>
-            <h3>{props.title}</h3>
+            <Typography.Title level={3}>{props.title}</Typography.Title>
             <Divider/>
             {props.children}
             <div className={styles.CTAWrapper}>

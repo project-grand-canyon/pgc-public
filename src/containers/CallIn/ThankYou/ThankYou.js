@@ -29,7 +29,7 @@ class ThankYou extends Component {
         this.fetchDistrictStats(state, distrct);
         this.removeTrackingGetArgs();
         this.setState({
-            identifier: urlParams.get('track'),
+            identifier: urlParams.get('t'),
             state: state,
             district: distrct
         });
@@ -83,7 +83,7 @@ class ThankYou extends Component {
 
     removeTrackingGetArgs = () => {
         const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        urlParams.delete('track');
+        urlParams.delete('t');
         this.props.history.push({
             pathname: this.props.history.location.pathname,
             search: `${urlParams.toString()}`,

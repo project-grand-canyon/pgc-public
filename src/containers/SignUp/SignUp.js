@@ -40,7 +40,6 @@ class SignUp extends Component {
             caller['email'] = fieldsValues.email;
         }
         caller['contactMethods'] = communicationMethods;
-        console.log(caller);
         axios.post('callers', caller).then((response)=>{
             this.setState({
                 state: state,
@@ -50,15 +49,12 @@ class SignUp extends Component {
             });
         }).catch((error)=>{
 
-            // TODO: Error.response.data for failure description
-
             console.error(error);
             Modal.error({
                 title: 'There was an error submitting the form',
                 content: (
                     <div>
-                      <p>{`${error.message}`}</p>
-                      <p>Please try again later.</p>
+                      <p>{`${error.response.data.message}`}</p>
                     </div>
                   )
               });

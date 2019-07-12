@@ -17,7 +17,7 @@ const pitchsections = (props) => {
         <div className={styles.PitchSections}>
             <TextPitchSection title="About" position={1}>
                 <p>Congressional staffers and representatives have told us nothing is more powerful in helping a representative know what their constituents want than written letters and phone calls.</p>
-                <p>Based on this fact, an effort called Project Grand Canyon was born. Just as the Grand Canyon was excavated one water drop at a time, our Members of Congress’ resistance to climate solutions will be worn down by the drip, drip, drip of hundreds of phone calls per month.</p>
+                <p>Based on this fact, an effort called Project Grand Canyon was born. Just as the Grand Canyon was excavated one water drop at a time, our Members of Congress’ resistance to climate solutions will be worn down by the drip, drip, drip of thousands of phone calls per month.</p>
             </TextPitchSection>
             <Divider style={{margin: 0}} />
             <ImagePitchSection actioned={props.actioned} title="Who are you?" position={2} location={CCLLogoImage} alt="ccl logo">
@@ -38,8 +38,8 @@ const pitchsections = (props) => {
             <Divider style={{margin: 0}}  />
             <ImagePitchSection actioned={props.actioned} title="Does it work?" position={5} location={MNGroupImage} alt="minnesota chapter image">
                 <p>CCL volunteers in Minnesota (photographed at the U.S. Capitol) have been implementing Project Grand Canyon since Spring of 2017.</p>
-                <p>Their Member of Congress, Jason Lewis, had been resisting meeting with CCL. After all the calls, the Member invited CCL for an hour long meeting.</p>
-                <p>In their words, <i>Did we convert him in one meeting? NO. Did we educate him? Absolutely. Our MOC encouraged us to "keep it coming," and our liaison is now in regular contact with him.</i></p>
+                <p>Their Member of Congress at the time, Jason Lewis, had been resisting meeting with CCL. After all the calls, the Member invited CCL for an hour long meeting.</p>
+                <p>In their words, <i>Did we convert him in one meeting? NO. Did we educate him? Absolutely. Our MOC encouraged us to "keep it coming," and our liaison started to have regular contact with him.</i></p>
             </ImagePitchSection>
         </div>
     );

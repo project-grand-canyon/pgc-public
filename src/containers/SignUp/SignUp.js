@@ -41,23 +41,38 @@ class SignUp extends Component {
         }
         caller['contactMethods'] = communicationMethods;
         axios.post('callers', caller).then((response)=>{
-            this.setState({
-                state: state,
-                district: district,
-                communicationMethods: communicationMethods,
-                didSignUp: true
-            });
-        }).catch((error)=>{
+            this.process_happy_signup(state, district, communicationMethods)
+        }).catch((error)=>{            
+            const errMessage = error.response.data.message;
+            const isDupe = errMessage.includes('Duplicate entry');
+            if (isDupe) {
+                Modal.warning({
+                    title: 'There was an error with your submission',
+                    content: (
+                        <div>
+                          <p>The contact information you provided already exists in our database. This means you are already registered with Project Grand Canyon.<br/><br/>No action is required from you.</p>
+                        </div>
+                      )
+                  });
+            } else {
+                Modal.error({
+                    title: 'There was an error submitting the form',
+                    content: (
+                        <div>
+                          <p>{`${errMessage}`}</p>
+                        </div>
+                      )
+                  });
+            }
+        });
+    }
 
-            console.error(error);
-            Modal.error({
-                title: 'There was an error submitting the form',
-                content: (
-                    <div>
-                      <p>{`${error.response.data.message}`}</p>
-                    </div>
-                  )
-              });
+    process_happy_signup = (state, district, communicationMethods) => {
+        this.setState({
+            state: state,
+            district: district,
+            communicationMethods: communicationMethods,
+            didSignUp: true
         });
     }
 

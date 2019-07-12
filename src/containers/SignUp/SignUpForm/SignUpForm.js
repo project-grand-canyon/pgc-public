@@ -16,7 +16,7 @@ class SignUpForm extends Component {
 
     componentDidMount = () => {
         axios.get('districts').then((response)=>{
-            const houseOfRepDistricts = response.data.filter((district) => { return parseInt(district.number) > 0 });
+            const houseOfRepDistricts = response.data.filter((district) => { return parseInt(district.number) >= 0 });
 
             this.setState({
                 congressionalDistricts: houseOfRepDistricts
@@ -66,9 +66,7 @@ class SignUpForm extends Component {
         fieldValues['districtId'] = this.state.congressionalDistricts.find((district)=>{
             return district.state === fieldValues.congressionalDistrict[0] && district.number === fieldValues.congressionalDistrict[1];
         }).districtId;
-        console.log(fieldValues)
         if (fieldValues.districtId) {
-            console.log(fieldValues)
             this.props.onSuccessfulSubmit(fieldValues);
         }
     }

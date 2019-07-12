@@ -265,14 +265,22 @@ class CallIn extends Component {
     }
 
     getRequestJSX = () => {
-        return this.state.requests ? (
+        const sorted = [...this.state.requests].sort((el1, el2)=> {
+            if (el1.lastModified < el2.lastModified) {
+                return 1
+            } else {
+                return -1
+            }
+        });
+
+        const request = sorted.shift();
+
+        return request ? (
             <>
                 <Typography.Title level={3}>Request:</Typography.Title>
-                <Typography.Text style={{fontStyle:"italic"}}>A specific requests for Rep. {this.state.repLastName}:</Typography.Text>
-                {/* <h3 className={styles.TPSubHeading}>Request</h3>
-                <h4 className={styles.Explanation}>A specific requests for Rep. Williams:</h4> */}
+                <Typography.Text style={{fontStyle:"italic"}}>A specific request for Rep. {this.state.repLastName}:</Typography.Text>
                 {this.state.requests[0] && 
-                    <Typography.Paragraph>{this.state.requests[0].content}</Typography.Paragraph>
+                    <Typography.Paragraph>{request.content}</Typography.Paragraph>
                 }
             </>
         ) : null;

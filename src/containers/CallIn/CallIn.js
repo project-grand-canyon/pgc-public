@@ -153,6 +153,7 @@ class CallIn extends Component {
     }
 
     getCallInJSX = () => {
+        const offices = this.state.offices;
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
@@ -182,9 +183,9 @@ class CallIn extends Component {
                                         <Col xs={24} sm={12} className={styles.Offices}>
                                             <Typography.Text strong>Offices</Typography.Text>
                                             <ul>
-                                                { this.getOfficesJSX() }
+                                                { this.getOfficesJSX(offices) }
                                             </ul>
-                                            <p>Please call the office closest to you.</p>
+                                            { (offices && offices.length > 1) ? <p>Please call the office closest to you.</p> : null }
                                         </Col>
                                     </Row>
                                 </Col>
@@ -216,11 +217,10 @@ class CallIn extends Component {
         </>
     }
 
-    getOfficesJSX = () => {
-        const offices = this.state.offices ? this.state.offices.map((office, idx)=>{
+    getOfficesJSX = (offices) => {
+        return offices ? offices.map((office, idx)=>{
             return(<li key={idx}><p>{`${office.address.city}: ${office.phone}`}</p></li>);
         }) : null;
-        return offices;
     }
 
     getTalkingPointsJSX = () => {

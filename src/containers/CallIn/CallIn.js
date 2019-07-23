@@ -3,6 +3,7 @@ import {Button, Card, Col, Empty, Row, Spin, Typography, Tabs} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
+import { isSenatorDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 
@@ -16,7 +17,7 @@ class CallIn extends Component {
         repFirstName: null,
         repImageUrl: null,
         state: null,
-        district: null,
+        number: null,
         districtId: null,
         talkingPoints: null,
         offices: null,
@@ -65,9 +66,9 @@ class CallIn extends Component {
     fetchCongressionalDistricts = () => {
         const pathComponents = this.props.history.location.pathname.split('/');
         const state = pathComponents[2]
-        const district = pathComponents[3]
+        const number = pathComponents[3]
 
-        if (!state || !district) {
+        if (!state || !number) {
             this.setState({
                 fetchCallInError: "No district specified"
             })
@@ -77,10 +78,10 @@ class CallIn extends Component {
         axios_api.get('districts').then((response)=>{
             const districts = response.data;
             const foundDistrict = districts.find((el)=>{
-                return (state.toLowerCase() == el.state.toLowerCase()) && (parseInt(district) == parseInt(el.number))
+                return (state.toLowerCase() == el.state.toLowerCase()) && (parseInt(number) == parseInt(el.number))
             })
             if(!foundDistrict){
-                throw Error(`No call-in details found for ${state}-${district}`)
+                throw Error(`No call-in details found for ${state}-${number}`)
             }
 
             Promise.all(
@@ -103,7 +104,7 @@ class CallIn extends Component {
                         repImageUrl: hydrated.repImageUrl,
                         requests: hydrated.requests,
                         state: hydrated.state,
-                        district: hydrated.number,
+                        number: hydrated.number,
                         talkingPoints: talkingPoints,
                         offices: hydrated.offices,
                         districtId: hydrated.districtId
@@ -126,7 +127,7 @@ class CallIn extends Component {
 
     render() {
         if (this.state.didCall) {
-            let search = `?state=${this.state.state}&district=${this.state.district}`
+            let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {
                 search += `&t=${this.state.identifier}}`
             }
@@ -154,13 +155,18 @@ class CallIn extends Component {
 
     getCallInJSX = () => {
         const offices = this.state.offices;
+
+        const title = isSenatorDistrict(this.state) ? 
+        `Call-In Guide: Senator ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
+        `Call-In Guide: Rep. ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
+
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
                     <section id="title">
                         <Row>
                             <Col span={24}>
-                                <Typography.Title level={1}>{ `Call-In Guide: Rep. ${this.state.repFirstName} ${this.state.repLastName} (${this.state.state}-${this.state.district})` }</Typography.Title>
+                                <Typography.Title level={1}>{ title }</Typography.Title>
                             </Col>
                         </Row>
                     </section>
@@ -169,12 +175,15 @@ class CallIn extends Component {
                             <Row>
                                 <Col sm={24} md={12} className={styles.InstructionsSubSection}>
                                     <Typography.Title level={3}>The Call</Typography.Title>
-                                    <p>Calling is simple, fast and non-threatening. You will either talk to a young staff member (not Rep. {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</p>
-                                    <p>They just want to know your name and address so they can confirm you live in District {this.state.district}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</p>
+                                    <p>Calling is simple, fast and non-threatening. You will either talk to a young staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</p>
+                                    <p>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</p>
                                 </Col>
                                 <Col sm={24} md={12} className={styles.InstructionsSubSection}>
                                     <Typography.Title level={3}>
-                                        Rep. {this.state.repFirstName} {this.state.repLastName} ({ this.state.state }-{ this.state.district })
+                                    {isSenatorDistrict(this.state) ? 
+                                        `Senator ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
+                                        `Rep. ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`
+                                    }
                                     </Typography.Title>
                                     <Row>
                                         <Col xs={24} sm={12} className={styles.HeadShot}>
@@ -213,7 +222,7 @@ class CallIn extends Component {
     getIntroJSX = () => {
         return <>
             <Typography.Title level={3}>Introduction:</Typography.Title>
-            <Typography.Paragraph>Hello, my name is __________, and I live in district {this.state.district}. I am calling about climate change.</Typography.Paragraph>
+            <Typography.Paragraph>Hello, my name is __________, and I live in  {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. I am calling about climate change.</Typography.Paragraph>
         </>
     }
 

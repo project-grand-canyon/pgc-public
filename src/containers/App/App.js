@@ -20,7 +20,10 @@ class App extends Component {
     Sentry.init({
       dsn: "https://a5fc08e12a1744ddacc396ce79e034f2@sentry.io/1462422",
     });
-    ReactGA.initialize('UA-140402020-1'); // Google Analytics
+    // Google Analytics
+    ReactGA.initialize('UA-140402020-1', {
+      testMode: process.env.NODE_ENV === 'test',
+    });
   }
 
   componentDidMount() {
@@ -54,3 +57,4 @@ class App extends Component {
 }
 
 export default withRouter(App);
+export {App};

@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - checkout
-      - run: echo "This would deploy to prod.."
+      - run: echo "This would deploy to prod."
 
 workflows:
   version: 2

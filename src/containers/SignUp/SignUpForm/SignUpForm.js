@@ -174,8 +174,7 @@ class SignUpForm extends Component {
                         {emailInput}
                         <Form.Item {...formItemLayout} label="Zip Code">
                             {getFieldDecorator('zipCode', {
-                                rules: [{required: true, message: 'Please input your zip code.'},
-                                        {pattern: /^[0-9]+$/, message: 'Zip code can only contain numbers.'},
+                                rules: [{pattern: /^[0-9]+$/, message: 'Zip code can only contain numbers.'},
                                         {len: 5, message: 'Zip code must be 5 characters.'}],
                                 validateFirst: true,
                                 validateTrigger: 'onBlur' 

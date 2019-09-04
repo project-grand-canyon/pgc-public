@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Card, Col, Empty, Row, Spin, Typography, Tabs} from 'antd';
+import {Button, Card, Col, Empty, Icon, Row, Spin, Typography, Tabs, Tooltip} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
@@ -160,6 +160,11 @@ class CallIn extends Component {
         `Call-In Guide: Senator ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
         `Call-In Guide: Rep. ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
 
+        // Temporary - remove after 10/3/19
+        const dcOfficeTooltip = <Card title="Why only D.C.?">
+            <p>CCL’s Senior Director for Government Affairs recommends calling the Washington D.C. offices, where most policy work occurs.</p>
+        </Card>;
+
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
@@ -190,7 +195,7 @@ class CallIn extends Component {
                                             <img src={`${this.state.repImageUrl}`} alt="" />
                                         </Col>
                                         <Col xs={24} sm={12} className={styles.Offices}>
-                                            <Typography.Text strong>Offices</Typography.Text>
+                                            <Typography.Text strong>Office</Typography.Text> <Tooltip title={dcOfficeTooltip}> <Icon type="question-circle" /> </Tooltip>
                                             <ul>
                                                 { this.getOfficesJSX(offices) }
                                             </ul>
@@ -228,7 +233,7 @@ class CallIn extends Component {
 
     getOfficesJSX = (offices) => {
         return offices ? offices.map((office, idx)=>{
-            return(<li key={idx}><p>{`${office.address.city}: ${office.phone}`}</p></li>);
+            return(<li key={idx}><p>{`${office.address.city} ${office.address.state}: ${office.phone}`}</p></li>);
         }) : null;
     }
 

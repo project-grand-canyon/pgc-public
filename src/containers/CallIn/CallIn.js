@@ -287,7 +287,7 @@ class CallIn extends Component {
         return request ? (
             <>
                 <Typography.Title level={3}>Request:</Typography.Title>
-                <Typography.Text style={{fontStyle:"italic"}}>A specific request for Rep. {this.state.repLastName}:</Typography.Text>
+                <Typography.Text style={{fontStyle:"italic"}}>A specific request for Senator {this.state.repLastName}:</Typography.Text>
                 {this.state.requests[0] && 
                     <Typography.Paragraph>{request.content}</Typography.Paragraph>
                 }

@@ -228,7 +228,9 @@ class CallIn extends Component {
 
     getOfficesJSX = (offices) => {
         return offices ? offices.map((office, idx)=>{
-            return(<li key={idx}><p>{`${office.address.city}: ${office.phone}`}</p></li>);
+            return(<li key={idx}>
+                <p>{office.address.city}: <a href={`tel:${office.phone}`}>{office.phone}</a></p>
+            </li>);
         }) : null;
     }
 

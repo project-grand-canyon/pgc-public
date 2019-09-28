@@ -78,7 +78,7 @@ class CallIn extends Component {
         axios_api.get('districts').then((response)=>{
             const districts = response.data;
             const foundDistrict = districts.find((el)=>{
-                return (state.toLowerCase() == el.state.toLowerCase()) && (parseInt(number) == parseInt(el.number))
+                return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
             })
             if(!foundDistrict){
                 throw Error(`No call-in details found for ${state}-${number}`)
@@ -95,7 +95,7 @@ class CallIn extends Component {
                     console.log(hydrated.script)
                     const talkingPoints = [...hydrated.script].map(el=>{
                         const theme = themes.find((el2)=>{return el2.themeId === el.themeId})
-                        el.theme = theme && theme.name || "Talking Point"
+                        el.theme = (theme && theme.name) || "Talking Point"
                         return el
                     })
                     this.setState({

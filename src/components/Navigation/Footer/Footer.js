@@ -18,7 +18,7 @@ const footer = (props) => {
                 </span>
             </div>
             <div>
-                <span>Questions or feedback? <a href="https://forms.gle/yq6vXYnaf3EbKKZS6" target="_blank">Contact Us</a></span>
+                <span>Questions or feedback? <a href="https://forms.gle/yq6vXYnaf3EbKKZS6" target="_blank" rel="noopener noreferrer">Contact Us</a></span>
             </div>
         </footer>
     );

@@ -1,4 +1,12 @@
+# Project Grand Canyon - Public Site
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Developing with pgc-api
+
+To connect to a local instance of pgc-api, run `npm start` with the environment variable `REACT_APP_API_ENDPOINT=<url>`. By default, pgc-api listens on `http://localhost:8080/api`, so that would look like:
+
+`REACT_APP_API_ENDPOINT=http://localhost:8080//api/ npm start`
 
 ## Available Scripts
 

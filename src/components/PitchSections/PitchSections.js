@@ -21,7 +21,7 @@ const pitchsections = (props) => {
             </TextPitchSection>
             <Divider style={{margin: 0}} />
             <ImagePitchSection actioned={props.actioned} title="Who are you?" position={2} location={CCLLogoImage} alt="ccl logo">
-                <p>We are a group of Citizens' Climate Lobby (CCL) volunteers from Central Texas.</p>
+                <p>We began as a group of Citizens’ Climate Lobby (CCL) volunteers from Central Texas and are expanding Project Grand Canyon to serve CCL chapters throughout the United States.</p>
                 <p>CCL is a non-profit, nonpartisan, grassroots organization focused on national policies to address climate change.</p>
                 <p>CCL's consistently respectful, nonpartisan approach to climate education is designed to create a broad, sustainable foundation for climate action.</p>
             </ImagePitchSection>

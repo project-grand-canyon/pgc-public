@@ -24,13 +24,13 @@ class ThankYou extends Component {
 
     componentDidMount = () => {
         const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        const state = urlParams.get('state').toUpperCase();
+        const state = urlParams.get('state') && urlParams.get('state').toUpperCase();
         const distrct = urlParams.get('district');
         this.fetchDistrictStats(state, distrct);
         this.removeTrackingGetArgs();
         this.setState({
             identifier: urlParams.get('t'),
-            state: state,
+            state: state || '',
             district: distrct
         });
     }

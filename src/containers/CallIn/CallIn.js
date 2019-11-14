@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Card, Col, Empty, Row, Spin, Typography, Tabs} from 'antd';
+import {Button, Card, Col, Empty, Icon, Row, Spin, Typography, Tabs, Tooltip} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
@@ -190,7 +190,7 @@ class CallIn extends Component {
                                             <img src={`${this.state.repImageUrl}`} alt="" />
                                         </Col>
                                         <Col xs={24} sm={12} className={styles.Offices}>
-                                            <Typography.Text strong>Offices</Typography.Text>
+                                            <Typography.Text strong>Office</Typography.Text>
                                             <ul>
                                                 { this.getOfficesJSX(offices) }
                                             </ul>
@@ -228,9 +228,7 @@ class CallIn extends Component {
 
     getOfficesJSX = (offices) => {
         return offices ? offices.map((office, idx)=>{
-            return(<li key={idx}>
-                <p>{office.address.city}: <a href={`tel:${office.phone}`}>{office.phone}</a></p>
-            </li>);
+            return(<li key={idx}><p>{`${office.address.city} ${office.address.state}: ${office.phone}`}</p></li>);
         }) : null;
     }
 

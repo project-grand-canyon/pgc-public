@@ -178,7 +178,7 @@ class ThankYou extends Component {
             return <Redirect to="/signup" />
         }
 
-        const pitch = this.state.stats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
+        const pitch = this.state.localStats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
 
         return (
             <SimpleLayout activeLinkKey="/signup">

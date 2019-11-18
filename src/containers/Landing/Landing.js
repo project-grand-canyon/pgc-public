@@ -16,7 +16,7 @@ class Landing extends Component {
 
     componentDidMount = () => {
         axios_api.get('stats').then((response)=>{
-            const stats = (response.status == 200) ? response.data : { 'totalCallers': 'thousands of'}
+            const stats = (response.status === 200) ? response.data : { 'totalCallers': 'thousands of'}
             this.setState({
                 stats: stats
             })

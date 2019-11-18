@@ -5,6 +5,7 @@
 .Heading {
     text-align: center;
     margin: 20px auto;
+    font-weight: normal;
 }
 
 .StatsHero {
@@ -13,9 +14,21 @@
     object-position: 50% 20%;
 }
 
-.Stat {
-    color: #267326;
-    font-weight: bold;
+
+.StatCol {
+    height: 120px
+}
+
+@media (min-width: 576px) and (max-width: 992px) { 
+    .StatCol {
+        height: 175px
+    } 
+}
+
+@media (min-width: 992px) {
+    .StatCol {
+        height: 150px
+    }
 }
 
 .Card {

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Card, Skeleton, Icon, message, Row, Col } from 'antd';
+import { Card, Col, Divider, Icon, message, Row, Skeleton, Statistic, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
+import {isSenatorDistrict} from '../../../util/district';
 
 import styles from './ThankYou.module.css';
 
@@ -14,10 +15,9 @@ import grassroots from '../../../assets/images/grassroots.jpg';
 class ThankYou extends Component {
 
     state = {
-        state: null,
         district: null,
-        identifier: null,
-        stats: null,
+        localStats: null,
+        overallStats: null,
         statsError: null,
         signUpRedirect: false
     }
@@ -25,30 +25,53 @@ class ThankYou extends Component {
     componentDidMount = () => {
         const urlParams = new URLSearchParams(this.props.location.search.slice(1));
         const state = urlParams.get('state') && urlParams.get('state').toUpperCase();
-        const distrct = urlParams.get('district');
-        this.fetchDistrictStats(state, distrct);
+        const number = urlParams.get('district');
+        this.fetchStats(state, number);
         this.removeTrackingGetArgs();
         this.setState({
-            identifier: urlParams.get('t'),
             state: state || '',
-            district: distrct
+            district: number
         });
     }
 
-    fetchDistrictStats = (state, distrct) => {
-        axios.get('district-stats', {
-            params: {
-                state: this.state.state,
-                district: this.state.district
-              }
-        }).then((response) => {
+    fetchStats = (state, number) => {
+        if (!state || !number) {
             this.setState({
-                stats: response.data
+                statsError: Error("No district specified")
             })
-        }).catch((error) => {
-            this.setState({
-                statsError: error
+            return;
+        }
+
+        axios.get('districts').then((response)=>{
+            const districts = response.data;
+            const foundDistrict = districts.find((el)=>{
+                return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
             })
+            if(!foundDistrict && !foundDistrict.districtId){
+                this.setState({
+                    statsError: Error("No district found")
+                })
+                return;
+            }
+
+            Promise.all(
+                [
+                    axios.get(`stats/${foundDistrict.districtId}`), 
+                    axios.get(`stats`)
+                ])
+                .then(values => {
+                    const district = values[0].data
+                    const overall = values[1].data
+                    this.setState({
+                        localStats: district,
+                        overallStats: overall,
+                        district: foundDistrict
+                    })
+                }).catch((error) => {
+                    this.setState({
+                        statsError: error
+                    })
+                });
         });
     }
 
@@ -95,23 +118,58 @@ class ThankYou extends Component {
         if (this.state.statsError) {
             return null;
         }
-
-        if (this.state.stats){
-            return (
-                <Row type="flex" gutter={4}>
-                    <Col span={24}>
-                        <Card type="inner" title={`${this.state.state}-${this.state.district} Call In Stats`}>
-                            <p>In the past 30 days, <span className={styles.Stat}>40 people</span> have called Rep. Williams about climate change.</p>
-                            <p>So far this year, <span className={styles.Stat}>90 people</span> have called Rep. Williams about climate change.</p>
-                            <p style={{fontStyle: "italic"}}>Congressional staffers and representatives have told us nothing helps a representative know what their constituents want more than written letters and phone calls, so keep up the great work!</p>
-                        </Card>
-                    </Col>
-                </Row>
-            );
+        if (!this.state.localStats || !this.state.district || !this.state.overallStats) {
+            return <Skeleton />;
+        }
+        if (this.state.district && !this.state.district.repLastName) {
+            return null;
         }
 
-        return <Skeleton />
-        
+        const localCalls = this.state.localStats && this.state.localStats.totalCalls;
+        const localCallers = this.state.localStats && this.state.localStats.totalCallers;
+        const overallCalls = this.state.overallStats && this.state.overallStats.totalCalls;
+        const overallCallers = this.state.overallStats && this.state.overallStats.totalCallers;
+        const isSen = isSenatorDistrict(this.state.district);
+        const repName = isSen ? `Senator ${this.state.district.repLastName}` : `Rep. ${this.state.district.repLastName}`;
+
+        const overallCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
+            <Card style={{height:"100%"}}><Statistic title="Total Calls Nationwide" value={overallCalls} suffix={<Icon type="phone" />} /></Card>
+        </Col>);
+        const localCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
+            <Card style={{height:"100%"}}><Statistic title={`Total Calls to ${repName}`} value={localCalls} suffix={<Icon type="phone" />} /></Card>
+        </Col>);
+        const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
+            <Card style={{height:"100%"}}><Statistic title="Registered Callers Nationwide" value={overallCallers} suffix={<Icon type="phone" />} /></Card>
+        </Col>);
+        const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
+            <Card style={{height:"100%"}}><Statistic title={`People calling ${repName}`} value={localCallers} suffix={<Icon type="phone" />} /></Card>
+        </Col>);
+
+        const senCallers = overallCallersCol;
+        const repCallers = (
+            <>
+            {overallCallersCol}
+            {localCallersCol}
+            </>
+        )
+
+        return (
+            <>
+                <Row className={styles.Heading}>
+                    <Typography.Title level={4} style={{fontStyle: 'italic'}}>Our Impact So Far:</Typography.Title>
+                </Row>
+                <div style={{ background: '#ECECEC', padding: '30px' }}>
+                <Row type="flex" justify="center" align="middle">
+                    {localCallsCol}
+                    {overallCallsCol}
+                </Row>
+                <Row type="flex" justify="center" align="middle">
+                { isSen ? senCallers : repCallers}
+                </Row>
+                </div>
+                <Divider />
+            </>
+        );        
     }
 
     render() {
@@ -120,15 +178,17 @@ class ThankYou extends Component {
             return <Redirect to="/signup" />
         }
 
+        const pitch = this.state.stats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
+
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <div className={styles.ThankYou}>
                     <div className={styles.Heading}>
-                        <h2>Thank You for Calling</h2>
+                        <Typography.Title level={2}>Thank You for Calling</Typography.Title>
                     </div>
                     { this.getStatsJSX() }
                     <div className={styles.Heading}>
-                        <h3 style={{fontStyle: 'italic'}}>Here's how you can do a little more:</h3>
+                        <Typography.Title level={4} style={{fontStyle: 'italic'}}>{pitch}</Typography.Title>
                     </div>
                     <Row type="flex" gutter={4}>
                         {

@@ -3,6 +3,7 @@ import { Button, Row, Col } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import ResponsiveLayout from '../../Layout/ResponsiveLayout/ResponsiveLayout';
+import getUrlParameter from '../../../util/urlparams';
 
 import capitol from '../../../assets/images/ccl-capitol.jpg'
 import styles from './ThankYou.module.css';
@@ -24,13 +25,14 @@ class ThankYou extends Component {
     }
 
     componentDidMount = () => {
-        const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        const communicationMethods = urlParams.get('com').split('-');
+
+        const params = this.props.location.search;
+        const communicationMethods = getUrlParameter(params, 'com').split('-');
         const communicationMethod = communicationMethods.length > 1 ? communicationMethods.join(' and ') : communicationMethods[0]
         this.setState({
             communicationMethod: communicationMethod,
-            state: urlParams.get('state'),
-            district: urlParams.get('district')
+            state: getUrlParameter(params, 'state'),
+            district: getUrlParameter(params, 'district')
         });
     }
 

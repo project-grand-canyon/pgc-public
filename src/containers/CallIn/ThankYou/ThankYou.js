@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
+import getUrlParameter from '../../../util/urlparams';
 import {isSenatorDistrict} from '../../../util/district';
 
 import styles from './ThankYou.module.css';
@@ -23,9 +24,9 @@ class ThankYou extends Component {
     }
 
     componentDidMount = () => {
-        const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        const state = urlParams.get('state') && urlParams.get('state').toUpperCase();
-        const number = urlParams.get('district');
+        const params = this.props.location.search;
+        const state = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
+        const number = getUrlParameter(params, 'district');
         this.fetchStats(state, number);
         this.removeTrackingGetArgs();
         this.setState({
@@ -105,13 +106,18 @@ class ThankYou extends Component {
       }
 
     removeTrackingGetArgs = () => {
-        const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        urlParams.delete('t');
-        this.props.history.push({
-            pathname: this.props.history.location.pathname,
-            search: `${urlParams.toString()}`,
-            state: {...this.state}
-          })
+        try {
+            const urlParams = new URLSearchParams(this.props.location.search.slice(1));
+            urlParams.delete('t');
+            this.props.history.push({
+                pathname: this.props.history.location.pathname,
+                search: `${urlParams.toString()}`,
+                state: {...this.state}
+            })
+        } catch(error) {
+            console.error(error);
+        }
+        
     }
 
     getStatsJSX = () => {
@@ -139,10 +145,10 @@ class ThankYou extends Component {
             <Card style={{height:"100%"}}><Statistic title={`Total Calls to ${repName}`} value={localCalls} suffix={<Icon type="phone" />} /></Card>
         </Col>);
         const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title="Registered Callers Nationwide" value={overallCallers} suffix={<Icon type="phone" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title="Registered Callers Nationwide" value={overallCallers} suffix={<Icon type="smile" />} /></Card>
         </Col>);
         const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={`People calling ${repName}`} value={localCallers} suffix={<Icon type="phone" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title={`People calling ${repName}`} value={localCallers} suffix={<Icon type="smile" />} /></Card>
         </Col>);
 
         const senCallers = overallCallersCol;

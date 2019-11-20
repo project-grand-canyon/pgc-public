@@ -9,6 +9,7 @@ import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 
 import styles from './CallIn.module.css';
+import getUrlParameter from '../../util/urlparams';
 
 class CallIn extends Component {
 
@@ -54,9 +55,9 @@ class CallIn extends Component {
     }
 
     saveIdentifier = () => {
-        const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        const identifier = urlParams.get('t');
-        const caller = urlParams.get('c');
+        const params = this.props.location.search;
+        const identifier = getUrlParameter(params, 't');
+        const caller = getUrlParameter(params, 'c');
         this.setState({
             identifier: identifier,
             callerId: caller

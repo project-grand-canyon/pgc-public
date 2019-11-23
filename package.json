@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@sentry/browser": "^5.2.1",
+    "@sentry/cli": "^1.49.0",
     "antd": "^3.25.2",
     "axios": "^0.18.1",
     "babel-plugin-import": "^1.12.1",

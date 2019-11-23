@@ -195,7 +195,6 @@ class CallIn extends Component {
                                             <ul>
                                                 { this.getOfficesJSX(offices) }
                                             </ul>
-                                            { (offices && offices.length > 1) ? <p>Please call the office closest to you.</p> : null }
                                         </Col>
                                     </Row>
                                 </Col>

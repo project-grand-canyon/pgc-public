@@ -11,7 +11,7 @@ class Landing extends Component {
     
     state = {
         didActionCTA: false,
-        stats: {}
+        stats: null
     }
 
     componentDidMount = () => {
@@ -35,9 +35,11 @@ class Landing extends Component {
             return <Redirect to="/signup" />
         }
 
+        const totalCallers = this.state.stats && this.state.stats.totalCallers;
+
         return (
             <ResponsiveLayout activeLinkKey="/">
-                <Hero actioned={this.didActionCTA} callerCount={this.state.stats.totalCallers} />
+                <Hero actioned={this.didActionCTA} callerCount={totalCallers} />
                 <PitchSections actioned={this.didActionCTA} />
                 <BottomHero actioned={this.didActionCTA} />
             </ResponsiveLayout>

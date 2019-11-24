@@ -14,7 +14,6 @@ import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import styles from './App.module.css';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     Sentry.init({

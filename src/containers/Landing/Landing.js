@@ -15,12 +15,17 @@ class Landing extends Component {
     }
 
     componentDidMount = () => {
+        const defaultStats = { 'totalCallers': 'thousands of'};
         axios_api.get('stats').then((response)=>{
-            const stats = (response.status === 200) ? response.data : { 'totalCallers': 'thousands of'}
+            const stats = (response.status === 200) ? response.data : defaultStats;
             this.setState({
                 stats: stats
-            })
-        });
+            });
+        }).catch((error) => {
+            this.setState({
+                stats: defaultStats
+            });
+          });
     }
 
     didActionCTA = () => {

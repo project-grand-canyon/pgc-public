@@ -1,5 +1,6 @@
 {
   "name": "pgc-public",
+  "homepage" : "https://www.projectgrandcanyon.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

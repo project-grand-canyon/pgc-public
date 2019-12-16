@@ -11,9 +11,13 @@ module.exports = override(
     }),
     addLessLoader({
         modifyVars: {
-            "@primary-color": "#1698d9",
-            "@font-size-base": "16px",
-            "@font-size-sm" : "14px"
+            "@primary-color": "#0081C7",
+            "@font-size-base": "14px",
+            "@font-size-sm" : "12px",
+            "@text-color": "#111111",
+            "@label-color": "#111111",
+            "@text-color-secondary": "#5A7931",
+            "@heading-color": "#0081C7",
         },
         javascriptEnabled: true,
     }),

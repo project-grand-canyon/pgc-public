@@ -6,9 +6,15 @@ import ResponsiveLayout from '../Layout/ResponsiveLayout/ResponsiveLayout';
 import BottomHero from '../../components/BottomHero/BottomHero';
 import Hero from '../../components/Hero/Hero';
 import PitchSections from '../../components/PitchSections/PitchSections';
+import { Divider } from 'antd';
 
 class Landing extends Component {
     
+    constructor(props) {
+        super(props);
+        this.pitchSectionsRef = React.createRef();
+    }
+
     state = {
         didActionCTA: false,
         stats: null
@@ -28,10 +34,18 @@ class Landing extends Component {
           });
     }
 
-    didActionCTA = () => {
+    onStartCalling = () => {
         this.setState({
             didActionCTA: true
         });
+    }
+
+    onMoreInfo = () => {
+        this.pitchSectionsRef 
+            && this.pitchSectionsRef.current 
+            && this.pitchSectionsRef.current.scrollIntoView({
+                "behavior": "smooth"
+            });
     }
 
     render() {
@@ -44,9 +58,13 @@ class Landing extends Component {
 
         return (
             <ResponsiveLayout activeLinkKey="/">
-                <Hero actioned={this.didActionCTA} callerCount={totalCallers} />
-                <PitchSections actioned={this.didActionCTA} />
-                <BottomHero actioned={this.didActionCTA} />
+                <Hero onStartCalling={this.onStartCalling} onMoreInfo={this.onMoreInfo} callerCount={totalCallers} />
+                <Divider style={{"margin": "0"}}/>
+                <div ref={this.pitchSectionsRef}>
+                    <PitchSections/>
+                </div>
+                <Divider />
+                <BottomHero onStartCalling={this.onStartCalling} />
             </ResponsiveLayout>
         );
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 
 import axios from '../../util/axios-api';
 import ResponsiveLayout from '../Layout/ResponsiveLayout/ResponsiveLayout';
@@ -89,9 +89,9 @@ class SignUp extends Component {
         return (
             <ResponsiveLayout activeLinkKey="/signup">
                 <div className={styles.SignUp}>
-                    <h2>
+                    <Typography.Title level={2}>
                         Sign Up
-                    </h2>
+                    </Typography.Title>
                     <SignUpForm onSuccessfulSubmit={this.handleFormSubmit} />
                 </div>
             </ResponsiveLayout>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import ResponsiveLayout from '../../Layout/ResponsiveLayout/ResponsiveLayout';
@@ -51,16 +51,16 @@ class ThankYou extends Component {
                     <Row type="flex" justify="center">
                         <Col xs={24} sm={24} md={18} lg={12}>
                             <div className={styles.ContentBlock}>
-                                <h2>
+                                <Typography.Title level={2}>
                                     Thank You for Signing Up
-                                </h2>
-                                <span>
+                                </Typography.Title>
+                                <Typography.Paragraph>
                                     You will be getting confirmation by { this.state.communicationMethod } shortly, and you will be added to the call-in schedule for each month.
-                                </span>
+                                </Typography.Paragraph>
                                 <img src={capitol} className={styles.Photo} alt="U.S. Capitol Building" />
                                 <div className={styles.CantWait}>
-                                    <h3>Can't wait to start calling?</h3>
-                                    <Button onClick={this.handleMakeCallClick} className={styles.MakeCall} type="primary">Make your first call now!</Button>
+                                    <Typography.Title level={4}>Can't wait to start calling?</Typography.Title>
+                                    <Button block onClick={this.handleMakeCallClick} type="primary">Make your first call now!</Button>
                                 </div>
                             </div>
                         </Col>

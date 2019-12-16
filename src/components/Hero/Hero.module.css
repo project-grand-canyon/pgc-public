@@ -1,26 +1,33 @@
 .Hero {
-    /* radial-gradient(rgba(0,0,0,1),rgba(0,0,0,0)) */
-    background-image: radial-gradient(#222, rgba(0,0,0,0), rgba(256,256,256,0.1)), url('../../assets/images/hero.jpg');
-    background-size: cover;
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-content: space-around;
     padding: 40px;
-    color: #fff !important;
-    text-align: center;
-    font-weight: 400;
 }
 
-.Hero h1,
-.Hero h3,
-.Hero h4 {
-    color: #fff;
+.capitol {
+    width: 25%;
+    height: auto;
+    padding-bottom: 10%;
+    align-self: center;
+}
+
+.CTAs {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.CTA {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%
 }
 
 @media (min-width: 500px) {
-    .Hero {
-        padding: 100px;
-    }       
 }

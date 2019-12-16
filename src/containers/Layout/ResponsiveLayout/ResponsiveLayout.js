@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon, Layout, Popover } from 'antd';
+import { Icon, Layout, Popover, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
 
@@ -59,12 +59,12 @@ class ResponsiveLayout extends Component {
         const menu = (this.state.viewportWidth > MOBILE_BREAKPOINT) ? navMenu : mobileMenu;
 
         return (<Layout className={styles.ResponsiveLayout}>
-            <Layout.Header style={{padding: "0 10px", background: "white", borderBottom: "1px solid lightgrey"}}>
+            <Layout.Header className={styles.Header}>
                 <nav>
-                    <Link style={{display: 'block', color: "rgba(0, 0, 0, 0.85)", textDecoration: "none"}} to='/'>
+                    <Link style={{display: 'block', textDecoration: "none"}} to='/'>
                         <div className={styles.Logo}>
                             <img src={logoImage} alt="logo" />
-                            <span>Project Grand Canyon</span>
+                            <Typography.Title level={4} style={{marginBottom: 0, color: "#111111"}}>Monthly Calling Campaign</Typography.Title>
                         </div>
                     </Link>
                     {menu}

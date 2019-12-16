@@ -118,7 +118,7 @@ class SignUpForm extends Component {
                 offset: 0,
               },
               md: {
-                span: 16,
+                span: 8,
                 offset: 8,
               },
             },
@@ -201,7 +201,7 @@ class SignUpForm extends Component {
                             )}
                         </Form.Item>
                         <Form.Item {...tailFormItemLayout}>
-                            <Button type="primary" htmlType="submit" className={styles.RegisterButton}>Register</Button>
+                            <Button block type="primary" htmlType="submit" className={styles.RegisterButton}>Register</Button>
                         </Form.Item>
                         
                     </Form>

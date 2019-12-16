@@ -63,7 +63,7 @@ class Landing extends Component {
                 <div ref={this.pitchSectionsRef}>
                     <PitchSections/>
                 </div>
-                <Divider />
+                <Divider style={{"margin": "0"}} />
                 <BottomHero onStartCalling={this.onStartCalling} />
             </ResponsiveLayout>
         );

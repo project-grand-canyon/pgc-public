@@ -2,3 +2,13 @@
     margin-top: 20px;
     padding: 0 40px;
 }
+
+.Title{
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .Subtitle {
+        text-align: center;
+    }
+}

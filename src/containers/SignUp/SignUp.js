@@ -89,9 +89,10 @@ class SignUp extends Component {
         return (
             <ResponsiveLayout activeLinkKey="/signup">
                 <div className={styles.SignUp}>
-                    <Typography.Title level={2}>
+                    <Typography.Title level={2} className={styles.Title}>
                         Sign Up
                     </Typography.Title>
+                    <Typography.Paragraph className={styles.Subtitle}>We’ll only reach out to you once a month to provide you with your call-in guide</Typography.Paragraph>
                     <SignUpForm onSuccessfulSubmit={this.handleFormSubmit} />
                 </div>
             </ResponsiveLayout>

@@ -8,6 +8,11 @@
     padding: 40px;
 }
 
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
 .capitol {
     width: 25%;
     height: auto;
@@ -29,5 +34,19 @@
     width: 100%
 }
 
-@media (min-width: 500px) {
+@media (min-width: 768px) {
+    .Hero {
+        flex-direction: row;
+    }
+
+    .main {
+        padding: 0px 40px;
+    }
+
+    .capitol {
+        width: 10%;
+        padding-bottom: 0;
+        align-self: center;
+        
+    }
 }

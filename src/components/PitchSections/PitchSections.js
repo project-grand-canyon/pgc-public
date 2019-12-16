@@ -18,7 +18,7 @@ class PitchSections extends React.Component {
                 </TextPitchSection>
                 <TextPitchSection title="Is it effective?" position={1}>
                     <Typography.Paragraph>Yes! CCL's Monthly Calling Campaign is designed to be an effective lobbying program.</Typography.Paragraph>
-                    <Typography.Paragraph>Calls to Congress are most meaningful when you are curtious, make them personal, and focus on a specific bill or issue.</Typography.Paragraph>
+                    <Typography.Paragraph>Calls to Congress are most meaningful when you are curteous, personal, and focus on a specific bill or issue.</Typography.Paragraph>
                     <Typography.Paragraph>Your phone is a potent tool for participatory democracy.</Typography.Paragraph>
                     <Typography.Paragraph>That’s it!</Typography.Paragraph>
                 </TextPitchSection>

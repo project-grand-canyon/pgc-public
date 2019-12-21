@@ -73,7 +73,7 @@ class ResponsiveLayout extends Component {
             <Layout.Content style={{backgroundColor: "white"}}>
                 { this.props.children }
             </Layout.Content>
-            <Layout.Footer style={{backgroundColor: "white"}}>
+            <Layout.Footer style={{margin: "0", padding: "0 20px", backgroundColor: "white"}}>
                 <PGCFooter />
             </Layout.Footer>
         </Layout>);

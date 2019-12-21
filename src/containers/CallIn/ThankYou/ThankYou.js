@@ -205,7 +205,7 @@ class ThankYou extends Component {
                                 >
                                     <Card.Meta
                                     title="Sign Up for Call Reminders"
-                                    description="If you haven't done it already, sign up to get a monthly call reminder from Project Grand Canyon."
+                                    description="If you haven't done it already, sign up to get a monthly call reminder from the Monthly Calling Campaign."
                                     />
                                 </Card>
                             </Col>)
@@ -216,7 +216,7 @@ class ThankYou extends Component {
                                 actions={[<Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, <Icon type="mail" onClick={()=>{this.handleShare('email')}} />]}
                             >
                                 <Card.Meta
-                                title="Share Project Grand Canyon"
+                                title="Share the Calling Congress Campaign"
                                 description="The more people who call, the more Members of Congress will listen. Spread the word on social media."
                                 />
                             </Card>

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactGA from 'react-ga'
 import { BrowserRouter } from 'react-router-dom';
-
+import "typeface-ubuntu";
 
 import App from './containers/App/App';
 

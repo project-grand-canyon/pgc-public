@@ -50,7 +50,7 @@ class SignUp extends Component {
                     title: 'There was an error with your submission',
                     content: (
                         <div>
-                          <p>The contact information you provided already exists in our database. This means you are already registered with Project Grand Canyon.<br/><br/>No action is required from you.</p>
+                          <p>The contact information you provided already exists in our database. This means you are already registered with the Monthly Calling Campaign.<br/><br/>No action is required from you.</p>
                         </div>
                       )
                   });

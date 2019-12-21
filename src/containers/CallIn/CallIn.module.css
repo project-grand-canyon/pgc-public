@@ -1,14 +1,16 @@
 .CallIn {
-    margin: 20px auto;
-    padding: 0 10px 0 10px;
+    padding: 10px 20px 0px 20px;
     max-width: 1000px;
+}
+
+.WhatToExpect {
+    margin: 20px 0;
 }
 
 .Loading {
     text-align: center;
     background: rgba(0,0,0,0.05);
     border-radius: 4px;
-    margin-bottom: 20px;
     padding: 30px 50px;
     margin: 20px 0;
 }
@@ -17,36 +19,21 @@
     padding: 0 10px 0 10px;
 }
 
+.HeaderRow {
+    padding-top: 0;
+}
+
+.ContentRow {
+    padding: 0 0px;
+}
+
 .HeadShot {
-    padding: 0 10px;
+    max-height: 120px;
+    clip-path: ellipse(50% 50% at 50% 50%);
+    margin: auto;
+    display: block;
 }
 
-.HeadShot img {
-    max-height: 220px;
+.Offices {
+    background: white;
 }
-
-.Offices ul p {
-    margin-bottom: 0;
-}
-
-.Block {
-    margin-bottom: 10px;
-}
-
-/* .Block h2 {
-    margin-bottom: 0;
-    font-size: 1.4em;
-} */
-
-/* .Explanation {
-    font-style: italic;
-    font-size: 0.9em;
-} */
-
-p {
-    color: black;
-}
-
-/* .TPSubHeading {
-    font-size: 1.2em;
-} */

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Card, Col, Empty, Row, Spin, Typography, Tabs} from 'antd';
+import {Affix, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
@@ -25,7 +25,9 @@ class CallIn extends Component {
         fetchCallInError: null,
         identifier: null,
         didCall: false,
-        callerId: null
+        callerId: null,
+        selectedTalkingPoint: 0,
+        officesLocked: false,
     }
 
     handleICalled = () => {
@@ -33,7 +35,7 @@ class CallIn extends Component {
             callerId: parseInt(this.state.callerId),
             trackingId: this.state.identifier,
             districtId: this.state.districtId,
-            talkingPointId: this.state.talkingPoints[0].talkingPointId
+            talkingPointId: this.state.talkingPoints[parseInt(this.state.selectedTalkingPoint)]
         } : {};
             axios_api.post('calls', reportBody).then((response) => {
                 // nothing for now
@@ -156,58 +158,89 @@ class CallIn extends Component {
 
     getCallInJSX = () => {
         const offices = this.state.offices;
-
+        const yourLegislator = isSenatorDistrict(this.state) ? "Your Senator:" : " Your Representative:";
         const title = isSenatorDistrict(this.state) ? 
-        `Call-In Guide: Senator ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
-        `Call-In Guide: Rep. ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
+        `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
+        `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
 
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
-                    <section id="title">
-                        <Row>
+                    <section>
+                        <Row className={styles.HeaderRow}>
+                            <Col span={24}>
+                                <Typography.Title level={4} style={{ color: "#111111"}}>Call In Guide:</Typography.Title>
+                            </Col>
+                        </Row>
+                        <Row className={styles.ContentRow} type="flex" justify="center">
+                            <Col xs={16} sm={12}>
+                                <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
+                            </Col>
+                        </Row>
+                        <Row className={styles.HeaderRow}>
+                            <Col span={24}>
+                                <Typography.Title level={4} style={{ color: "#111111"}}>{yourLegislator}</Typography.Title>
+                            </Col>
+                        </Row>
+                        <Row className={styles.ContentRow}>
                             <Col span={24}>
                                 <Typography.Title level={1}>{ title }</Typography.Title>
                             </Col>
                         </Row>
+                        <Row className={styles.HeaderRow}>
+                            <Col xs={24} sm={12} className={styles.Offices}>
+                                <Typography.Title style={{ color: "#111111"}} level={4}>
+                                    {offices.length > 1 ? "Offices:" : "Office:"}
+                                </Typography.Title>
+                            </Col>
+                        </Row>
+                        <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}>
+                        <Row className={styles.ContentRow} style={
+                            {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
+                        }>
+                            <Col>
+                                    <List
+                                        className={styles.Offices}
+                                        size="small"
+                                        itemLayout="horizontal"
+                                        dataSource={offices}
+                                        renderItem={item => (
+                                            <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
+                                                <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
+                                            </List.Item>
+                                        )}
+                                        />
+                            </Col>
+                        </Row>
+                        </Affix>
                     </section>
                     <section id="instructions">
-                        <Card type="inner" className={styles.Block} title={(<Typography.Title level={2}>How this works</Typography.Title>)}>
-                            <Row>
-                                <Col sm={24} md={12} className={styles.InstructionsSubSection}>
-                                    <Typography.Title level={3}>The Call</Typography.Title>
-                                    <p>Calling is simple, fast and non-threatening. You will either talk to a young staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</p>
-                                    <p>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</p>
-                                </Col>
-                                <Col sm={24} md={12} className={styles.InstructionsSubSection}>
-                                    <Typography.Title level={3}>
-                                    {isSenatorDistrict(this.state) ? 
-                                        `Senator ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
-                                        `Rep. ${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`
-                                    }
-                                    </Typography.Title>
-                                    <Row>
-                                        <Col xs={24} sm={12} className={styles.HeadShot}>
-                                            <img src={`${this.state.repImageUrl}`} alt="" />
-                                        </Col>
-                                        <Col xs={24} sm={12} className={styles.Offices}>
-                                            <Typography.Text strong>Office</Typography.Text>
-                                            <ul>
-                                                { this.getOfficesJSX(offices) }
-                                            </ul>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-                        </Card>
+                        <Collapse 
+                            className={styles.WhatToExpect}
+                            bordered={true}
+                            accordion={true}
+                            expandIconPosition="right"
+                            expandIcon={({ isActive }) => <Icon type="info-circle" rotate={isActive ? 90 : 0} />}
+                        >
+                            <Collapse.Panel
+                                header={<Typography.Title style={{ color: "#111111", margin: 0}} level={4}>What To Expect</Typography.Title>}
+                                key={1}
+                            >
+                                <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
+                                <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
+                            </Collapse.Panel>
+                        </Collapse>
                     </section>
                     <section id="talking-points">
-                        <Card type="inner" className={styles.Block} title={(<Typography.Title level={2}>Call-In Script</Typography.Title>)}>
+                    <Row className={styles.HeaderRow}>
+                        <Col>
+                        <Typography.Title level={2}>Call-In Script:</Typography.Title>
+                        </Col>
+                    </Row>
                             {this.getIntroJSX()}
                             {this.getTalkingPointsJSX()}
                             {this.getRequestJSX()}
                             {this.getReportYourCallButtonJSX()}
-                        </Card>
                     </section>
                 </div>
             </>
@@ -226,28 +259,19 @@ class CallIn extends Component {
         </>
     }
 
-    getOfficesJSX = (offices) => {
-        return offices ? offices.map((office, idx)=>{
-            return(<li key={idx}><p>{office.address.city} {office.address.state}: <a href={`tel:${office.phone}`}>{office.phone}</a></p></li>);
-        }) : null;
-    }
-
     getTalkingPointsJSX = () => {
         const talkingPoints = (this.state.talkingPoints) ? this.state.talkingPoints.map((talkingPoint, idx) => {
-            const education = talkingPoint.content ? (
-                <>
-                    
+            const education = (
                     <Typography.Paragraph>{talkingPoint.content}
                     {talkingPoint.referenceUrl && 
                         <span> (<a rel="noopener noreferrer" target="_blank" href={talkingPoint.referenceUrl}>Background Info</a>)</span>
                     }
-                    </Typography.Paragraph>
-                </>
-            ) : null;
+                    </Typography.Paragraph>  
+            );
             return (
-                <Tabs.TabPane tab={`${talkingPoint.theme}`} key={idx}>
+            <Collapse.Panel header={<Typography.Text>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
                     {education}
-                </Tabs.TabPane>);
+                </Collapse.Panel>);
         }) : null;
         return(
             <>
@@ -255,9 +279,16 @@ class CallIn extends Component {
                 <Typography.Text style={{fontStyle:"italic"}}>Talking points provide information that connects climate change to your local area. Choose one.</Typography.Text>
                 <Row>
                     <Col span={24}>
-                    <Tabs onChange={this.didSelectTab} >
+                    <Collapse 
+                        accordion
+                        bordered={false}
+                        onChange={(index)=> {
+                            this.setState({
+                                selectedTalkingPoint: index
+                            })
+                    }} >
                         { talkingPoints }
-                    </Tabs>
+                    </Collapse>
                     </Col>
                 </Row>
             </>
@@ -290,7 +321,7 @@ class CallIn extends Component {
 
         return request ? (
             <>
-                <Typography.Title level={3}>Request:</Typography.Title>
+                <Typography.Title style={{marginTop: "1em"}}level={3}>Request:</Typography.Title>
                 <Typography.Text style={{fontStyle:"italic"}}>{subtitle}</Typography.Text>
                 {this.state.requests[0] && 
                     <Typography.Paragraph>{request.content}</Typography.Paragraph>

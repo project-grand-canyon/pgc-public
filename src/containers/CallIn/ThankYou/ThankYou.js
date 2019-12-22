@@ -79,13 +79,13 @@ class ThankYou extends Component {
     handleShare = (platform) => {
         switch (platform) {
             case 'facebook':
-                this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.projectgrandcanyon.com')
+                this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.cclcalls.org')
                 break;
             case 'twitter':
-                this.openInNewTab('https://twitter.com/intent/tweet?text=Check+out+www.projectgrandcanyon.com.+It%27s+a+great+way+for+individuals+to+make+a+difference+on+climate+change.')
+                this.openInNewTab('https://twitter.com/intent/tweet?text=Check+out+www.cclcalls.org.+It%27s+a+great+way+for+individuals+to+make+a+difference+on+climate+change.')
                 break;
             default:
-                this.copyToClipboard('https://www.projectgrandcanyon.com')
+                this.copyToClipboard('https://www.cclcalls.org')
                 message.success('A shareable link has been copied to your clipboard.')
             break;
         }
@@ -144,34 +144,34 @@ class ThankYou extends Component {
         const localCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
             <Card style={{height:"100%"}}><Statistic title={`Total Calls to ${repName}`} value={localCalls} suffix={<Icon type="phone" />} /></Card>
         </Col>);
+        const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
+            <Card style={{height:"100%"}}><Statistic title={`People signed up to call ${repName}`} value={localCallers} suffix={<Icon type="smile" />} /></Card>
+        </Col>);
         const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
             <Card style={{height:"100%"}}><Statistic title="Registered Callers Nationwide" value={overallCallers} suffix={<Icon type="smile" />} /></Card>
-        </Col>);
-        const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={`People calling ${repName}`} value={localCallers} suffix={<Icon type="smile" />} /></Card>
         </Col>);
 
         const senCallers = overallCallersCol;
         const repCallers = (
             <>
-            {overallCallersCol}
             {localCallersCol}
+            {overallCallersCol}
             </>
         )
 
         return (
             <>
-                <Row className={styles.Heading}>
-                    <Typography.Title level={4} style={{fontStyle: 'italic'}}>Our Impact So Far:</Typography.Title>
-                </Row>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
-                <Row type="flex" justify="center" align="middle">
-                    {localCallsCol}
-                    {overallCallsCol}
-                </Row>
-                <Row type="flex" justify="center" align="middle">
-                { isSen ? senCallers : repCallers}
-                </Row>
+                <div style={{ background: '#ECECEC', padding: '20px', display: localCalls > 20 ? 'block' : 'none' }}>
+                    <Row className={styles.Heading}>
+                        <Typography.Title level={4} style={{fontStyle: 'italic'}}>Our Impact So Far:</Typography.Title>
+                    </Row>
+                    <Row type="flex" justify="center" align="middle">
+                        {localCallsCol}
+                        {overallCallsCol}
+                    </Row>
+                    <Row type="flex" justify="center" align="middle">
+                    { isSen ? senCallers : repCallers}
+                    </Row>
                 </div>
                 <Divider />
             </>

@@ -190,7 +190,7 @@ class CallIn extends Component {
                                 </Row>
                                 <Row className={styles.ContentRow}>
                                     <Col span={24}>
-                                        <Typography.Title level={1}>{ title }</Typography.Title>
+                                        <Typography.Title level={2}>{ title }</Typography.Title>
                                     </Col>
                                 </Row>
                                 <Row className={styles.HeaderRow}>
@@ -309,7 +309,7 @@ class CallIn extends Component {
         return (
             <>
                 <Typography.Title level={3}>Report Your Call:</Typography.Title>
-                <Button type="primary" style={{width: '200px'}} onClick={this.handleICalled}>I called!</Button>
+                <Button type="primary" className={styles.ICalled} onClick={this.handleICalled}>I called!</Button>
             </>
         );
     }

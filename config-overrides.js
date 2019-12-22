@@ -20,7 +20,7 @@ module.exports = override(
             "@heading-4-size": "16px",
             "@text-color": "#111111",
             "@label-color": "#111111",
-            "@text-color-secondary": "#5A7931",
+            "@text-color-secondary": "#111111",
             "@heading-color": "#0081C7",
         },
         javascriptEnabled: true,

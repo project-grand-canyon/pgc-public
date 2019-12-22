@@ -6,6 +6,16 @@
     margin: 20px 0;
 }
 
+.ICalled {
+    width: 100%
+}
+
+@media (min-width: 768px) {
+    .ICalled {
+        width: 200px;
+    }
+}
+
 .Loading {
     text-align: center;
     background: rgba(0,0,0,0.05);

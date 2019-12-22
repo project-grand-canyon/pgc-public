@@ -40,7 +40,7 @@ class CallIn extends Component {
             axios_api.post('calls', reportBody).then((response) => {
                 // nothing for now
             }).catch((error) => {
-               //nothing for now 
+               // nothing for now 
             }).then(() => {
                 this.setState({
                     didCall: true
@@ -166,54 +166,64 @@ class CallIn extends Component {
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
+                    
+                    
                     <section>
-                        <Row className={styles.HeaderRow}>
+                    <Row className={styles.HeaderRow}>
                             <Col span={24}>
                                 <Typography.Title level={4} style={{ color: "#111111"}}>Call In Guide:</Typography.Title>
                             </Col>
                         </Row>
-                        <Row className={styles.ContentRow} type="flex" justify="center">
-                            <Col xs={16} sm={12}>
-                                <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
+                        <Row type="flex" align="middle">
+                            <Col xs={24} md={8} lg={6} xl={4}>
+                                <Row className={styles.ContentRow} type="flex" justify="center">
+                                    <Col xs={16} sm={12}>
+                                        <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col xs={24} md={16} lg={18} xl={20}>
+                                <Row className={styles.HeaderRow}>
+                                    <Col span={24}>
+                                        <Typography.Title level={4} style={{ color: "#111111"}}>{yourLegislator}</Typography.Title>
+                                    </Col>
+                                </Row>
+                                <Row className={styles.ContentRow}>
+                                    <Col span={24}>
+                                        <Typography.Title level={1}>{ title }</Typography.Title>
+                                    </Col>
+                                </Row>
+                                <Row className={styles.HeaderRow}>
+                                    <Col xs={24} sm={12} className={styles.Offices}>
+                                        <Typography.Title style={{ color: "#111111"}} level={4}>
+                                            {offices.length > 1 ? "Offices:" : "Office:"}
+                                        </Typography.Title>
+                                    </Col>
+                                </Row>
+                                {/* Not using affix till I figure it out for desktop and mobile */}
+                                {/* <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}> */}
+                                    <Row className={styles.ContentRow} style={
+                                        {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
+                                    }>
+                                        <Col>
+                                                <List
+                                                    className={styles.Offices}
+                                                    size="small"
+                                                    itemLayout="horizontal"
+                                                    dataSource={offices}
+                                                    renderItem={item => (
+                                                        <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
+                                                            <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
+                                                        </List.Item>
+                                                    )}
+                                                />
+                                        </Col>
+                                    </Row>
+                                {/* </Affix> */}
                             </Col>
                         </Row>
-                        <Row className={styles.HeaderRow}>
-                            <Col span={24}>
-                                <Typography.Title level={4} style={{ color: "#111111"}}>{yourLegislator}</Typography.Title>
-                            </Col>
-                        </Row>
-                        <Row className={styles.ContentRow}>
-                            <Col span={24}>
-                                <Typography.Title level={1}>{ title }</Typography.Title>
-                            </Col>
-                        </Row>
-                        <Row className={styles.HeaderRow}>
-                            <Col xs={24} sm={12} className={styles.Offices}>
-                                <Typography.Title style={{ color: "#111111"}} level={4}>
-                                    {offices.length > 1 ? "Offices:" : "Office:"}
-                                </Typography.Title>
-                            </Col>
-                        </Row>
-                        <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}>
-                        <Row className={styles.ContentRow} style={
-                            {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
-                        }>
-                            <Col>
-                                    <List
-                                        className={styles.Offices}
-                                        size="small"
-                                        itemLayout="horizontal"
-                                        dataSource={offices}
-                                        renderItem={item => (
-                                            <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
-                                                <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
-                                            </List.Item>
-                                        )}
-                                        />
-                            </Col>
-                        </Row>
-                        </Affix>
                     </section>
+
                     <section id="instructions">
                         <Collapse 
                             className={styles.WhatToExpect}
@@ -223,7 +233,7 @@ class CallIn extends Component {
                             expandIcon={({ isActive }) => <Icon type="info-circle" rotate={isActive ? 90 : 0} />}
                         >
                             <Collapse.Panel
-                                header={<Typography.Title style={{ color: "#111111", margin: 0}} level={4}>What To Expect</Typography.Title>}
+                                header={<Typography.Text style={{ margin: 0}} strong>What To Expect</Typography.Text>}
                                 key={1}
                             >
                                 <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>

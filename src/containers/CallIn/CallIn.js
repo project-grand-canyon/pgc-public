@@ -166,18 +166,17 @@ class CallIn extends Component {
         const callIn = (this.state.repLastName) ? (
             <>
                 <div className={styles.CallIn}>
-                    
-                    
                     <section>
-                    <Row className={styles.HeaderRow}>
-                            <Col span={24}>
+                    <Row type="flex" justify="center" className={styles.HeaderRow}>
+                            <Col xs={24} md={20} lg={18} xl={12}>
                                 <Typography.Title level={4} style={{ color: "#111111"}}>Call In Guide:</Typography.Title>
                             </Col>
                         </Row>
+                        <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
                         <Row type="flex" align="middle">
                             <Col xs={24} md={8} lg={6} xl={4}>
                                 <Row className={styles.ContentRow} type="flex" justify="center">
-                                    <Col xs={16} sm={12}>
+                                    <Col>
                                         <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
                                     </Col>
                                 </Row>
@@ -194,7 +193,7 @@ class CallIn extends Component {
                                     </Col>
                                 </Row>
                                 <Row className={styles.HeaderRow}>
-                                    <Col xs={24} sm={12} className={styles.Offices}>
+                                    <Col className={styles.Offices}>
                                         <Typography.Title style={{ color: "#111111"}} level={4}>
                                             {offices.length > 1 ? "Offices:" : "Office:"}
                                         </Typography.Title>
@@ -222,9 +221,11 @@ class CallIn extends Component {
                                 {/* </Affix> */}
                             </Col>
                         </Row>
+                        </Col></Row>
                     </section>
 
                     <section id="instructions">
+                        <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
                         <Collapse 
                             className={styles.WhatToExpect}
                             bordered={true}
@@ -240,17 +241,20 @@ class CallIn extends Component {
                                 <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
                             </Collapse.Panel>
                         </Collapse>
+                        </Col></Row>
                     </section>
                     <section id="talking-points">
-                    <Row className={styles.HeaderRow}>
-                        <Col>
+                    <Row type="flex" justify="center" className={styles.HeaderRow}>
+                        <Col xs={24} md={20} lg={18} xl={12}>
                         <Typography.Title level={2}>Call-In Script:</Typography.Title>
                         </Col>
                     </Row>
+                    <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
                             {this.getIntroJSX()}
                             {this.getTalkingPointsJSX()}
                             {this.getRequestJSX()}
                             {this.getReportYourCallButtonJSX()}
+                            </Col></Row>
                     </section>
                 </div>
             </>

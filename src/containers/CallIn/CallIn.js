@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Affix, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
+import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';

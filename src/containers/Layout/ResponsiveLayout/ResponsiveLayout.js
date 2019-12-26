@@ -61,7 +61,7 @@ class ResponsiveLayout extends Component {
         return (<Layout className={styles.ResponsiveLayout}>
             <Layout.Header className={styles.Header}>
                 <nav>
-                    <Link style={{display: 'block', textDecoration: "none"}} to='/'>
+                    <Link style={{display: 'block', flexGrow: 1, textDecoration: "none"}} to='/'>
                         <div className={styles.Logo}>
                             <img src={logoImage} alt="logo" />
                             <Typography.Title level={4} style={{marginBottom: 0, color: "#111111"}}>Monthly Calling Campaign</Typography.Title>

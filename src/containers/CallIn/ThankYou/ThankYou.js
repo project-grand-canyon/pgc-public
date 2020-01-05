@@ -139,16 +139,16 @@ class ThankYou extends Component {
         const repName = isSen ? `Senator ${this.state.district.repLastName}` : `Rep. ${this.state.district.repLastName}`;
 
         const overallCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title="Total Calls Nationwide" value={overallCalls} suffix={<Icon type="phone" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Total Calls Nationwide</Typography.Text>} value={overallCalls} suffix={<Icon type="phone" />} /></Card>
         </Col>);
         const localCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={`Total Calls to ${repName}`} value={localCalls} suffix={<Icon type="phone" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`Total Calls to ${repName}`}</Typography.Text>} value={localCalls} suffix={<Icon type="phone" />} /></Card>
         </Col>);
         const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={`People signed up to call ${repName}`} value={localCallers} suffix={<Icon type="smile" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`People signed up to call ${repName}`}</Typography.Text>} value={localCallers} suffix={<Icon type="smile" />} /></Card>
         </Col>);
         const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title="Registered Callers Nationwide" value={overallCallers} suffix={<Icon type="smile" />} /></Card>
+            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Registered Callers Nationwide</Typography.Text>} value={overallCallers} suffix={<Icon type="smile" />} /></Card>
         </Col>);
 
         const senCallers = overallCallersCol;
@@ -161,9 +161,9 @@ class ThankYou extends Component {
 
         return (
             <>
-                <div style={{ background: '#ECECEC', padding: '20px', display: localCalls > 20 ? 'block' : 'none' }}>
+                <div style={{ background: '#ECECEC', padding: '20px', display: localCalls > 0 ? 'block' : 'none' }}>
                     <Row className={styles.Heading}>
-                        <Typography.Title level={4} style={{fontStyle: 'italic'}}>Our Impact So Far:</Typography.Title>
+                        <Typography.Title level={3}>Our Impact So Far:</Typography.Title>
                     </Row>
                     <Row type="flex" justify="center" align="middle">
                         {localCallsCol}
@@ -188,13 +188,15 @@ class ThankYou extends Component {
 
         return (
             <SimpleLayout activeLinkKey="/signup">
-                <div className={styles.ThankYou}>
+                <Row type="flex" justify="center">
+                    <Col xs={24} md={20} lg={18} xl={16}>
+                        <div className={styles.ThankYou}>
                     <div className={styles.Heading}>
-                        <Typography.Title level={2}>Thank You for Calling</Typography.Title>
+                        <Typography.Title level={1}>Thank You for Calling</Typography.Title>
                     </div>
                     { this.getStatsJSX() }
                     <div className={styles.Heading}>
-                        <Typography.Title level={4} style={{fontStyle: 'italic'}}>{pitch}</Typography.Title>
+                        <Typography.Title level={3}>{pitch}</Typography.Title>
                     </div>
                     <Row type="flex" gutter={4}>
                         {
@@ -234,6 +236,8 @@ class ThankYou extends Component {
                         </Col>
                     </Row>
                 </div>
+                    </Col>
+                </Row>
             </SimpleLayout>
         )
     }

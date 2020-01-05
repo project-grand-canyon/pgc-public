@@ -169,7 +169,7 @@ class CallIn extends Component {
                     <section>
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                             <Col xs={24} md={20} lg={18} xl={12}>
-                                <Typography.Title level={4} style={{ color: "#111111"}}>Call In Guide:</Typography.Title>
+                                <Typography.Title level={2}>Call-In Guide:</Typography.Title>
                             </Col>
                         </Row>
                         <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
@@ -184,7 +184,7 @@ class CallIn extends Component {
                             <Col xs={24} md={16} lg={18} xl={20}>
                                 <Row className={styles.HeaderRow}>
                                     <Col span={24}>
-                                        <Typography.Title level={4} style={{ color: "#111111"}}>{yourLegislator}</Typography.Title>
+                                        <Typography.Title level={4}>{yourLegislator}</Typography.Title>
                                     </Col>
                                 </Row>
                                 <Row className={styles.ContentRow}>
@@ -194,7 +194,7 @@ class CallIn extends Component {
                                 </Row>
                                 <Row className={styles.HeaderRow}>
                                     <Col className={styles.Offices}>
-                                        <Typography.Title style={{ color: "#111111"}} level={4}>
+                                        <Typography.Title level={4}>
                                             {offices.length > 1 ? "Offices:" : "Office:"}
                                         </Typography.Title>
                                     </Col>
@@ -247,7 +247,7 @@ class CallIn extends Component {
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                         <Col xs={24} md={20} lg={18} xl={12}>
                         <Typography.Title level={2}>Call-In Script:</Typography.Title>
-                        </Col>
+                    </Col>
                     </Row>
                     <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
                             {this.getIntroJSX()}
@@ -283,7 +283,7 @@ class CallIn extends Component {
                     </Typography.Paragraph>  
             );
             return (
-            <Collapse.Panel header={<Typography.Text>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
+            <Collapse.Panel header={<Typography.Text strong>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
                     {education}
                 </Collapse.Panel>);
         }) : null;

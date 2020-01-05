@@ -5,9 +5,17 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: "Ubuntu", sans-serif;
+}
+
+h1, h2 {
+  color: #0081C7 !important;
 }
 
 code {

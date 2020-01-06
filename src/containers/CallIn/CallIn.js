@@ -35,7 +35,7 @@ class CallIn extends Component {
             callerId: parseInt(this.state.callerId),
             trackingId: this.state.identifier,
             districtId: this.state.districtId,
-            talkingPointId: this.state.talkingPoints[parseInt(this.state.selectedTalkingPoint)]
+            talkingPointId: (this.state.selectedTalkingPoint && parseInt(this.state.selectedTalkingPoint.talkingPointId)) || 0
         } : {};
             axios_api.post('calls', reportBody).then((response) => {
                 // nothing for now

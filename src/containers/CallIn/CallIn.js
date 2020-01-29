@@ -6,8 +6,6 @@ import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
-
-
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
 
@@ -28,6 +26,7 @@ class CallIn extends Component {
         callerId: null,
         selectedTalkingPoint: 0,
         officesLocked: false,
+        homeDistrict: null
     }
 
     handleICalled = () => {
@@ -37,15 +36,15 @@ class CallIn extends Component {
             districtId: this.state.districtId,
             talkingPointId: (this.state.selectedTalkingPoint && parseInt(this.state.selectedTalkingPoint.talkingPointId)) || 0
         } : {};
-            axios_api.post('calls', reportBody).then((response) => {
-                // nothing for now
-            }).catch((error) => {
-               // nothing for now 
-            }).then(() => {
-                this.setState({
-                    didCall: true
-                });
+        axios_api.post('calls', reportBody).then((response) => {
+            // nothing for now
+        }).catch((error) => {
+            // nothing for now 
+        }).then(() => {
+            this.setState({
+                didCall: true
             });
+        });
     }
 
     removeGetArgs = () => {
@@ -56,8 +55,14 @@ class CallIn extends Component {
           })
     }
 
-    saveIdentifier = () => {
-        const params = this.props.location.search;
+    saveHomeDistrict = (params) => {
+        const homeDistrict = getUrlParameter(params, 'd');
+        this.setState({
+            homeDistrict: homeDistrict
+        });
+    }
+
+    saveIdentifier = (params) => {
         const identifier = getUrlParameter(params, 't');
         const caller = getUrlParameter(params, 'c');
         this.setState({
@@ -123,7 +128,8 @@ class CallIn extends Component {
     }
 
     componentDidMount() {
-        this.saveIdentifier();
+        this.saveIdentifier(this.props.location.search);
+        this.saveHomeDistrict(this.props.location.search);
         this.removeGetArgs();
         this.fetchCongressionalDistricts();
     }
@@ -133,6 +139,9 @@ class CallIn extends Component {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {
                 search += `&t=${this.state.identifier}}`
+            }
+            if (this.state.homeDistrict) {
+                search += `&d=${this.state.homeDistrict}`
             }
             return <Redirect
                 to={{

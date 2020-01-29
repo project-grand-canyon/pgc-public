@@ -16,6 +16,7 @@ import grassroots from '../../../assets/images/grassroots.jpg';
 class ThankYou extends Component {
 
     state = {
+        eligibleCallTargets: null,
         district: null,
         localStats: null,
         overallStats: null,
@@ -25,67 +26,79 @@ class ThankYou extends Component {
 
     componentDidMount = () => {
         const params = this.props.location.search;
-        const state = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
-        const number = getUrlParameter(params, 'district');
-        this.fetchStats(state, number);
+        const calledState = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
+        const calledNumber = getUrlParameter(params, 'district');
+        const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         this.removeTrackingGetArgs();
-        this.setState({
-            state: state || '',
-            district: number
-        });
-    }
-
-    fetchStats = (state, number) => {
-        if (!state || !number) {
-            this.setState({
-                statsError: Error("No district specified")
-            })
-            return;
-        }
-
-        axios.get('districts').then((response)=>{
-            const districts = response.data;
-            const foundDistrict = districts.find((el)=>{
-                return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
-            })
-            if(!foundDistrict && !foundDistrict.districtId){
+        this.fetchDistricts((districts) => {
+            const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
+            if(!calledDistrict && !calledDistrict.districtId){
                 this.setState({
                     statsError: Error("No district found")
                 })
                 return;
-            }
-
-            Promise.all(
-                [
-                    axios.get(`stats/${foundDistrict.districtId}`), 
-                    axios.get(`stats`)
-                ])
-                .then(values => {
-                    const district = values[0].data
-                    const overall = values[1].data
-                    this.setState({
-                        localStats: district,
-                        overallStats: overall,
-                        district: foundDistrict
-                    })
-                }).catch((error) => {
-                    this.setState({
-                        statsError: error
-                    })
+            } else {
+                this.setStats(calledDistrict);
+                const eligibleCallTargets = this.eligibleCallTargetDistrictIds(homeDistrictNumber, calledNumber).map( districtNumber => {
+                    return this.findDistrictByStateNumber(calledState, districtNumber, districts);
                 });
+                this.setState({
+                    district: calledDistrict,
+                    eligibleCallTargets: eligibleCallTargets                    
+                })
+            }
+        })
+    }
+
+    eligibleCallTargetDistrictIds = (homeDistrict, justCalled) => {
+        return [-1, -2, homeDistrict].filter(el => {
+            return `${el}` !== `${justCalled}`
         });
+    }
+
+    fetchDistricts = (cb) => {
+        axios.get('districts').then((response)=>{
+            const districts = response.data;
+            cb(districts)
+        });
+    }
+
+    findDistrictByStateNumber = (state, number, districts) => {
+        return districts.find((el)=>{
+            return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
+        })
+    }
+
+    setStats = (district) => {
+        Promise.all(
+            [
+                axios.get(`stats/${district.districtId}`), 
+                axios.get(`stats`)
+            ])
+            .then(values => {
+                const district = values[0].data
+                const overall = values[1].data
+                this.setState({
+                    localStats: district,
+                    overallStats: overall
+                })
+            }).catch((error) => {
+                this.setState({
+                    statsError: error
+                })
+            });
     }
 
     handleShare = (platform) => {
         switch (platform) {
             case 'facebook':
-                this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.cclcalls.org')
+                this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcitizensclimatelobby.org/monthly-calling-campaign')
                 break;
             case 'twitter':
-                this.openInNewTab('https://twitter.com/intent/tweet?text=Check+out+www.cclcalls.org.+It%27s+a+great+way+for+individuals+to+make+a+difference+on+climate+change.')
+                this.openInNewTab('https://twitter.com/intent/tweet?text=Check+out+citizensclimatelobby.org/monthly-calling-campaign.+It%27s+a+great+way+for+individuals+to+make+a+difference+on+climate+change.')
                 break;
             default:
-                this.copyToClipboard('https://www.cclcalls.org')
+                this.copyToClipboard('https://citizensclimatelobby.org/monthly-calling-campaign')
                 message.success('A shareable link has been copied to your clipboard.')
             break;
         }
@@ -109,6 +122,7 @@ class ThankYou extends Component {
         try {
             const urlParams = new URLSearchParams(this.props.location.search.slice(1));
             urlParams.delete('t');
+            urlParams.delete('d');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,
@@ -178,6 +192,24 @@ class ThankYou extends Component {
         );        
     }
 
+    getOtherCallTargetCards = () => {
+        return this.state.eligibleCallTargets && this.state.eligibleCallTargets.filter(el=>{return el !== undefined && el !== null}).map(el => {
+            return (
+                <Col xs={24} sm={12} md={12} lg={12} xl={8} key={el.districtId}>
+                    <Card
+                        cover={<img alt="representative portrait" src={el.repImageUrl} />}
+                        actions={[<Icon type="phone" onClick={()=>{this.openInNewTab(`https://cclcalls.org/call/${el.state}/${el.number}`)}}/>]}
+                    >
+                        <Card.Meta
+                        title={`Call ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName}`}
+                        description={`Itching to call more people? Give ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName} a ring.`}
+                        />
+                    </Card>
+                </Col>
+            )
+        })
+    }
+
     render() {
         
         if (this.state.signUpRedirect) {
@@ -198,7 +230,8 @@ class ThankYou extends Component {
                     <div className={styles.Heading}>
                         <Typography.Title level={3}>{pitch}</Typography.Title>
                     </div>
-                    <Row type="flex" gutter={4}>
+                    <Row type="flex" gutter={[4, 4]}>
+                        {this.getOtherCallTargetCards()}
                         {
                             !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>
                                 <Card
@@ -207,7 +240,7 @@ class ThankYou extends Component {
                                 >
                                     <Card.Meta
                                     title="Sign Up for Call Reminders"
-                                    description="If you haven't done it already, sign up to get a monthly call reminder from the Monthly Calling Campaign."
+                                    description="If you haven't done it already, sign up to get a monthly call reminder."
                                     />
                                 </Card>
                             </Col>)
@@ -219,7 +252,7 @@ class ThankYou extends Component {
                             >
                                 <Card.Meta
                                 title="Share the Calling Congress Campaign"
-                                description="The more people who call, the more Members of Congress will listen. Spread the word on social media."
+                                description="The more people who call, the more our representatives listen. Spread the word."
                                 />
                             </Card>
                         </Col>

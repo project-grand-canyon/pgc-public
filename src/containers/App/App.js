@@ -8,7 +8,7 @@ import CallIn from '../CallIn/CallIn'
 import Landing from '../Landing/Landing';
 import SignUp from '../SignUp/SignUp';
 import SignUpThankYou from '../SignUp/ThankYou/ThankYou';
-import CallThankYou from '../CallIn/ThankYou/ThankYou';
+import CallThankYou from '../CallIn/ThankYou';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 
 import styles from './App.module.css';

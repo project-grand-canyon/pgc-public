@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react'
 import axios from '../../../util/axios-api'
 import _ from 'lodash'
 
-import { Card, Col, Icon, Row, Statistic, Typography } from 'antd'
+import { Card, Col, Icon, Row, Spin, Statistic, Typography } from 'antd'
 import styles from './ThankYou.module.css'
 
 import { isSenatorDistrict } from '../../../util/district'
 
-const Stats = ({
-    stateAbrv,
-    districtNumber,
-}) => {
-    const [loading, setLoading] = useState(true)
+const LOADING = 'loading'
+const NO_RESULTS = 'no-results'
+const READY = 'ready'
+
+const ThankYouStats = ({ stateAbrv, districtNumber }) => {
+    const [status, setStatus] = useState(LOADING)
     const [district, setDistrict] = useState()
     const [callStats, setCallStats] = useState({})
 
@@ -19,15 +20,14 @@ const Stats = ({
         axios.get('districts')
             .then((response) => {
                 const foundDistrict = _.find(response.data, district => {
-                    return stateAbrv === district.state
+                    return stateAbrv === district.state.toLowerCase()
                         && districtNumber === parseInt(district.number)
                 })
 
-                if(!foundDistrict && !foundDistrict.districtId){
-                    this.setState({
-                        statsError: Error("No district found")
-                    })
-                    return;
+                if (!foundDistrict || !foundDistrict.districtId) {
+                    console.warn(`No district found for ${stateAbrv}-${districtNumber}`)
+                    setStatus(NO_RESULTS)
+                    return
                 }
 
                 setDistrict(foundDistrict)
@@ -38,28 +38,39 @@ const Stats = ({
                     ])
                     .then(([local, overall]) => {
                         setCallStats({
-                            local,
-                            overall,
+                            localCalls: local.totalCalls,
+                            localCallers: local.totalCallers,
+                            overallCalls: overall.totalCalls,
+                            overallCallers: overall.totalCallers,
                         })
-                        setLoading(false)
+                        setStatus(READY)
                     })
                     .catch((error) => {
-                        // TODO ERROR
-                        setLoading(false)
+                        console.error(error)
+                        setStatus(NO_RESULTS)
                     });
                 }
             );
     }, [stateAbrv, districtNumber])
 
-    if (loading) {
-        // TODO Loading dots
-        return <div>LOADING...</div>
+    if (status === LOADING) {
+        return (
+            <Row type="flex" justify="center">
+                <Spin />
+            </Row>
+        )
     }
 
-    const localCalls = callStats.local && callStats.local.totalCalls
-    const localCallers = callStats.local && callStats.local.totalCallers
-    const overallCalls = callStats.overall && callStats.overall.totalCalls
-    const overallCallers = callStats.overall && callStats.overall.totalCallers
+    if (status === NO_RESULTS) {
+        return null
+    }
+
+    const {
+        localCalls,
+        localCallers,
+        overallCalls,
+        overallCallers,
+    } = callStats
     const isSen = isSenatorDistrict(district)
     const repName = isSen ? `Senator ${district.repLastName}` : `Rep. ${district.repLastName}`
 
@@ -111,7 +122,7 @@ const Stats = ({
                 </Row>
             </div>
         </>
-    );        
+    )       
 }
 
-export default Stats
+export default ThankYouStats

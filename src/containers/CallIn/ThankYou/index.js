@@ -24,9 +24,8 @@ class ThankYou extends Component {
 
     componentDidMount = () => {
         const urlParams = new URLSearchParams(this.props.location.search.slice(1));
-        const stateAbrv = urlParams.get('state') && urlParams.get('state').toLowerCase()
-        const districtNumber = urlParams.get('district') && parseInt(urlParams.get('district')) 
-        const wasActualCall = !!urlParams.get('t')
+        const stateAbrv = urlParams.has('state') && urlParams.get('state').toLowerCase()
+        const districtNumber = urlParams.has('district') && parseInt(urlParams.get('district')) 
         
         // Delete the tracking ID 
         urlParams.delete('t');
@@ -35,14 +34,13 @@ class ThankYou extends Component {
         // so that we don't report the call twice
         this.props.history.push({
             pathname: this.props.history.location.pathname,
-            search: `${urlParams.toString()}`,
+            search: urlParams.toString(),
             state: {...this.state}
         })
 
         this.setState({
             stateAbrv,
             districtNumber,
-            wasActualCall,
         })
     }
 
@@ -80,8 +78,6 @@ class ThankYou extends Component {
             return <Redirect to="/signup" />
         }
 
-        const pitch = this.state.stats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
-
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <div className={styles.ThankYou}>
@@ -97,9 +93,6 @@ class ThankYou extends Component {
                             <Divider />
                         </>
                     )}
-                    <div className={styles.Heading}>
-                        <Typography.Title level={4} style={{fontStyle: 'italic'}}>{pitch}</Typography.Title>
-                    </div>
                     <Row type="flex" gutter={4}>
                         {
                             !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>

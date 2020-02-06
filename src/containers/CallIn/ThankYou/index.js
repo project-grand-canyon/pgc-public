@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Card, Col, Divider, Icon, message, Row, Typography } from 'antd';
+import { Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
+import _ from 'lodash'
+
+import axios from '../../../util/axios-api'
 
 import ThankYouStats from './ThankYouStats'
-
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
-
 import styles from './ThankYou.module.css';
 
 import capitol from '../../../assets/images/capitol-group.jpg';
@@ -18,8 +19,6 @@ class ThankYou extends Component {
     state = {
         signUpRedirect: false,
         wasActualCall: false,
-        stateAbrv: null,
-        districtNumber: null,
     }
 
     componentDidMount = () => {
@@ -38,10 +37,20 @@ class ThankYou extends Component {
             state: {...this.state}
         })
 
-        this.setState({
-            stateAbrv,
-            districtNumber,
-        })
+        axios.get('districts')
+            .then((response) => {
+                const foundDistrict = _.find(response.data, district => {
+                    return stateAbrv === district.state.toLowerCase()
+                        && districtNumber === parseInt(district.number)
+                })
+
+                if (!foundDistrict || !foundDistrict.districtId) {
+                    console.warn(`No district found for ${stateAbrv}-${districtNumber}`)
+                    return
+                }
+
+                this.setState({ district: foundDistrict })
+            })
     }
 
     handleShare = (platform) => {
@@ -84,15 +93,7 @@ class ThankYou extends Component {
                     <div className={styles.Heading}>
                         <Typography.Title level={2}>Thank You for Calling</Typography.Title>
                     </div>
-                    {this.state.stateAbrv && this.state.districtNumber && (
-                        <>
-                            <ThankYouStats
-                                stateAbrv={this.state.stateAbrv}
-                                districtNumber={this.state.districtNumber}
-                            />
-                            <Divider />
-                        </>
-                    )}
+                    <ThankYouStats district={this.state.district} />
                     <Row type="flex" gutter={4}>
                         {
                             !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>

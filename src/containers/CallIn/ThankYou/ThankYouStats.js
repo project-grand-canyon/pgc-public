@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../../util/axios-api'
-import _ from 'lodash'
 
 import { Card, Col, Icon, Row, Spin, Statistic, Typography } from 'antd'
 import styles from './ThankYou.module.css'
@@ -11,47 +10,29 @@ const LOADING = 'loading'
 const NO_RESULTS = 'no-results'
 const READY = 'ready'
 
-const ThankYouStats = ({ stateAbrv, districtNumber }) => {
+const ThankYouStats = ({ district }) => {
     const [status, setStatus] = useState(LOADING)
-    const [district, setDistrict] = useState()
     const [callStats, setCallStats] = useState({})
 
     useEffect(() => {
-        axios.get('districts')
-            .then((response) => {
-                const foundDistrict = _.find(response.data, district => {
-                    return stateAbrv === district.state.toLowerCase()
-                        && districtNumber === parseInt(district.number)
+        Promise.all([
+                axios.get(`stats`),
+                district && axios.get(`stats/${district.districtId}`), 
+            ])
+            .then(([overall, local]) => {
+                setCallStats({
+                    localCalls: local.totalCalls,
+                    localCallers: local.totalCallers,
+                    overallCalls: overall.totalCalls,
+                    overallCallers: overall.totalCallers,
                 })
-
-                if (!foundDistrict || !foundDistrict.districtId) {
-                    console.warn(`No district found for ${stateAbrv}-${districtNumber}`)
-                    setStatus(NO_RESULTS)
-                    return
-                }
-
-                setDistrict(foundDistrict)
-
-                Promise.all([
-                        axios.get(`stats/${foundDistrict.districtId}`), 
-                        axios.get(`stats`)
-                    ])
-                    .then(([local, overall]) => {
-                        setCallStats({
-                            localCalls: local.totalCalls,
-                            localCallers: local.totalCallers,
-                            overallCalls: overall.totalCalls,
-                            overallCallers: overall.totalCallers,
-                        })
-                        setStatus(READY)
-                    })
-                    .catch((error) => {
-                        console.error(error)
-                        setStatus(NO_RESULTS)
-                    });
-                }
-            );
-    }, [stateAbrv, districtNumber])
+                setStatus(READY)
+            })
+            .catch((error) => {
+                setStatus(NO_RESULTS)
+                console.error(error)
+            });
+    }, [district])
 
     if (status === LOADING) {
         return (

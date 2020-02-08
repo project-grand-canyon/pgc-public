@@ -3,7 +3,7 @@ import styles from './PageTitle.module.css';
 
 const pagetitle = (props) => {
     return (<div className={styles.PageTitle}>
-            <span>Project Grand Canyon</span>
+            <span>Monthly Call Congress Campaign</span>
         </div>);
 };
 

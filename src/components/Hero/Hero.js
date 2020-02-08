@@ -1,18 +1,21 @@
 import React from 'react';
-import { Button, Divider, Spin, Typography } from 'antd';
-
+import { Button, Typography } from 'antd';
+import { ReactComponent as CapitolIcon } from '../../assets/images/capitol-building.svg';
 import styles from './Hero.module.css';
 
 const hero = (props) => {
-
-    const numberOfCallers = props.callerCount || <Spin size="small" />;
-
     return (
         <div className={styles.Hero}>
-            <Typography.Title level={1}>Project Grand Canyon</Typography.Title>
-            <Divider style={{width:"50%"}} />
-            <Typography.Title level={4}>Join the {numberOfCallers} people nationwide who are making a difference on climate change with one phone call a month</Typography.Title>
-            <Button className={styles.CTA} onClick={props.actioned} size="large" type="default">Sign Up</Button>
+            <CapitolIcon className={styles.capitol} />
+            <div className={styles.main}>
+                <Typography.Text>Make a difference</Typography.Text>
+                <Typography.Title level={1} style={{marginTop: "10px", marginBottom: "10px"}}>Call Congress for Climate</Typography.Title>
+                <Typography.Text>By Citizens' Climate Lobby</Typography.Text>
+                <div className={styles.CTAs}>
+                    <Button block className={styles.CTA} onClick={props.onStartCalling} size="large" type="primary">Start Calling</Button>
+                    <Button block className={styles.CTA} onClick={props.onMoreInfo} size="large">More Info</Button>
+                </div>
+            </div>
         </div>
     );
 };

@@ -9,14 +9,19 @@
     height: 100%;
 }
 
+.Header {
+    padding: 0 10px; 
+    background: white;
+    border-bottom: 1px solid lightgrey;
+}
+
 .Logo {
-    height: 45px;
+    height: 35px;
     display: flex;
     align-items: center;
     align-content: center;
     justify-content: flex-start;
     line-height: 1em;
-
 }
 
 .Logo img{

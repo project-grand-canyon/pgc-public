@@ -14,11 +14,11 @@ import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import styles from './App.module.css';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     Sentry.init({
       dsn: "https://a5fc08e12a1744ddacc396ce79e034f2@sentry.io/1462422",
+      release: process.env.REACT_APP_SENTRY_RELEASE,
     });
     // Google Analytics
     ReactGA.initialize('UA-140402020-1', {

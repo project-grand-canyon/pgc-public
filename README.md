@@ -1,4 +1,4 @@
-# Project Grand Canyon - Public Site
+# CCL's Monthly Calling Campaign - Public Site
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

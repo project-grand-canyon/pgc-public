@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Modal } from 'antd';
+import { Modal, Typography } from 'antd';
 
 import axios from '../../util/axios-api';
 import ResponsiveLayout from '../Layout/ResponsiveLayout/ResponsiveLayout';
@@ -50,7 +50,7 @@ class SignUp extends Component {
                     title: 'There was an error with your submission',
                     content: (
                         <div>
-                          <p>The contact information you provided already exists in our database. This means you are already registered with Project Grand Canyon.<br/><br/>No action is required from you.</p>
+                          <p>The contact information you provided already exists in our database. This means you are already registered with the Monthly Calling Campaign.<br/><br/>No action is required from you.</p>
                         </div>
                       )
                   });
@@ -89,9 +89,10 @@ class SignUp extends Component {
         return (
             <ResponsiveLayout activeLinkKey="/signup">
                 <div className={styles.SignUp}>
-                    <h2>
+                    <Typography.Title level={2} className={styles.Title}>
                         Sign Up
-                    </h2>
+                    </Typography.Title>
+                    <Typography.Paragraph className={styles.Subtitle}>We’ll only reach out to you once a month to provide you with your call-in guide</Typography.Paragraph>
                     <SignUpForm onSuccessfulSubmit={this.handleFormSubmit} />
                 </div>
             </ResponsiveLayout>

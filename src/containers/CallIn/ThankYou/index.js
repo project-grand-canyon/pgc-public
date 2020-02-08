@@ -3,15 +3,16 @@ import { Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import _ from 'lodash'
 
-import axios from '../../../util/axios-api'
+import axios from 'util/axios-api'
 
 import ThankYouStats from './ThankYouStats'
-import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
+import ThankYouCallChecklist from './ThankYouCallChecklist'
+import SimpleLayout from 'containers/Layout/SimpleLayout/SimpleLayout';
 import styles from './ThankYou.module.css';
 
-import capitol from '../../../assets/images/capitol-group.jpg';
-import discussion from '../../../assets/images/discussion.jpeg';
-import grassroots from '../../../assets/images/grassroots.jpg';
+import capitol from 'assets/images/capitol-group.jpg';
+import discussion from 'assets/images/discussion.jpeg';
+import grassroots from 'assets/images/grassroots.jpg';
 
 
 class ThankYou extends Component {
@@ -19,12 +20,14 @@ class ThankYou extends Component {
     state = {
         signUpRedirect: false,
         wasActualCall: false,
+        otherDistricts: null,
+        calledDistrict: null,
     }
 
     componentDidMount = () => {
         const urlParams = new URLSearchParams(this.props.location.search.slice(1));
         const stateAbrv = urlParams.has('state') && urlParams.get('state').toLowerCase()
-        const districtNumber = urlParams.has('district') && parseInt(urlParams.get('district')) 
+        const districtNumber = urlParams.has('district') && parseInt(urlParams.get('district'))
         
         // Delete the tracking ID 
         urlParams.delete('t');
@@ -39,17 +42,23 @@ class ThankYou extends Component {
 
         axios.get('districts')
             .then((response) => {
-                const foundDistrict = _.find(response.data, district => {
+                const calledDistrict = _.find(response.data, district => {
                     return stateAbrv === district.state.toLowerCase()
-                        && districtNumber === parseInt(district.number)
+                        && districtNumber === district.number
                 })
 
-                if (!foundDistrict || !foundDistrict.districtId) {
+                if (!calledDistrict || !calledDistrict.districtId) {
                     console.warn(`No district found for ${stateAbrv}-${districtNumber}`)
                     return
                 }
 
-                this.setState({ district: foundDistrict })
+                const otherDistrictIds = _.map(calledDistrict.callTargets, ({ targetDistrictId }) => targetDistrictId)
+                const otherDistricts = _.filter(response.data, district => {
+                    return _.includes(otherDistrictIds, district.districtId) 
+                        && district.districtId !== calledDistrict.districtId
+                })
+
+                this.setState({ calledDistrict, otherDistricts })
             })
     }
 
@@ -89,11 +98,16 @@ class ThankYou extends Component {
 
         return (
             <SimpleLayout activeLinkKey="/signup">
+                <ThankYouCallChecklist 
+                    calledDistrict={this.state.calledDistrict} 
+                    otherDistricts={this.state.otherDistricts} 
+                />
+                <ThankYouStats district={this.state.calledDistrict} />
+
                 <div className={styles.ThankYou}>
                     <div className={styles.Heading}>
                         <Typography.Title level={2}>Thank You for Calling</Typography.Title>
                     </div>
-                    <ThankYouStats district={this.state.district} />
                     <Row type="flex" gutter={4}>
                         {
                             !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>

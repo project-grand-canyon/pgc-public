@@ -33,16 +33,13 @@ class CallIn extends Component {
             trackingId: this.state.identifier,
             districtId: this.state.districtId,
             talkingPointId: this.state.talkingPoints[0].talkingPointId
-        } : {};
-            axios_api.post('calls', reportBody).then((response) => {
-                // nothing for now
-            }).catch((error) => {
-               //nothing for now 
-            }).then(() => {
-                this.setState({
-                    didCall: true
-                });
-            });
+        } : {}
+
+        axios_api.post('calls', reportBody).then(() => {
+            this.setState({
+                didCall: true
+            })
+        })
     }
 
     removeGetArgs = () => {

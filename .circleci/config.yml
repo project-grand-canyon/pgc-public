@@ -47,7 +47,7 @@ jobs:
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400" \
-            --dry-run
+            --dry-run \
             --exclude "img/*"
           from: build/
           overwrite: true

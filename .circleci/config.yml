@@ -17,8 +17,7 @@ jobs:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
-      - run: yarn install
+      - run: npm install
 
       - save_cache:
           paths:
@@ -26,16 +25,15 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm run build
-      # run tests!
-      - run: yarn test
+      - run: npm test
 
       # Store the `./build` directory to be used by subsequent steps; this way we don't risk
       # having the deploy step fail on some npm hiccup or accidentally deploy something different
       # from what's been tested. We build the artifacts once and use the same set throughout.
       - persist_to_workspace:
-        root: "."
-        paths:
-          - build
+          root: "."
+          paths:
+            - build
 
   deploy-to-prod:
     docker:

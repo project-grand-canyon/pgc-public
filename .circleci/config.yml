@@ -47,7 +47,6 @@ jobs:
           arguments: |
             --acl public-read \
             --cache-control "max-age=86400"
-            --dry-run
             --exclude "img/*"
           from: build/
           overwrite: true
@@ -64,7 +63,6 @@ workflows:
             branches:
               only: 
                 - master
-                - ci-deploy
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

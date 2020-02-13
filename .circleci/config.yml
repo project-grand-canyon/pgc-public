@@ -63,6 +63,7 @@ workflows:
             branches:
               only: 
                 - master
+                - ci-deploy-2
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

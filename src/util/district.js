@@ -7,7 +7,7 @@ const displayName = (district) => {
         return null;
     }
 
-    if (district.number >= 0) {
+    if (district.number > 0) {
         return `${district.state}-${district.number}`
     }
 

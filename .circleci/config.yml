@@ -46,7 +46,7 @@ jobs:
       - aws-s3/sync:
           arguments: |
             --acl public-read \
-            --dryrun
+            --dryrun \
             --cache-control "max-age=86400" \
             --exclude "img/*" \
             --exclude "config/*"

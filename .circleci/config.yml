@@ -46,7 +46,6 @@ jobs:
       - aws-s3/sync:
           arguments: |
             --acl public-read \
-            --dryrun \
             --cache-control "max-age=86400" \
             --exclude "img/*" \
             --exclude "config/*"
@@ -65,7 +64,6 @@ workflows:
             branches:
               only: 
                 - master
-                - ci-deploy
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

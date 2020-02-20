@@ -1,8 +1,14 @@
 .SignUp {
-    margin: 20px auto;
+    margin-top: 20px;
     padding: 0 20px;
 }
 
-.SignUp h2 {
+.Title{
     text-align: center;
+}
+
+@media (min-width: 768px) {
+    .Subtitle {
+        text-align: center;
+    }
 }

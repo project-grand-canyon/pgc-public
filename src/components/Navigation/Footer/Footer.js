@@ -9,7 +9,7 @@ const footer = (props) => {
         <footer className={styles.Footer}>
             <div className={styles.Links}>
                 <span>
-                    <Link to="/">Home</Link> | <Link to="/signup">Sign Up</Link>
+                <a href="http://www.cclusa.org" target="_blank" rel="noopener noreferrer">Home</a> | <Link to="/signup">Sign Up</Link>
                 </span>
             </div>
             <div className={styles.ShoutOutCCL}>

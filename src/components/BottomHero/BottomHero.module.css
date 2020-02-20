@@ -1,23 +1,4 @@
 .BottomHero {
-    background-image: linear-gradient(0deg,rgba(0,0,0,0.4),rgba(0,0,0,0.3)), url('../../assets/images/hero.jpg');
-    background-size: cover;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    padding: 40px 80px;
-    color: whitesmoke;
-}
-
-.Paragraph a {
-    color: gold
-}
-
-.Heading {
-    color: whitesmoke !important;
-}
-
-.Paragraph {
-    color: whitesmoke
+    padding: 20px 20px 0px 20px;
 }

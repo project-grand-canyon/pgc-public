@@ -15,6 +15,7 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "lodash": "^4.17.15",
+    "luxon": "^1.22.0",
     "prop-types": "^15.6.2",
     "react": "^16.12.0",
     "react-app-rewired": "^2.1.5",
@@ -22,7 +23,8 @@
     "react-ga": "^2.5.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.8",
-    "typeface-ubuntu": "^0.0.65"
+    "typeface-ubuntu": "^0.0.65",
+    "victory": "^34.1.1"
   },
   "scripts": {
     "start": "react-app-rewired start",

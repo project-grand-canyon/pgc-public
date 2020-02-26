@@ -9,23 +9,6 @@ import {
     CallableMemberOfCongress,
 } from './styled'
 
-/*
-
-created: "2019-05-27 19:14"
-lastModified: "2020-02-06 17:16"
-districtId: 532
-state: "CA"
-number: 12
-repFirstName: "Nancy"
-repLastName: "Pelosi"
-repImageUrl: "https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/450x550/P000197.jpg"
-callTargets: [{…}]
-scriptModifiedTime: 1578411491000
-lastStaleScriptNotification: 1581009388000
-info: ""
-
- */
-
 const MemberOfCongress = ({ 
     repFirstName, 
     repLastName,
@@ -51,7 +34,7 @@ const ThankYouCallChecklist = ({
     return (
         <ThankYouContainer>
             <ThankYouMessage>
-                Thank you for calling
+                You should also call:
             </ThankYouMessage>
             <MemberOfCongressList>
                 {_.map(allDistricts, district => <MemberOfCongress {...district} />)}

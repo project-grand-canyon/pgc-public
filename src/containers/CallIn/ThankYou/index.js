@@ -98,11 +98,12 @@ class ThankYou extends Component {
 
         return (
             <SimpleLayout activeLinkKey="/signup">
+                <ThankYouStats district={this.state.calledDistrict} />
+                
                 <ThankYouCallChecklist 
                     calledDistrict={this.state.calledDistrict} 
                     otherDistricts={this.state.otherDistricts} 
                 />
-                <ThankYouStats district={this.state.calledDistrict} />
 
                 <div className={styles.ThankYou}>
                     <div className={styles.Heading}>

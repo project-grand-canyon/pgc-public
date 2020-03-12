@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
 import axios from 'util/axios-api'
-import { 
-    VictoryStack,
-    VictoryArea,
-} from 'victory';
 import _ from 'lodash'
 
 import { Card, Col, Icon, Row, Spin, Statistic, Typography } from 'antd'
-import { BarContainer, Well, ThankYouText } from './styled'
+import CallThermometer from './CallThermometer'
+import { 
+    BarContainer, 
+    Well, 
+    ThankYouText,
+} from './styled'
 
 import { isSenatorDistrict } from 'util/district'
 
@@ -20,7 +21,7 @@ const selectCallChartData = ({ callsByMonth }) => {
         .map((__, index) => {
             const month = now.plus({ month: -1 * index })
             const monthKey = month.toFormat('yyyy-MM')
-            const monthDisplay = month.toFormat('MMM')
+            const monthDisplay = month.toFormat('MMMM yyyy')
             const numCalls = callsByMonth[monthKey] || 0
 
             return {
@@ -31,14 +32,6 @@ const selectCallChartData = ({ callsByMonth }) => {
         })
         .reverse()
         .value()
-}
-
-const stackedAreaDefaultProps = {
-    animate: {
-        duration: 500,
-    },
-    x: 'monthDisplay',
-    y: 'numCalls',
 }
 
 const LOADING = 'loading'
@@ -74,7 +67,6 @@ const ThankYouStats = ({ district }) => {
     }, [district])
 
     if (status === LOADING) {
-        console.log(status)
         return (
             <Row type="flex" justify="center">
                 <Spin />
@@ -83,7 +75,6 @@ const ThankYouStats = ({ district }) => {
     }
 
     if (status === NO_RESULTS) {
-        console.log(status)
         return null
     }
 
@@ -95,25 +86,10 @@ const ThankYouStats = ({ district }) => {
             : `Rep. ${district.repLastName}`
     }
 
-    console.log({ chartData })
-
     return (
         <Well>
             <BarContainer>
-                <VictoryStack>
-                    {chartData.local && (
-                        <VictoryArea
-                            {...stackedAreaDefaultProps}
-                            data={chartData.local}
-                        />
-                    )}
-                    {chartData.overall && (
-                        <VictoryArea
-                            {...stackedAreaDefaultProps}
-                            data={chartData.overall}
-                        />
-                    )}
-                </VictoryStack>
+                {chartData.local && <CallThermometer data={chartData.local} />}
             </BarContainer>
             <ThankYouText>
                 <h1>Thanks for calling in</h1>

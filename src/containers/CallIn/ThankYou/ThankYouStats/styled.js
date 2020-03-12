@@ -1,5 +1,4 @@
 import styled from '@emotion/styled'
-
 const CCL_GREEN = `#9bc23b`
 
 export const fadeHexColor = (hexColor, fade) => 
@@ -12,6 +11,7 @@ export const Well = styled.div`
 `
 export const BarContainer = styled.div`
 `
+
 export const ThankYouText = styled.div`
     display: flex;
     flex-direction: column;

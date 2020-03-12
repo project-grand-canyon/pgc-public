@@ -11,6 +11,7 @@
     "antd": "^3.25.2",
     "axios": "^0.18.1",
     "babel-plugin-import": "^1.12.1",
+    "color": "^3.1.2",
     "customize-cra": "^0.9.1",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",

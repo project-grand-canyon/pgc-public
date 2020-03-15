@@ -2,12 +2,16 @@ const isSenatorDistrict = (district) => {
     return district && district.number < 0;
 }
 
+const isAtLargeDistrict = (district) => {
+    return district && district.number === 0;
+}
+
 const displayName = (district) => {
     if (!district) {
         return null;
     }
 
-    if (district.number >= 0) {
+    if (district.number > 0) {
         return `${district.state}-${district.number}`
     }
 
@@ -53,6 +57,7 @@ const getAssociatedSenators = (district, districts) => {
 
 export {
     isSenatorDistrict,
+    isAtLargeDistrict,
     displayName,
     comparator,
     getAssociatedSenators,

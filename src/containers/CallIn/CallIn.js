@@ -3,7 +3,7 @@ import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from '
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
-import { isSenatorDistrict, displayName } from '../../util/district';
+import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 import styles from './CallIn.module.css';
@@ -247,7 +247,7 @@ class CallIn extends Component {
                                 key={1}
                             >
                                 <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
-                                <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
+                                <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
                             </Collapse.Panel>
                         </Collapse>
                         </Col></Row>
@@ -278,7 +278,7 @@ class CallIn extends Component {
     getIntroJSX = () => {
         return <>
             <Typography.Title level={3}>Introduction:</Typography.Title>
-            <Typography.Paragraph>Hello, my name is __________, and I live in  {isSenatorDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. I am calling about climate change.</Typography.Paragraph>
+            <Typography.Paragraph>Hello, my name is __________, and I live in  {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. I am calling about climate change.</Typography.Paragraph>
         </>
     }
 

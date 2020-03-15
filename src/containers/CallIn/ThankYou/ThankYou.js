@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { Card, Col, Divider, Icon, message, Row, Skeleton, Statistic, Typography } from 'antd';
+import { 
+    Avatar,
+    Card, 
+    Col, 
+    Divider, 
+    Icon, 
+    List,
+    message, 
+    Row, 
+    Skeleton, 
+    Statistic, 
+    Typography,
+} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
@@ -12,6 +24,7 @@ import styles from './ThankYou.module.css';
 import capitol from '../../../assets/images/capitol-group.jpg';
 import discussion from '../../../assets/images/discussion.jpeg';
 import grassroots from '../../../assets/images/grassroots.jpg';
+import CallThermometer from './CallThermometer';
 
 class ThankYou extends Component {
 
@@ -193,21 +206,33 @@ class ThankYou extends Component {
     }
 
     getOtherCallTargetCards = () => {
-        return this.state.eligibleCallTargets && this.state.eligibleCallTargets.filter(el=>{return el !== undefined && el !== null}).map(el => {
-            return (
-                <Col xs={24} sm={12} md={12} lg={12} xl={8} key={el.districtId}>
-                    <Card
-                        cover={<img alt="representative portrait" src={el.repImageUrl} />}
-                        actions={[<Icon type="phone" onClick={()=>{this.openInNewTab(`https://cclcalls.org/call/${el.state}/${el.number}`)}}/>]}
-                    >
-                        <Card.Meta
-                        title={`Call ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName}`}
-                        description={`Itching to call more people? Give ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName} a ring.`}
-                        />
-                    </Card>
-                </Col>
-            )
-        })
+        if (!this.state.eligibleCallTargets) return null
+
+        const callTargets = this.state.eligibleCallTargets
+            .filter(callTarget => !!callTarget)
+            .map(callTarget => {
+                return (
+                    <List.Item>
+                        <a 
+                            target="_blank"
+                            href={`https://cclcalls.org/call/${callTarget.state}/${callTarget.number}`}
+                        >
+                            <List.Item.Meta
+                                avatar={
+                                    <Avatar src={callTarget.repImageUrl} />
+                                }
+                                title={`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
+                            />
+                        </a>
+                    </List.Item>
+                )
+            })
+
+        return (
+            <List>
+                {callTargets}
+            </List>
+        )
     }
 
     render() {
@@ -221,54 +246,50 @@ class ThankYou extends Component {
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <Row type="flex" justify="center">
-                    <Col xs={24} md={20} lg={18} xl={16}>
-                        <div className={styles.ThankYou}>
-                    <div className={styles.Heading}>
+                    <Col xs={24} md={8} justify="right">
+                        {this.state.localStats && <CallThermometer callsByMonth={this.state.localStats.callsByMonth} /> }
+                    </Col>
+                    <Col xs={24} md={16}>
                         <Typography.Title level={1}>Thank You for Calling</Typography.Title>
-                    </div>
-                    { this.getStatsJSX() }
-                    <div className={styles.Heading}>
                         <Typography.Title level={3}>{pitch}</Typography.Title>
-                    </div>
-                    <Row type="flex" gutter={[4, 4]}>
                         {this.getOtherCallTargetCards()}
-                        {
-                            !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                                <Card
-                                    cover={<img alt="US Captitol Building" src={capitol} />}
-                                    actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
-                                >
-                                    <Card.Meta
-                                    title="Sign Up for Call Reminders"
-                                    description="If you haven't done it already, sign up to get a monthly call reminder."
-                                    />
-                                </Card>
-                            </Col>)
-                        }
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                    </Col>
+                </Row>
+                <Row type="flex" gutter={[4, 4]}>
+                    {!this.state.identifier && (
+                        <Col xs={24} sm={12} md={8}>
                             <Card
-                                cover={<img alt="US Captitol Building" src={discussion} />}
-                                actions={[<Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, <Icon type="mail" onClick={()=>{this.handleShare('email')}} />]}
+                                cover={<img alt="US Captitol Building" src={capitol} />}
+                                actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
                             >
                                 <Card.Meta
-                                title="Share the Calling Congress Campaign"
-                                description="The more people who call, the more our representatives listen. Spread the word."
+                                title="Sign Up for Call Reminders"
+                                description="If you haven't done it already, sign up to get a monthly call reminder."
                                 />
                             </Card>
                         </Col>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                            <Card
-                                cover={<img alt="Volunteer with clipboard" src={grassroots} />}
-                                actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
-                            >
-                                <Card.Meta
-                                title="Join Citizens' Climate Lobby"
-                                description="CCL volunteers created this site, and we would love for you to join us."
-                                />
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
+                    )}
+                    <Col xs={24} sm={12} md={8}>
+                        <Card
+                            cover={<img alt="US Captitol Building" src={discussion} />}
+                            actions={[<Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, <Icon type="mail" onClick={()=>{this.handleShare('email')}} />]}
+                        >
+                            <Card.Meta
+                            title="Share the Calling Congress Campaign"
+                            description="The more people who call, the more our representatives listen. Spread the word."
+                            />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={8}>
+                        <Card
+                            cover={<img alt="Volunteer with clipboard" src={grassroots} />}
+                            actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
+                        >
+                            <Card.Meta
+                            title="Join Citizens' Climate Lobby"
+                            description="CCL volunteers created this site, and we would love for you to join us."
+                            />
+                        </Card>
                     </Col>
                 </Row>
             </SimpleLayout>

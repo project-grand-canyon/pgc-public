@@ -64,14 +64,16 @@ const SEA_BLUE = `#05668D`
 const SEAWEED = `#028090`
 const PERSIAN_GREEN = `#00A896`
 const CARIBBEAN_GREEN = `#02C39A`
-const MORNING_SUN = `#F0F3BD`
 
 let colorChoices = [
-    SEA_BLUE,
-    SEAWEED,
-    PERSIAN_GREEN,
     CARIBBEAN_GREEN,
-    MORNING_SUN,
+    SEAWEED,
+    CARIBBEAN_GREEN,
+    PERSIAN_GREEN,
+    SEAWEED,
+    SEA_BLUE,
+    PERSIAN_GREEN,
+    SEA_BLUE,
 ]
 
 const CallThermometer = ({ callsByMonth }) => {

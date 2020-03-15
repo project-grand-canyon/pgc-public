@@ -1,33 +1,37 @@
 import React, { Component } from 'react';
+import styled from '@emotion/styled'
 import { 
     Avatar,
     Card, 
     Col, 
-    Divider, 
+    Alert,
     Icon, 
-    List,
     message, 
     Row, 
-    Skeleton, 
-    Statistic, 
     Typography,
+    List,
 } from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
 import getUrlParameter from '../../../util/urlparams';
-import {isSenatorDistrict} from '../../../util/district';
-
-import styles from './ThankYou.module.css';
 
 import capitol from '../../../assets/images/capitol-group.jpg';
 import discussion from '../../../assets/images/discussion.jpeg';
 import grassroots from '../../../assets/images/grassroots.jpg';
 import CallThermometer from './CallThermometer';
+import OtherCallTargets from './OtherCallTargets';
+
+const Well = styled.div`
+    background: #DEDEDE;
+`
+
+const ShadedAvatar = styled(Avatar)`
+    background: #98c7e6;
+`
 
 class ThankYou extends Component {
-
     state = {
         eligibleCallTargets: null,
         district: null,
@@ -147,151 +151,61 @@ class ThankYou extends Component {
         
     }
 
-    getStatsJSX = () => {
-        if (this.state.statsError) {
-            return null;
-        }
-        if (!this.state.localStats || !this.state.district || !this.state.overallStats) {
-            return <Skeleton />;
-        }
-        if (this.state.district && !this.state.district.repLastName) {
-            return null;
-        }
-
-        const localCalls = this.state.localStats && this.state.localStats.totalCalls;
-        const localCallers = this.state.localStats && this.state.localStats.totalCallers;
-        const overallCalls = this.state.overallStats && this.state.overallStats.totalCalls;
-        const overallCallers = this.state.overallStats && this.state.overallStats.totalCallers;
-        const isSen = isSenatorDistrict(this.state.district);
-        const repName = isSen ? `Senator ${this.state.district.repLastName}` : `Rep. ${this.state.district.repLastName}`;
-
-        const overallCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Total Calls Nationwide</Typography.Text>} value={overallCalls} suffix={<Icon type="phone" />} /></Card>
-        </Col>);
-        const localCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`Total Calls to ${repName}`}</Typography.Text>} value={localCalls} suffix={<Icon type="phone" />} /></Card>
-        </Col>);
-        const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`People signed up to call ${repName}`}</Typography.Text>} value={localCallers} suffix={<Icon type="smile" />} /></Card>
-        </Col>);
-        const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Registered Callers Nationwide</Typography.Text>} value={overallCallers} suffix={<Icon type="smile" />} /></Card>
-        </Col>);
-
-        const senCallers = overallCallersCol;
-        const repCallers = (
-            <>
-            {localCallersCol}
-            {overallCallersCol}
-            </>
-        )
-
-        return (
-            <>
-                <div style={{ background: '#ECECEC', padding: '20px', display: localCalls > 0 ? 'block' : 'none' }}>
-                    <Row className={styles.Heading}>
-                        <Typography.Title level={3}>Our Impact So Far:</Typography.Title>
-                    </Row>
-                    <Row type="flex" justify="center" align="middle">
-                        {localCallsCol}
-                        {overallCallsCol}
-                    </Row>
-                    <Row type="flex" justify="center" align="middle">
-                    { isSen ? senCallers : repCallers}
-                    </Row>
-                </div>
-                <Divider />
-            </>
-        );        
-    }
-
-    getOtherCallTargetCards = () => {
-        if (!this.state.eligibleCallTargets) return null
-
-        const callTargets = this.state.eligibleCallTargets
-            .filter(callTarget => !!callTarget)
-            .map(callTarget => {
-                return (
-                    <List.Item>
-                        <a 
-                            target="_blank"
-                            href={`https://cclcalls.org/call/${callTarget.state}/${callTarget.number}`}
-                        >
-                            <List.Item.Meta
-                                avatar={
-                                    <Avatar src={callTarget.repImageUrl} />
-                                }
-                                title={`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
-                            />
-                        </a>
-                    </List.Item>
-                )
-            })
-
-        return (
-            <List>
-                {callTargets}
-            </List>
-        )
-    }
-
     render() {
-        
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
         }
 
-        const pitch = this.state.localStats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
-
         return (
             <SimpleLayout activeLinkKey="/signup">
-                <Row type="flex" justify="center">
-                    <Col xs={24} md={8} justify="right">
-                        {this.state.localStats && <CallThermometer callsByMonth={this.state.localStats.callsByMonth} /> }
-                    </Col>
-                    <Col xs={24} md={16}>
-                        <Typography.Title level={1}>Thank You for Calling</Typography.Title>
-                        <Typography.Title level={3}>{pitch}</Typography.Title>
-                        {this.getOtherCallTargetCards()}
-                    </Col>
-                </Row>
-                <Row type="flex" gutter={[4, 4]}>
-                    {!this.state.identifier && (
-                        <Col xs={24} sm={12} md={8}>
-                            <Card
-                                cover={<img alt="US Captitol Building" src={capitol} />}
-                                actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
-                            >
-                                <Card.Meta
-                                title="Sign Up for Call Reminders"
-                                description="If you haven't done it already, sign up to get a monthly call reminder."
-                                />
-                            </Card>
+                <Well>
+                    <Row type="flex" justify="center" gutter={[16, 16]}>
+                        <Col xs={24} md={8} justify="right">
+                            {this.state.statsError && <Alert message={this.state.statsError} type="error" /> }
+                            {this.state.localStats && <CallThermometer callsByMonth={this.state.localStats.callsByMonth} /> }
                         </Col>
-                    )}
-                    <Col xs={24} sm={12} md={8}>
-                        <Card
-                            cover={<img alt="US Captitol Building" src={discussion} />}
-                            actions={[<Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, <Icon type="mail" onClick={()=>{this.handleShare('email')}} />]}
-                        >
-                            <Card.Meta
-                            title="Share the Calling Congress Campaign"
-                            description="The more people who call, the more our representatives listen. Spread the word."
-                            />
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={8}>
-                        <Card
-                            cover={<img alt="Volunteer with clipboard" src={grassroots} />}
-                            actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
-                        >
-                            <Card.Meta
-                            title="Join Citizens' Climate Lobby"
-                            description="CCL volunteers created this site, and we would love for you to join us."
-                            />
-                        </Card>
-                    </Col>
-                </Row>
+                        <Col xs={24} md={16}>
+                            <Typography.Title level={1}>Thank You for Calling</Typography.Title>
+                            {this.state.eligibleCallTargets && <OtherCallTargets districts={this.state.eligibleCallTargets} /> }
+                            <List>
+                                {!this.state.identifier && (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            avatar={<ShadedAvatar icon={<Icon type="notification" />} />}
+                                            title={
+                                                <a onClick={()=>{this.setState({signUpRedirect: true})}}>
+                                                    Sign Up for Call Reminders
+                                                </a>
+                                            }
+                                            description="If you haven't done it already, sign up to get a monthly call reminder."
+                                        />
+                                    </List.Item>
+                                )}
+                                <List.Item>
+                                    <List.Item.Meta
+                                        avatar={<ShadedAvatar icon={<Icon type="share-alt" />} />}
+                                        title="Share the Calling Congress Campaign"
+                                        description="The more people who call, the more our representatives listen. Spread the word."
+                                    />
+                                </List.Item>
+                                <List.Item>
+                                    <List.Item.Meta
+                                        avatar={<ShadedAvatar icon={<Icon type="user-add" />} />}
+                                        title={
+                                            <a 
+                                                target="_blank" 
+                                                href="https://citizensclimatelobby.org/join-citizens-climate-lobby/"
+                                            >
+                                                Join Citizens' Climate Lobby
+                                            </a>
+                                        }
+                                        description="CCL volunteers created this site, and we would love for you to join us."
+                                    />
+                                </List.Item>
+                            </List>
+                        </Col>
+                    </Row>
+                </Well>
             </SimpleLayout>
         )
     }

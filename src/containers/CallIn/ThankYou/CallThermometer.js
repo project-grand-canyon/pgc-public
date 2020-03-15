@@ -90,7 +90,7 @@ const CallThermometer = ({ callsByMonth }) => {
             }
         })
         .sortBy(({ monthKey }) => monthKey)
-        .map(({ numCalls, monthDisplay }) => {
+        .map(({ numCalls, monthDisplay, monthKey }) => {
             if (!numCalls) return null
         
             const color = colorChoices[colorIndex]
@@ -98,7 +98,7 @@ const CallThermometer = ({ callsByMonth }) => {
             total += numCalls
         
             return (
-                <Segment value={numCalls} color={color}>
+                <Segment key={monthKey} value={numCalls} color={color}>
                     <SegmentLabel>{monthDisplay}: {numCalls}</SegmentLabel>
                 </Segment>
             )

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled from '@emotion/styled'
 import { 
     Avatar,
-    Card, 
     Col, 
     Alert,
     Icon, 
@@ -17,14 +16,12 @@ import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
 import getUrlParameter from '../../../util/urlparams';
 
-import capitol from '../../../assets/images/capitol-group.jpg';
-import discussion from '../../../assets/images/discussion.jpeg';
-import grassroots from '../../../assets/images/grassroots.jpg';
 import CallThermometer from './CallThermometer';
 import OtherCallTargets from './OtherCallTargets';
 
 const Well = styled.div`
-    background: #DEDEDE;
+    background: #EEEEEE;
+    padding: 3rem 0.5rem 5rem;
 `
 
 const ShadedAvatar = styled(Avatar)`
@@ -97,7 +94,8 @@ class ThankYou extends Component {
                 const overall = values[1].data
                 this.setState({
                     localStats: district,
-                    overallStats: overall
+                    overallStats: overall,
+                    activeStats: district || overall,
                 })
             }).catch((error) => {
                 this.setState({
@@ -159,10 +157,10 @@ class ThankYou extends Component {
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <Well>
-                    <Row type="flex" justify="center" gutter={[16, 16]}>
+                    <Row type="flex" justify="center" gutter={[24, 24]}>
                         <Col xs={24} md={8} justify="right">
                             {this.state.statsError && <Alert message={this.state.statsError} type="error" /> }
-                            {this.state.localStats && <CallThermometer callsByMonth={this.state.localStats.callsByMonth} /> }
+                            {this.state.activeStats && <CallThermometer callsByMonth={this.state.activeStats.callsByMonth} /> }
                         </Col>
                         <Col xs={24} md={16}>
                             <Typography.Title level={1}>Thank You for Calling</Typography.Title>

@@ -158,11 +158,11 @@ class ThankYou extends Component {
             <SimpleLayout activeLinkKey="/signup">
                 <Well>
                     <Row type="flex" justify="center" gutter={[24, 24]}>
-                        <Col xs={24} md={8} justify="right">
+                        <Col xs={24} md={6} justify="right">
                             {this.state.statsError && <Alert message={this.state.statsError} type="error" /> }
                             {this.state.activeStats && <CallThermometer callsByMonth={this.state.activeStats.callsByMonth} /> }
                         </Col>
-                        <Col xs={24} md={16}>
+                        <Col xs={24} md={12}>
                             <Typography.Title level={1}>Thank You for Calling</Typography.Title>
                             {this.state.eligibleCallTargets && <OtherCallTargets districts={this.state.eligibleCallTargets} /> }
                             <List>

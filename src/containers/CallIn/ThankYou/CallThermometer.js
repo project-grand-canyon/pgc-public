@@ -29,7 +29,8 @@ const Segment = styled.div`
         transition-duration: 300ms;
     }
 
-    &:hover {
+    // Highlight the current month
+    &:hover, &:nth-child(2) {
         width: 4.5rem;
 
         > * {
@@ -90,6 +91,7 @@ const CallThermometer = ({ callsByMonth }) => {
             }
         })
         .sortBy(({ monthKey }) => monthKey)
+        .reverse()
         .map(({ numCalls, monthDisplay, monthKey }) => {
             if (!numCalls) return null
         

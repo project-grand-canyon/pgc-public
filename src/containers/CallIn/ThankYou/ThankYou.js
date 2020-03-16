@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import styled from '@emotion/styled'
 import { 
-    Avatar,
+    Button,
     Col, 
     Alert,
-    Icon, 
     message, 
     Row, 
     Typography,
@@ -22,10 +21,6 @@ import OtherCallTargets from './OtherCallTargets';
 const Well = styled.div`
     background: #EEEEEE;
     padding: 3rem 0.5rem 5rem;
-`
-
-const ShadedAvatar = styled(Avatar)`
-    background: #98c7e6;
 `
 
 class ThankYou extends Component {
@@ -131,7 +126,11 @@ class ThankYou extends Component {
     openInNewTab = (url) => {
         var win = window.open(url, '_blank');
         win.focus();
-      }
+    }
+
+    signupRedirect = () => {
+        this.setState({ signUpRedirect: true })
+    }
 
     removeTrackingGetArgs = () => {
         try {
@@ -158,46 +157,56 @@ class ThankYou extends Component {
             <SimpleLayout activeLinkKey="/signup">
                 <Well>
                     <Row type="flex" justify="center" gutter={[24, 24]}>
-                        <Col xs={24} md={6} justify="right">
+                        <Col xs={24} md={7} lg={5} justify="right">
                             {this.state.statsError && <Alert message={this.state.statsError} type="error" /> }
                             {this.state.activeStats && <CallThermometer callsByMonth={this.state.activeStats.callsByMonth} /> }
                         </Col>
-                        <Col xs={24} md={12}>
+                        <Col xs={24} md={14} lg={10}>
                             <Typography.Title level={1}>Thank You for Calling</Typography.Title>
                             {this.state.eligibleCallTargets && <OtherCallTargets districts={this.state.eligibleCallTargets} /> }
                             <List>
                                 {!this.state.identifier && (
                                     <List.Item>
                                         <List.Item.Meta
-                                            avatar={<ShadedAvatar icon={<Icon type="notification" />} />}
-                                            title={
-                                                <a onClick={()=>{this.setState({signUpRedirect: true})}}>
-                                                    Sign Up for Call Reminders
-                                                </a>
+                                            title="Sign Up for Call Reminders"
+                                            description={
+                                                <>
+                                                    <p>If you haven't done it already, sign up to get a monthly call reminder.</p>
+                                                    <Button onClick={() => this.signupRedirect} icon="notification">Remind Me!</Button>
+                                                </>
                                             }
-                                            description="If you haven't done it already, sign up to get a monthly call reminder."
                                         />
+                                        
                                     </List.Item>
                                 )}
                                 <List.Item>
                                     <List.Item.Meta
-                                        avatar={<ShadedAvatar icon={<Icon type="share-alt" />} />}
-                                        title="Share the Calling Congress Campaign"
-                                        description="The more people who call, the more our representatives listen. Spread the word."
+                                        title="Join Citizens' Climate Lobby"
+                                        description={
+                                            <>
+                                                <p>CCL volunteers created this site, and we would love for you to join us.</p>
+                                                <Button 
+                                                    target="_blank" 
+                                                    href="https://citizensclimatelobby.org/join-citizens-climate-lobby/"
+                                                    icon="user-add" 
+                                                >
+                                                    Sign Up
+                                                </Button>
+                                            </>
+                                        }
                                     />
                                 </List.Item>
                                 <List.Item>
                                     <List.Item.Meta
-                                        avatar={<ShadedAvatar icon={<Icon type="user-add" />} />}
-                                        title={
-                                            <a 
-                                                target="_blank" 
-                                                href="https://citizensclimatelobby.org/join-citizens-climate-lobby/"
-                                            >
-                                                Join Citizens' Climate Lobby
-                                            </a>
+                                        title="Share the Calling Congress Campaign"
+                                        description={
+                                            <>
+                                                <p>The more people who call, the more our representatives listen. Spread the word.</p>
+                                                <Button icon="facebook" type="link" onClick={() => this.handleShare('facebook')}>Facebook</Button>
+                                                <Button icon="twitter" type="link" onClick={() => this.handleShare('twitter')}>Twitter</Button>
+                                                <Button icon="copy" type="link" onClick={() => this.handleShare('copy')}>Copy Link</Button>
+                                            </>
                                         }
-                                        description="CCL volunteers created this site, and we would love for you to join us."
                                     />
                                 </List.Item>
                             </List>

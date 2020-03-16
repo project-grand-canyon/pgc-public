@@ -1,31 +1,25 @@
 import React from 'react';
-import { Avatar, Typography } from 'antd';
+import { Avatar, Button, Typography } from 'antd';
 import styled from '@emotion/styled'
 
 import { isSenatorDistrict } from '../../../util/district';
 
-const CallLink = styled.a`
+const CallLink = styled(Button)`
+    width: 100%;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    background: #ffffff;
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
-    width: 23rem;
-    transition-property: background color;
-    transition-duration: 300ms;
+    height: auto;
     font-weight: 500;
     font-size: 1.1rem;
-    border-radius: 4px;
-
-    &:hover {
-        background: #0081C7;
-        color: white;
-    }
+    margin-bottom: 0.75rem;
 `
 
 const StyledAvatar = styled(Avatar)`
+    margin-top: 0.5rem;
     margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-style: solid;
+    border-width: 2px;
 `
 
 const OtherCallTargets = ({ districts = [] }) => {
@@ -35,6 +29,7 @@ const OtherCallTargets = ({ districts = [] }) => {
             const link = `/call/${callTarget.state}/${callTarget.number}`
             return (      
                 <CallLink
+                    type="primary"
                     key={link}
                     target="_blank"
                     href={link}

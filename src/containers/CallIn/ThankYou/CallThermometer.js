@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import _ from 'lodash'
 import { DateTime } from 'luxon'
@@ -15,7 +15,7 @@ const Segment = styled.div`
     flex-direction: column;
     justify-content: center;
     width: 4rem;
-    height: ${({ value }) => `${value * 0.2 + 1}rem`};
+    height: ${({ magnitude }) => `${magnitude * 19 + 1}rem`};
     position: relative;
     background-color: ${({ color }) => color};
     transition-property: width;
@@ -77,12 +77,17 @@ let colorChoices = [
     SEA_BLUE,
 ]
 
-const CallThermometer = ({ callsByMonth }) => {
+const CallThermometer = ({ data: { district, overall } }) => {
+    const [activeStats, setActiveStats] = useState(district || overall)
+
     let total = 0
     let colorIndex = 0 
-    const segments = _(callsByMonth)
+    let maxCalls = 50
+    const segments = activeStats && _(activeStats.callsByMonth)
         .map((numCalls, monthKey) => {
             const monthDisplay = DateTime.fromFormat(monthKey, 'yyyy-MM').toFormat('MMMM yyyy')
+            maxCalls = Math.max(maxCalls, numCalls)
+            total += numCalls
 
             return {
                 monthKey,
@@ -97,10 +102,9 @@ const CallThermometer = ({ callsByMonth }) => {
         
             const color = colorChoices[colorIndex]
             colorIndex = (colorIndex + 1) % colorChoices.length
-            total += numCalls
-        
+            
             return (
-                <Segment key={monthKey} value={numCalls} color={color}>
+                <Segment key={monthKey} magnitude={numCalls / maxCalls} color={color}>
                     <SegmentLabel>{monthDisplay}: {numCalls}</SegmentLabel>
                 </Segment>
             )
@@ -109,6 +113,8 @@ const CallThermometer = ({ callsByMonth }) => {
 
     return (
         <Container>
+            <a onClick={() => setActiveStats(district)}>District</a>
+            <a onClick={() => setActiveStats(overall)}>Overall</a>
             <ThermometerText>
                 <TotalNumber>{total}</TotalNumber>
                 <TotalLabel>calls</TotalLabel>

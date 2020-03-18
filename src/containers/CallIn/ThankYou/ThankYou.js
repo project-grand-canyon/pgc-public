@@ -27,8 +27,7 @@ class ThankYou extends Component {
     state = {
         eligibleCallTargets: null,
         district: null,
-        localStats: null,
-        overallStats: null,
+        stats: null,
         statsError: null,
         signUpRedirect: false
     }
@@ -88,9 +87,10 @@ class ThankYou extends Component {
                 const district = values[0].data
                 const overall = values[1].data
                 this.setState({
-                    localStats: district,
-                    overallStats: overall,
-                    activeStats: district || overall,
+                    stats: {
+                        district,
+                        overall,
+                    }
                 })
             }).catch((error) => {
                 this.setState({
@@ -159,7 +159,7 @@ class ThankYou extends Component {
                     <Row type="flex" justify="center" gutter={[24, 24]}>
                         <Col xs={24} md={7} lg={5} justify="right">
                             {this.state.statsError && <Alert message={this.state.statsError} type="error" /> }
-                            {this.state.activeStats && <CallThermometer callsByMonth={this.state.activeStats.callsByMonth} /> }
+                            {this.state.stats && <CallThermometer data={this.state.stats} /> }
                         </Col>
                         <Col xs={24} md={14} lg={10}>
                             <Typography.Title level={1}>Thank You for Calling</Typography.Title>

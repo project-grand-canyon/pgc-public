@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
+import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
 import { Redirect } from 'react-router-dom';
 
 import axios_api from '../../util/axios-api';
@@ -252,6 +252,17 @@ class CallIn extends Component {
                         </Collapse>
                         </Col></Row>
                     </section>
+
+                    {/* This covid section can be removed when the US crisis has settled. */}
+                    <section id="covid">
+                        <Row type="flex" justify="center">
+                            <Col xs={24} md={20} lg={18} xl={12}>
+                            <Alert showIcon style={{ marginBottom: 20}} type="warning" message="Calling During the COVID Crisis" description="Many parts of the country are currently overwhelmed by this public health crisis. Please use your best judgement to decide whether the Member of Congress that represents your part of the country is receptive to our message during this sensitive time." />
+                            </Col>
+                        </Row>
+                    </section>
+                    {/* This covid section can be removed when the US crisis has settled. */}
+
                     <section id="talking-points">
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                         <Col xs={24} md={20} lg={18} xl={12}>

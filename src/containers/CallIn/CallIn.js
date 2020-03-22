@@ -117,7 +117,7 @@ class CallIn extends Component {
                         talkingPoints: talkingPoints,
                         offices: hydrated.offices,
                         districtId: hydrated.districtId,
-                        status: 'covid_paused' || hydrated.status,
+                        status: hydrated.status,
                     })
                 }).catch(e=>{
                     throw e
@@ -189,6 +189,8 @@ class CallIn extends Component {
                         <Alert
                             message="Please don't call this Member of Congress"
                             description={`
+                                We are asking you to not call your Member of Congress at this time 
+                            We are asking you to not call your Member of Congress at this time 
                                 We are asking you to not call your Member of Congress at this time 
                                 so that they can focus on the COVID-19 outbreak. Your monthly
                                 call-in notifications will resume when the crisis abates.

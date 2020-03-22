@@ -32,8 +32,7 @@ class ThankYou extends Component {
         title: "What is Citizens' Climate Lobby?",
         description: "Learn more about us",
         handler: () => {
-            const win = window.open('https://citizensclimatelobby.org/about-ccl/', '_blank');
-            win.focus();
+            window.location.href = 'https://citizensclimatelobby.org/about-ccl/';
         }
     }
 

@@ -117,7 +117,7 @@ class CallIn extends Component {
                         talkingPoints: talkingPoints,
                         offices: hydrated.offices,
                         districtId: hydrated.districtId,
-                        status: 'covid_paused' || hydrated.status,
+                        status: hydrated.status,
                     })
                 }).catch(e=>{
                     throw e

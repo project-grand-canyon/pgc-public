@@ -25,22 +25,20 @@ const StyledAvatar = styled(Avatar)`
 `
 
 const OtherCallTargets = ({ districts = [] }) => {
-    const callTargets = districts
-        .filter(callTarget => !!callTarget)
-        .map(callTarget => {
-            const link = `/call/${callTarget.state}/${callTarget.number}`
-            return (    
-                <CallLink
-                    key={link}
-                    type="primary"
-                    target="_blank"
-                    href={link}
-                >
-                    <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
-                    {`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
-                </CallLink>   
-            )
-        })
+    const callTargets = districts.map(callTarget => {
+        const link = `/call/${callTarget.state}/${callTarget.number}`
+        return (    
+            <CallLink
+                key={link}
+                type="primary"
+                target="_blank"
+                href={link}
+            >
+                <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
+                {`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
+            </CallLink>   
+        )
+    })
 
     return (
         <div>

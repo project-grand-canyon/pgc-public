@@ -37,7 +37,7 @@ const ColorContentRow = ({ bg, children}) => (
 class ThankYou extends Component {
 
     state = {
-        eligibleCallTargets: null,
+        eligibleCallTargets: [],
         district: null,
         localStats: null,
         overallStats: null,
@@ -60,21 +60,30 @@ class ThankYou extends Component {
                 return;
             } else {
                 this.setStats(calledDistrict);
-                const eligibleCallTargets = this.eligibleCallTargetDistrictIds(homeDistrictNumber, calledNumber).map( districtNumber => {
-                    return this.findDistrictByStateNumber(calledState, districtNumber, districts);
-                });
+                const eligibleCallTargets = this.eligibleCallTargetDistrictIds(
+                    homeDistrictNumber, 
+                    calledState, 
+                    calledNumber, 
+                    districts
+                )
                 this.setState({
                     district: calledDistrict,
-                    eligibleCallTargets: eligibleCallTargets                    
+                    eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,                    
                 })
             }
         })
     }
 
-    eligibleCallTargetDistrictIds = (homeDistrict, justCalled) => {
-        return [-1, -2, homeDistrict].filter(el => {
-            return `${el}` !== `${justCalled}`
-        });
+    eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
+        return [-1, -2, homeDistrictNumber]
+            .filter(el => {
+                return `${el}` !== `${calledNumber}`
+            })
+            .map(districtNumber => {
+                return this.findDistrictByStateNumber(calledState, districtNumber, districts)
+            })
+            // Filter out the `covid_paused` districts
+            .filter(district => district && district.status === 'active')
     }
 
     fetchDistricts = (cb) => {
@@ -85,9 +94,9 @@ class ThankYou extends Component {
     }
 
     findDistrictByStateNumber = (state, number, districts) => {
-        return districts.find((el)=>{
-            return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
-        })
+        return districts.find(el => (
+            state.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
+        ))
     }
 
     setStats = (district) => {
@@ -166,20 +175,20 @@ class ThankYou extends Component {
                     <Col xs={24} align="center">
                         <Typography.Title level={1}>Thank You for Calling</Typography.Title>
                     </Col>
-                    <Col sm={24} md={12} lg={14}>
-                        { this.state.statsError || (
+                    {this.state.district && this.state.localStats && (
+                        <Col sm={24} md={12} lg={14}>
                             <CallStats 
                                 district={this.state.district} 
                                 localStats={this.state.localStats} 
                                 overallStats={this.state.overallStats} 
                             /> 
-                        )}
-                    </Col>
-                    <Col sm={24} md={12} lg={10}>
-                        {this.state.eligibleCallTargets && (
+                        </Col>
+                    )}
+                    {this.state.eligibleCallTargets && (
+                        <Col sm={24} md={12} lg={10}>
                             <OtherCallTargets districts={this.state.eligibleCallTargets} />
-                        )}
-                    </Col>
+                        </Col>
+                    )}
                 </ColorContentRow>
                 <ColorContentRow>
                     {

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled'
-import { Card, Col, Icon, Row, Skeleton, Statistic, Typography } from 'antd';
+import { Card, Col, Icon, Row, Statistic, Typography } from 'antd';
 
 import { isSenatorDistrict } from '../../../util/district';
 
@@ -20,10 +20,7 @@ const StatCell = ({ title, icon, value, isSen }) => (
 )
 
 const CallStats = ({ district, localStats, overallStats }) => {
-    if (!localStats || !district || !overallStats) {
-        return <Skeleton />
-    }
-    if (district && !district.repLastName) {
+    if (!district.repLastName) {
         return null;
     }
 
@@ -31,10 +28,6 @@ const CallStats = ({ district, localStats, overallStats }) => {
     const localCallers = localStats && localStats.totalCallers;
     const overallCalls = overallStats && overallStats.totalCalls;
     const overallCallers = overallStats && overallStats.totalCallers;
-
-    if (!localCalls) {
-        return null
-    }
 
     const isSen = isSenatorDistrict(district);
     const repName = isSen ? `Senator ${district.repLastName}` : `Rep. ${district.repLastName}`;

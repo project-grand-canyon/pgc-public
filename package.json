@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
     "@sentry/browser": "^5.2.1",
     "@sentry/cli": "^1.49.0",
     "antd": "^3.25.2",

@@ -1,17 +1,38 @@
 import React, { Component } from 'react';
 import { Card, Col, Divider, Icon, message, Row, Skeleton, Statistic, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
+import styled from '@emotion/styled'
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
 import getUrlParameter from '../../../util/urlparams';
-import {isSenatorDistrict} from '../../../util/district';
-
-import styles from './ThankYou.module.css';
 
 import capitol from '../../../assets/images/capitol-group.jpg';
 import discussion from '../../../assets/images/discussion.jpeg';
 import grassroots from '../../../assets/images/grassroots.jpg';
+import OtherCallTargets from './OtherCallTargets';
+import CallStats from './CallStats';
+
+
+const CONTENT_WIDTH_PX = 900
+const StyledRow = styled(Row)`
+    background: ${props => props.bg};
+    padding: 1.4em;
+
+    @media (min-width: ${CONTENT_WIDTH_PX + 20}px) {
+        padding: 2em calc(50vw - ${CONTENT_WIDTH_PX / 2}px);
+    }
+`
+const ColorContentRow = ({ bg, children}) => (
+    <StyledRow 
+        bg={bg || 'transparent'} 
+        type="flex" 
+        justify="center" 
+        gutter={[20, 20]}
+    >
+        {children}
+    </StyledRow>
+)
 
 class ThankYou extends Component {
 
@@ -134,143 +155,73 @@ class ThankYou extends Component {
         
     }
 
-    getStatsJSX = () => {
-        if (this.state.statsError) {
-            return null;
-        }
-        if (!this.state.localStats || !this.state.district || !this.state.overallStats) {
-            return <Skeleton />;
-        }
-        if (this.state.district && !this.state.district.repLastName) {
-            return null;
-        }
-
-        const localCalls = this.state.localStats && this.state.localStats.totalCalls;
-        const localCallers = this.state.localStats && this.state.localStats.totalCallers;
-        const overallCalls = this.state.overallStats && this.state.overallStats.totalCalls;
-        const overallCallers = this.state.overallStats && this.state.overallStats.totalCallers;
-        const isSen = isSenatorDistrict(this.state.district);
-        const repName = isSen ? `Senator ${this.state.district.repLastName}` : `Rep. ${this.state.district.repLastName}`;
-
-        const overallCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Total Calls Nationwide</Typography.Text>} value={overallCalls} suffix={<Icon type="phone" />} /></Card>
-        </Col>);
-        const localCallsCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`Total Calls to ${repName}`}</Typography.Text>} value={localCalls} suffix={<Icon type="phone" />} /></Card>
-        </Col>);
-        const localCallersCol = (<Col xs={24} sm={12} md={6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>{`People signed up to call ${repName}`}</Typography.Text>} value={localCallers} suffix={<Icon type="smile" />} /></Card>
-        </Col>);
-        const overallCallersCol = (<Col xs={24} sm={isSen ? 24 : 12} md={isSen ? 12 : 6} className={styles.StatCol}>
-            <Card style={{height:"100%"}}><Statistic title={<Typography.Text style={{fontSize: "1.2em"}}>Registered Callers Nationwide</Typography.Text>} value={overallCallers} suffix={<Icon type="smile" />} /></Card>
-        </Col>);
-
-        const senCallers = overallCallersCol;
-        const repCallers = (
-            <>
-            {localCallersCol}
-            {overallCallersCol}
-            </>
-        )
-
-        return (
-            <>
-                <div style={{ background: '#ECECEC', padding: '20px', display: localCalls > 0 ? 'block' : 'none' }}>
-                    <Row className={styles.Heading}>
-                        <Typography.Title level={3}>Our Impact So Far:</Typography.Title>
-                    </Row>
-                    <Row type="flex" justify="center" align="middle">
-                        {localCallsCol}
-                        {overallCallsCol}
-                    </Row>
-                    <Row type="flex" justify="center" align="middle">
-                    { isSen ? senCallers : repCallers}
-                    </Row>
-                </div>
-                <Divider />
-            </>
-        );        
-    }
-
-    getOtherCallTargetCards = () => {
-        return this.state.eligibleCallTargets && this.state.eligibleCallTargets.filter(el=>{return el !== undefined && el !== null}).map(el => {
-            return (
-                <Col xs={24} sm={12} md={12} lg={12} xl={8} key={el.districtId}>
-                    <Card
-                        cover={<img alt="representative portrait" src={el.repImageUrl} />}
-                        actions={[<Icon type="phone" onClick={()=>{this.openInNewTab(`https://cclcalls.org/call/${el.state}/${el.number}`)}}/>]}
-                    >
-                        <Card.Meta
-                        title={`Call ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName}`}
-                        description={`Itching to call more people? Give ${isSenatorDistrict(el) ? "Senator" : "Representative"} ${el.repLastName} a ring.`}
-                        />
-                    </Card>
-                </Col>
-            )
-        })
-    }
-
     render() {
-        
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
         }
 
-        const pitch = this.state.localStats ? "Please help us make a bigger impact:" : "Here's how you can do a little more:";
-
         return (
             <SimpleLayout activeLinkKey="/signup">
-                <Row type="flex" justify="center">
-                    <Col xs={24} md={20} lg={18} xl={16}>
-                        <div className={styles.ThankYou}>
-                    <div className={styles.Heading}>
+                <ColorContentRow bg="#ececec">
+                    <Col xs={24} align="center">
                         <Typography.Title level={1}>Thank You for Calling</Typography.Title>
-                    </div>
-                    { this.getStatsJSX() }
-                    <div className={styles.Heading}>
-                        <Typography.Title level={3}>{pitch}</Typography.Title>
-                    </div>
-                    <Row type="flex" gutter={[4, 4]}>
-                        {this.getOtherCallTargetCards()}
-                        {
-                            !this.state.identifier && (<Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                                <Card
-                                    cover={<img alt="US Captitol Building" src={capitol} />}
-                                    actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
-                                >
-                                    <Card.Meta
-                                    title="Sign Up for Call Reminders"
-                                    description="If you haven't done it already, sign up to get a monthly call reminder."
-                                    />
-                                </Card>
-                            </Col>)
-                        }
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                            <Card
-                                cover={<img alt="US Captitol Building" src={discussion} />}
-                                actions={[<Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, <Icon type="mail" onClick={()=>{this.handleShare('email')}} />]}
-                            >
-                                <Card.Meta
-                                title="Share the Calling Congress Campaign"
-                                description="The more people who call, the more our representatives listen. Spread the word."
-                                />
-                            </Card>
-                        </Col>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
-                            <Card
-                                cover={<img alt="Volunteer with clipboard" src={grassroots} />}
-                                actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
-                            >
-                                <Card.Meta
-                                title="Join Citizens' Climate Lobby"
-                                description="CCL volunteers created this site, and we would love for you to join us."
-                                />
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
                     </Col>
-                </Row>
+                    <Col sm={24} md={12} lg={14}>
+                        { this.state.statsError || (
+                            <CallStats 
+                                district={this.state.district} 
+                                localStats={this.state.localStats} 
+                                overallStats={this.state.overallStats} 
+                            /> 
+                        )}
+                    </Col>
+                    <Col sm={24} md={12} lg={10}>
+                        {this.state.eligibleCallTargets && (
+                            <OtherCallTargets districts={this.state.eligibleCallTargets} />
+                        )}
+                    </Col>
+                </ColorContentRow>
+                <ColorContentRow>
+                    {
+                        !this.state.identifier && (<Col xs={24} sm={12} lg={8}>
+                            <Card
+                                cover={<img alt="US Captitol Building" src={capitol} />}
+                                actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
+                            >
+                                <Card.Meta
+                                title="Sign Up for Call Reminders"
+                                description="If you haven't done it already, sign up to get a monthly call reminder."
+                                />
+                            </Card>
+                        </Col>)
+                    }
+                    <Col xs={24} sm={12} lg={8}>
+                        <Card
+                            cover={<img alt="US Captitol Building" src={discussion} />}
+                            actions={[
+                                <Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, 
+                                <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, 
+                                <Icon type="mail" onClick={()=>{this.handleShare('email')}} />
+                            ]}
+                        >
+                            <Card.Meta
+                            title="Share the Calling Congress Campaign"
+                            description="The more people who call, the more our representatives listen. Spread the word."
+                            />
+                        </Card>
+                    </Col>
+                    <Col xs={24} sm={12} lg={8}>
+                        <Card
+                            cover={<img alt="Volunteer with clipboard" src={grassroots} />}
+                            actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
+                        >
+                            <Card.Meta
+                            title="Join Citizens' Climate Lobby"
+                            description="CCL volunteers created this site, and we would love for you to join us."
+                            />
+                        </Card>
+                    </Col>
+                </ColorContentRow>
             </SimpleLayout>
         )
     }

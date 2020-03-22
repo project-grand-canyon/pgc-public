@@ -190,8 +190,6 @@ class CallIn extends Component {
                             message="Please don't call this Member of Congress"
                             description={`
                                 We are asking you to not call your Member of Congress at this time 
-                            We are asking you to not call your Member of Congress at this time 
-                                We are asking you to not call your Member of Congress at this time 
                                 so that they can focus on the COVID-19 outbreak. Your monthly
                                 call-in notifications will resume when the crisis abates.
                             `}

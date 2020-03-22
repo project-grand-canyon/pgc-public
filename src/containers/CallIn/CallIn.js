@@ -18,6 +18,7 @@ class CallIn extends Component {
         state: null,
         number: null,
         districtId: null,
+        status: null,
         talkingPoints: null,
         offices: null,
         fetchCallInError: null,
@@ -115,7 +116,8 @@ class CallIn extends Component {
                         number: hydrated.number,
                         talkingPoints: talkingPoints,
                         offices: hydrated.offices,
-                        districtId: hydrated.districtId
+                        districtId: hydrated.districtId,
+                        status: 'covid_paused' || hydrated.status,
                     })
                 }).catch(e=>{
                     throw e
@@ -172,118 +174,138 @@ class CallIn extends Component {
         `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
         `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
 
-        const callIn = (this.state.repLastName) ? (
-            <>
+        if (!this.state.repLastName) {
+            return (
+                <div className={styles.Loading}>
+                    <Spin />
+                </div>
+            )
+        }
+
+        if (this.state.status === 'covid_paused') {
+            return (
                 <div className={styles.CallIn}>
-                    <section>
-                    <Row type="flex" justify="center" className={styles.HeaderRow}>
-                            <Col xs={24} md={20} lg={18} xl={12}>
-                                <Typography.Title level={2}>Call-In Guide:</Typography.Title>
-                            </Col>
-                        </Row>
-                        <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
-                        <Row type="flex" align="middle">
-                            <Col xs={24} md={8} lg={6} xl={4}>
-                                <Row className={styles.ContentRow} type="flex" justify="center">
-                                    <Col>
-                                        <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col xs={24} md={16} lg={18} xl={20}>
-                                <Row className={styles.HeaderRow}>
-                                    <Col span={24}>
-                                        <Typography.Title level={4}>{yourLegislator}</Typography.Title>
-                                    </Col>
-                                </Row>
-                                <Row className={styles.ContentRow}>
-                                    <Col span={24}>
-                                        <Typography.Title level={2}>{ title }</Typography.Title>
-                                    </Col>
-                                </Row>
-                                <Row className={styles.HeaderRow}>
-                                    <Col className={styles.Offices}>
-                                        <Typography.Title level={4}>
-                                            {offices.length > 1 ? "Offices:" : "Office:"}
-                                        </Typography.Title>
-                                    </Col>
-                                </Row>
-                                {/* Not using affix till I figure it out for desktop and mobile */}
-                                {/* <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}> */}
-                                    <Row className={styles.ContentRow} style={
-                                        {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
-                                    }>
-                                        <Col>
-                                                <List
-                                                    className={styles.Offices}
-                                                    size="small"
-                                                    itemLayout="horizontal"
-                                                    dataSource={offices}
-                                                    renderItem={item => (
-                                                        <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
-                                                            <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
-                                                        </List.Item>
-                                                    )}
-                                                />
-                                        </Col>
-                                    </Row>
-                                {/* </Affix> */}
-                            </Col>
-                        </Row>
-                        </Col></Row>
-                    </section>
+                    <Alert
+                        message="Please don't call this Member of Congress"
+                        description={`
+                            We are asking you to not call your Member of Congress so that 
+                            they can focus on the COVID-19 Outbreak.
+                        `}
+                        type="warning"
+                    />
+                </div>
+            )
+        }
 
-                    <section id="instructions">
-                        <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
-                        <Collapse 
-                            className={styles.WhatToExpect}
-                            bordered={true}
-                            accordion={true}
-                            expandIconPosition="right"
-                            expandIcon={({ isActive }) => <Icon type="info-circle" rotate={isActive ? 90 : 0} />}
-                        >
-                            <Collapse.Panel
-                                header={<Typography.Text style={{ margin: 0}} strong>What To Expect</Typography.Text>}
-                                key={1}
-                            >
-                                <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
-                                <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
-                            </Collapse.Panel>
-                        </Collapse>
-                        </Col></Row>
-                    </section>
-
-                    {/* This covid section can be removed when the US crisis has settled. */}
-                    <section id="covid">
-                        <Row type="flex" justify="center">
-                            <Col xs={24} md={20} lg={18} xl={12}>
-                            <Alert showIcon style={{ marginBottom: 20}} type="warning" message="Calling During the COVID-19 Crisis" description="Many parts of the country are currently overwhelmed by this public health crisis. Please use your best judgement to decide whether the Member of Congress that represents your part of the country is receptive to our message during this sensitive time." />
-                            </Col>
-                        </Row>
-                    </section>
-                    {/* This covid section can be removed when the US crisis has settled. */}
-
-                    <section id="talking-points">
+        return (
+            <div className={styles.CallIn}>
+                <section>
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                         <Col xs={24} md={20} lg={18} xl={12}>
-                        <Typography.Title level={2}>Call-In Script:</Typography.Title>
-                    </Col>
+                            <Typography.Title level={2}>Call-In Guide:</Typography.Title>
+                        </Col>
                     </Row>
                     <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
+                    <Row type="flex" align="middle">
+                        <Col xs={24} md={8} lg={6} xl={4}>
+                            <Row className={styles.ContentRow} type="flex" justify="center">
+                                <Col>
+                                    <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col xs={24} md={16} lg={18} xl={20}>
+                            <Row className={styles.HeaderRow}>
+                                <Col span={24}>
+                                    <Typography.Title level={4}>{yourLegislator}</Typography.Title>
+                                </Col>
+                            </Row>
+                            <Row className={styles.ContentRow}>
+                                <Col span={24}>
+                                    <Typography.Title level={2}>{ title }</Typography.Title>
+                                </Col>
+                            </Row>
+                            <Row className={styles.HeaderRow}>
+                                <Col className={styles.Offices}>
+                                    <Typography.Title level={4}>
+                                        {offices.length > 1 ? "Offices:" : "Office:"}
+                                    </Typography.Title>
+                                </Col>
+                            </Row>
+                            {/* Not using affix till I figure it out for desktop and mobile */}
+                            {/* <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}> */}
+                                <Row className={styles.ContentRow} style={
+                                    {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
+                                }>
+                                    <Col>
+                                        <List
+                                            className={styles.Offices}
+                                            size="small"
+                                            itemLayout="horizontal"
+                                            dataSource={offices}
+                                            renderItem={item => (
+                                                <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
+                                                    <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
+                                                </List.Item>
+                                            )}
+                                        />
+                                    </Col>
+                                </Row>
+                            {/* </Affix> */}
+                        </Col>
+                    </Row>
+                    </Col></Row>
+                </section>
+
+                <section id="instructions">
+                    <Row type="flex" justify="center">
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                            <Collapse 
+                                className={styles.WhatToExpect}
+                                bordered={true}
+                                accordion={true}
+                                expandIconPosition="right"
+                                expandIcon={({ isActive }) => <Icon type="info-circle" rotate={isActive ? 90 : 0} />}
+                            >
+                                <Collapse.Panel
+                                    header={<Typography.Text style={{ margin: 0}} strong>What To Expect</Typography.Text>}
+                                    key={1}
+                                >
+                                    <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
+                                    <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
+                                </Collapse.Panel>
+                            </Collapse>
+                        </Col>
+                    </Row>
+                </section>
+
+                {/* This covid section can be removed when the US crisis has settled. */}
+                <section id="covid">
+                    <Row type="flex" justify="center">
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                        <Alert showIcon style={{ marginBottom: 20}} type="warning" message="Calling During the COVID-19 Crisis" description="Many parts of the country are currently overwhelmed by this public health crisis. Please use your best judgement to decide whether the Member of Congress that represents your part of the country is receptive to our message during this sensitive time." />
+                        </Col>
+                    </Row>
+                </section>
+                {/* This covid section can be removed when the US crisis has settled. */}
+
+                <section id="talking-points">
+                    <Row type="flex" justify="center" className={styles.HeaderRow}>
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                            <Typography.Title level={2}>Call-In Script:</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row type="flex" justify="center">
+                        <Col xs={24} md={20} lg={18} xl={12}>
                             {this.getIntroJSX()}
                             {this.getTalkingPointsJSX()}
                             {this.getRequestJSX()}
                             {this.getReportYourCallButtonJSX()}
-                            </Col></Row>
-                    </section>
-                </div>
-            </>
-        ) : (
-            <div className={styles.Loading}>
-                <Spin />
+                        </Col>
+                    </Row>
+                </section>
             </div>
         );
-        return callIn;
     }
 
     getIntroJSX = () => {

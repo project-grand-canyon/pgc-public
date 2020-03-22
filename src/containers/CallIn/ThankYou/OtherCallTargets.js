@@ -1,12 +1,9 @@
 import React from 'react';
-import { Avatar, Button, Typography, Row, Col } from 'antd';
+import { Avatar, Button, Typography } from 'antd';
 import styled from '@emotion/styled'
 
 import { isSenatorDistrict } from '../../../util/district';
 
-const OtherCallContainer = styled.div`
-
-`
 const CallLink = styled(Button)`
     width: 100%;
     display: flex;

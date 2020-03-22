@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Col, Divider, Icon, message, Row, Skeleton, Statistic, Typography } from 'antd';
+import { Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import styled from '@emotion/styled'
 

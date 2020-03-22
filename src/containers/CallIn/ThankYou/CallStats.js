@@ -4,9 +4,6 @@ import { Card, Col, Icon, Row, Statistic, Typography } from 'antd';
 
 import { isSenatorDistrict } from '../../../util/district';
 
-const StatsContainer = styled.div`
-
-`
 const StatCell = ({ title, icon, value, isSen }) => (
     <Col xs={24} sm={isSen ? 24 : 12}>
         <Card style={{height:"100%"}}>
@@ -45,7 +42,7 @@ const CallStats = ({ district, localStats, overallStats }) => {
     )
 
     return (
-        <StatsContainer>
+        <div>
             <Row>
                 <Typography.Title level={3}>Our Impact So Far:</Typography.Title>
             </Row>
@@ -56,7 +53,7 @@ const CallStats = ({ district, localStats, overallStats }) => {
             <Row type="flex" justify="center" align="middle">
                 {repCallers}
             </Row>
-        </StatsContainer>
+        </div>
     )  
 }
 

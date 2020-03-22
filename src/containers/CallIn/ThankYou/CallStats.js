@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/styled'
 import { Card, Col, Icon, Row, Statistic, Typography } from 'antd';
 
 import { isSenatorDistrict } from '../../../util/district';

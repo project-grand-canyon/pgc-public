@@ -21,9 +21,9 @@ class SignUp extends Component {
         const { district, zipCode, firstName, lastName, phone, email } = fieldsValues
         const caller = {
             districtId: district.districtId,
-            zipCode: zipCode,
-            firstName: firstName,
-            lastName: lastName,
+            zipCode,
+            firstName,
+            lastName,
         }
         
         const communicationMethods = [];

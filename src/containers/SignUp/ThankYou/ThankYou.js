@@ -13,37 +13,50 @@ class ThankYou extends Component {
     state = {
         makeFirstCall: false,
         state: null,
-        district: null,
-        communicationMethod: null
+        districtNumber: null,
+        communicationMethod: null,
+        districtStatus: 'active'
     }
 
-    handleMakeCallClick = (event) => {
-        console.log('hi');
-        this.setState({
-            makeFirstCall: true
-        })
+    followUpActionActiveDistrict = {
+        title: "Can't wait to start calling?",
+        description: "Make your first call now!",
+        handler: () => {
+            this.setState({
+                makeFirstCall: true
+            })
+        }
+    }
+
+    followUpActionCovidPausedDistrict = {
+        title: "What is Citizens' Climate Lobby?",
+        description: "Learn more about us",
+        handler: () => {
+            window.location.href = 'https://citizensclimatelobby.org/about-ccl/';
+        }
     }
 
     componentDidMount = () => {
-
         const params = this.props.location.search;
         const communicationMethods = getUrlParameter(params, 'com').split('-');
         const communicationMethod = communicationMethods.length > 1 ? communicationMethods.join(' and ') : communicationMethods[0]
         this.setState({
             communicationMethod: communicationMethod,
             state: getUrlParameter(params, 'state'),
-            district: getUrlParameter(params, 'district')
+            districtNumber: getUrlParameter(params, 'district'),
+            districtStatus: getUrlParameter(params, 'status')
         });
     }
 
+    
     render() {  
-
-
         if (this.state.makeFirstCall) {
             return <Redirect
-                to={{pathname: `/call/${this.state.state}/${this.state.district}`}}
+                to={{pathname: `/call/${this.state.state}/${this.state.districtNumber}`}}
             />;
         }
+
+        const followUpAction = this.state.districtStatus === 'covid_paused' ? this.followUpActionCovidPausedDistrict : this.followUpActionActiveDistrict;
 
         return (
             <ResponsiveLayout activeLinkKey="/signup">
@@ -59,8 +72,8 @@ class ThankYou extends Component {
                                 </Typography.Paragraph>
                                 <img src={capitol} className={styles.Photo} alt="U.S. Capitol Building" />
                                 <div className={styles.CantWait}>
-                                    <Typography.Title level={4}>Can't wait to start calling?</Typography.Title>
-                                    <Button block onClick={this.handleMakeCallClick} type="primary">Make your first call now!</Button>
+                                    <Typography.Title level={4}>{followUpAction.title}</Typography.Title>
+                                    <Button block onClick={() => followUpAction.handler()} type="primary">{followUpAction.description}</Button>
                                 </div>
                             </div>
                         </Col>

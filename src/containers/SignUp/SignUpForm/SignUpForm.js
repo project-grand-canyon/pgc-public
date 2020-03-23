@@ -63,10 +63,10 @@ class SignUpForm extends Component {
             
         }
         const fieldValues = this.props.form.getFieldsValue();
-        fieldValues['districtId'] = this.state.congressionalDistricts.find((district)=>{
+        fieldValues['district'] = this.state.congressionalDistricts.find((district)=>{
             return district.state === fieldValues.congressionalDistrict[0] && district.number === fieldValues.congressionalDistrict[1];
-        }).districtId;
-        if (fieldValues.districtId) {
+        });
+        if (fieldValues.district) {
             this.props.onSuccessfulSubmit(fieldValues);
         }
     }

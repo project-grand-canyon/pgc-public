@@ -12,36 +12,32 @@ class SignUp extends Component {
 
     state = {
         didSignUp: false,
-        state: null,
         district: null,
         communicationMethods: null,
         postCallerDetailsError: null
     }
 
     handleFormSubmit = (fieldsValues) => {
-        const {congressionalDistrict} = {...fieldsValues};
-        const state = congressionalDistrict[0];
-        const district = congressionalDistrict[1];
-        
+        const { district, zipCode, firstName, lastName, phone, email } = fieldsValues
         const caller = {
-            districtId: fieldsValues.districtId,
-            zipCode: fieldsValues.zipCode,
-            firstName: fieldsValues.firstName,
-            lastName: fieldsValues.lastName,
+            districtId: district.districtId,
+            zipCode,
+            firstName,
+            lastName,
         }
         
         const communicationMethods = [];
-        if (fieldsValues.phone) {
+        if (phone) {
             communicationMethods.push('sms');
-            caller['phone'] = fieldsValues.phone;
+            caller['phone'] = phone;
         }
-        if (fieldsValues.email) {
+        if (email) {
             communicationMethods.push('email');
-            caller['email'] = fieldsValues.email;
+            caller['email'] = email;
         }
         caller['contactMethods'] = communicationMethods;
         axios.post('callers', caller).then((response)=>{
-            this.process_happy_signup(state, district, communicationMethods)
+            this.process_happy_signup(district, communicationMethods)
         }).catch((error)=>{            
             const errMessage = error.response.data.message;
             const isDupe = errMessage.includes('Duplicate entry');
@@ -67,9 +63,8 @@ class SignUp extends Component {
         });
     }
 
-    process_happy_signup = (state, district, communicationMethods) => {
+    process_happy_signup = (district, communicationMethods) => {
         this.setState({
-            state: state,
             district: district,
             communicationMethods: communicationMethods,
             didSignUp: true
@@ -78,10 +73,11 @@ class SignUp extends Component {
 
     render() { 
         if (this.state.didSignUp) {
+            const {state, number, status} = this.state.district;
             return <Redirect
                 to={{
                 pathname: "/signup/thankyou",
-                search: `?state=${this.state.state}&district=${this.state.district}&com=${this.state.communicationMethods.join('-')}`
+                search: `?state=${state}&district=${number}&com=${this.state.communicationMethods.join('-')}&status=${status}`
             }}
           />;
         }

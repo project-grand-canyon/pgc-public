@@ -18,7 +18,7 @@ class SignUp extends Component {
     }
 
     handleFormSubmit = (fieldsValues) => {
-        const {district, zipCode, firstName, lastName, phone, email, } = {...fieldsValues};
+        const { district, zipCode, firstName, lastName, phone, email } = fieldsValues
         const caller = {
             districtId: district.districtId,
             zipCode: zipCode,

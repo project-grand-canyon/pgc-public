@@ -11,7 +11,7 @@ import capitol from '../../../assets/images/capitol-group.jpg';
 import discussion from '../../../assets/images/discussion.jpeg';
 import grassroots from '../../../assets/images/grassroots.jpg';
 import OtherCallTargets from './OtherCallTargets';
-import CallStats from './CallStats';
+import CallStats from './CallStats/CallStats'
 
 
 const CONTENT_WIDTH_PX = 900

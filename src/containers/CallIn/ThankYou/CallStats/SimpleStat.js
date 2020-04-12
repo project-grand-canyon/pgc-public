@@ -8,10 +8,13 @@ const SimpleStat = styled.div`
 `
 SimpleStat.Label = styled.div`
     font-size: 0.9rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
     color: #999999;
 `
 SimpleStat.Value = styled.div`
     font-size: 1.5rem;
+    line-height: 1.25;
     margin-right: 0.3rem;
 `
 

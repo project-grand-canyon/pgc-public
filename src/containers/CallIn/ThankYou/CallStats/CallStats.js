@@ -74,7 +74,7 @@ const CallStats = ({ district, localStats, overallStats }) => {
                         <BottomRightAnchor>
                             <Tooltip 
                                 position="top" 
-                                title="Call your Senators!"
+                                title="Thank you for being a CCL caller!"
                             >
                                 <img alt="Map of the United States" src={usaMapImg} />
                             </Tooltip>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Col, Icon, message, Row, Typography } from 'antd';
+import { Button, Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import styled from '@emotion/styled'
 
@@ -192,19 +192,23 @@ class ThankYou extends Component {
                 </ColorContentRow>
                 <ColorContentRow>
                     {
-                        !this.state.identifier && (<Col xs={24} sm={12} lg={8}>
+                        !this.state.identifier && (<Col xs={24} md={8} lg={6}>
                             <Card
                                 cover={<img alt="US Captitol Building" src={capitol} />}
-                                actions={[<Icon type="user-add" onClick={()=>{this.setState({signUpRedirect: true})}} />]}
+                                actions={[]}
                             >
-                                <Card.Meta
-                                title="Sign Up for Call Reminders"
-                                description="If you haven't done it already, sign up to get a monthly call reminder."
-                                />
+                                <Typography.Paragraph>
+                                    If you haven't done it already, sign up to get a monthly call reminder.
+                                </Typography.Paragraph>
+                                <Button
+                                    onClick={()=>{this.setState({signUpRedirect: true})}}
+                                >
+                                    <Icon type="notification" /> Get Reminders
+                                </Button>
                             </Card>
                         </Col>)
                     }
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={24} md={8} lg={6}>
                         <Card
                             cover={<img alt="US Captitol Building" src={discussion} />}
                             actions={[
@@ -213,21 +217,23 @@ class ThankYou extends Component {
                                 <Icon type="mail" onClick={()=>{this.handleShare('email')}} />
                             ]}
                         >
-                            <Card.Meta
-                            title="Share the Calling Congress Campaign"
-                            description="The more people who call, the more our representatives listen. Spread the word."
-                            />
+                            <Typography>
+                                The more people who call, the more our representatives listen
+                            </Typography>
                         </Card>
                     </Col>
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={24} md={8} lg={6}>
                         <Card
                             cover={<img alt="Volunteer with clipboard" src={grassroots} />}
-                            actions={[<Icon type="user-add" onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}/>]}
                         >
-                            <Card.Meta
-                            title="Join Citizens' Climate Lobby"
-                            description="CCL volunteers created this site, and we would love for you to join us."
-                            />
+                            <Typography.Paragraph>
+                            Learn more about Citizens' Climate Lobby and what we do
+                            </Typography.Paragraph>
+                            <Button
+                                onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}
+                            >
+                                <Icon type="team" /> Join CCL
+                            </Button>
                         </Card>
                     </Col>
                 </ColorContentRow>

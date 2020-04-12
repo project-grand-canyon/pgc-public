@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 import Color from 'color'
 import { Tooltip } from 'antd'
 import { DateTime } from 'luxon'
-import SimpleStat from './SimpleStat'
 
 const Green = Color('#A5CE39')
 

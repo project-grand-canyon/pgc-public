@@ -1,5 +1,4 @@
 import React from 'react'
-import _ from 'lodash'
 import { Card, Col, Row, Tooltip, Typography } from 'antd'
 import styled from '@emotion/styled'
 

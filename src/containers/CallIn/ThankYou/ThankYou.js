@@ -218,7 +218,7 @@ class ThankYou extends Component {
                             ]}
                         >
                             <Typography>
-                                The more people who call, the more our representatives listen
+                                The more people who call, the more our representatives listen.
                             </Typography>
                         </Card>
                     </Col>

@@ -5,8 +5,8 @@
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "@sentry/browser": "^5.2.1",
-    "@sentry/cli": "^1.49.0",
+    "@sentry/browser": "^5.15.4",
+    "@sentry/cli": "^1.52.1",
     "antd": "^3.25.2",
     "axios": "^0.18.1",
     "babel-plugin-import": "^1.12.1",

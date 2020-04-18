@@ -101,7 +101,6 @@ class CallIn extends Component {
                 .then(values => {
                     const hydrated = values[0].data
                     const themes = values[1].data
-                    console.log(hydrated.script)
                     const talkingPoints = [...hydrated.script].map(el=>{
                         const theme = themes.find((el2)=>{return el2.themeId === el.themeId})
                         el.theme = (theme && theme.name) || "Talking Point"
@@ -140,10 +139,13 @@ class CallIn extends Component {
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {
-                search += `&t=${this.state.identifier}}`
+                search += `&t=${this.state.identifier}`
             }
             if (this.state.homeDistrict) {
                 search += `&d=${this.state.homeDistrict}`
+            }
+            if (this.state.callerId) {
+                search += `&c=${this.state.callerId}`
             }
             return <Redirect
                 to={{

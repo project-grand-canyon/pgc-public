@@ -1,0 +1,21 @@
+{
+    "created": "2019-07-23 01:51",
+    "lastModified": "2020-04-14 17:26",
+    "districtId": 860,
+    "state": "WA",
+    "number": -2,
+    "repFirstName": "Maria",
+    "repLastName": "Cantwell",
+    "repImageUrl": "https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/450x550/C000127.jpg",
+    "callTargets": [
+        {
+            "targetDistrictId": 860,
+            "percentage": 100
+        }
+    ],
+    "scriptModifiedTime": 1586885216000,
+    "lastStaleScriptNotification": 1564145106000,
+    "status": "active",
+    "info": "",
+    "senatorDistrict": true
+}

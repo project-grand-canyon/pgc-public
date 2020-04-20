@@ -21,9 +21,14 @@ const StyledAvatar = styled(Avatar)`
     border-width: 2px;
 `
 
-const OtherCallTargets = ({ districts = [] }) => {
+const OtherCallTargets = ({ districts = [], trackingToken = null, callerId = null, homeDistrictNumber = null }) => {
+    const trackingParam = trackingToken ? `t=${trackingToken}` : null;
+    const callerParam = callerId ? `c=${callerId}` : null;
+    const homeDistrictNumberParam = homeDistrictNumber ? `d=${homeDistrictNumber}` : null;
+    const args = [trackingParam, callerParam, homeDistrictNumberParam].filter((el) => el)
+    const queryParams = args.length > 0 ? "?".concat(args.join("&")) : "";
     const callTargets = districts.map(callTarget => {
-        const link = `/call/${callTarget.state}/${callTarget.number}`
+        const link = `/call/${callTarget.state}/${callTarget.number}${queryParams}`
         return (    
             <CallLink
                 key={link}

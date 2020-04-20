@@ -193,8 +193,6 @@ class SignUpForm extends Component {
                             })(
                                 <Cascader options={this.state.cascaderDistricts} onChange={(value, selectedOptions) => {
                                     const values = {...value}
-                                    console.log(value);
-                                    console.log(selectedOptions);
                                     values.state = value[0];
                                     values.districtNumber = value[1];
                                 }} placeholder="Please select" />

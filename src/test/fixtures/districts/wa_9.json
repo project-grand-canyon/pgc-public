@@ -1,0 +1,29 @@
+{
+    "created": "2019-05-27 19:14",
+    "lastModified": "2020-04-16 17:27",
+    "districtId": 566,
+    "state": "WA",
+    "number": 9,
+    "repFirstName": "Adam",
+    "repLastName": "Smith",
+    "repImageUrl": "https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/450x550/S000510.jpg",
+    "callTargets": [
+        {
+            "targetDistrictId": 566,
+            "percentage": 40
+        },
+        {
+            "targetDistrictId": 860,
+            "percentage": 50
+        },
+        {
+            "targetDistrictId": 915,
+            "percentage": 10
+        }
+    ],
+    "scriptModifiedTime": 1587058076000,
+    "lastStaleScriptNotification": 1564145106000,
+    "status": "active",
+    "info": null,
+    "senatorDistrict": false
+}

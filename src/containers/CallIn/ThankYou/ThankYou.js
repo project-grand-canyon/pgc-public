@@ -37,12 +37,15 @@ const ColorContentRow = ({ bg, children}) => (
 class ThankYou extends Component {
 
     state = {
+        callerId: null,
         eligibleCallTargets: [],
         district: null,
+        homeDistrictNumber: null,
         localStats: null,
         overallStats: null,
         statsError: null,
-        signUpRedirect: false
+        signUpRedirect: false,
+        trackingToken: null
     }
 
     componentDidMount = () => {
@@ -50,6 +53,8 @@ class ThankYou extends Component {
         const calledState = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
         const calledNumber = getUrlParameter(params, 'district');
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
+        const trackingToken = getUrlParameter(params, 't') || undefined;
+        const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
@@ -67,6 +72,9 @@ class ThankYou extends Component {
                     districts
                 )
                 this.setState({
+                    homeDistrictNumber,
+                    trackingToken,
+                    callerId,
                     district: calledDistrict,
                     eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,                    
                 })
@@ -153,6 +161,7 @@ class ThankYou extends Component {
             const urlParams = new URLSearchParams(this.props.location.search.slice(1));
             urlParams.delete('t');
             urlParams.delete('d');
+            urlParams.delete('c');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,
@@ -186,7 +195,12 @@ class ThankYou extends Component {
                     )}
                     {this.state.eligibleCallTargets && (
                         <Col sm={24} md={12} lg={10}>
-                            <OtherCallTargets districts={this.state.eligibleCallTargets} />
+                            <OtherCallTargets 
+                                homeDistrictNumber={this.state.homeDistrictNumber}
+                                callerId={this.state.callerId}
+                                trackingToken={this.state.trackingToken}
+                                districts={this.state.eligibleCallTargets}
+                            />
                         </Col>
                     )}
                 </ColorContentRow>

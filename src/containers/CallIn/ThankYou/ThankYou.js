@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import styled from '@emotion/styled'
+import { connect } from "react-redux";
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
@@ -256,4 +257,10 @@ class ThankYou extends Component {
     }
 }
 
-export default ThankYou;
+const mapStateToProps = state => {
+    const { calls } = state;
+    return { calls };
+};
+
+  export default connect(mapStateToProps)(ThankYou);
+

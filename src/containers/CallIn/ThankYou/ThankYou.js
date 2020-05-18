@@ -262,5 +262,4 @@ const mapStateToProps = state => {
     return { calls };
 };
 
-  export default connect(mapStateToProps)(ThankYou);
-
+export default connect(mapStateToProps)(ThankYou);

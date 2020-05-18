@@ -1,7 +1,7 @@
 import { LOG_CALL } from "../actionTypes";
 
 const initialState = {
-  calls: {},
+  byId: {},
 };
 
 export default function(state = initialState, action) {
@@ -10,7 +10,7 @@ export default function(state = initialState, action) {
       const { districtId, timestamp } = action.payload;
       return {
         ...state,
-        calls: {...state.calls, [districtId]: timestamp}
+        byId: {...state.byId, [districtId]: timestamp}
       };
     }
     default:

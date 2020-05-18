@@ -1,22 +1,15 @@
-import { createStore, applyMiddleware } from 'redux';
-import { createLogger } from 'redux-logger';
+import { createStore } from 'redux';
 import rootReducer from './reducers';
 import { loadCalls, saveCalls } from '../util/localStorage'
-
-const loggerMiddleware = createLogger();
 
 const localStorageCalls = loadCalls();
 
 export const store = createStore(
     rootReducer,
-    localStorageCalls,
-    applyMiddleware(
-        loggerMiddleware
-    )
+    localStorageCalls
 );
 
 store.subscribe(() => {
-    console.log('persisting calls')
     saveCalls({
       calls: store.getState().calls
     });

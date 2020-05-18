@@ -93,6 +93,12 @@ class ThankYou extends Component {
             })
             // Filter out the `covid_paused` districts
             .filter(district => district && district.status === 'active')
+            .map(district =>  {
+                const hasMadeCalls = this.props.calls && this.props.calls.byId
+                const hasCalledThisDistrict = Object.keys(this.props.calls.byId).indexOf(district.districtId) !== -1
+                district['alreadyCalled'] = hasMadeCalls && hasCalledThisDistrict
+                return district
+            })
     }
 
     fetchDistricts = (cb) => {
@@ -172,6 +178,16 @@ class ThankYou extends Component {
             console.error(error);
         }
         
+    }
+
+    alreadyCalledDistricts = () => {
+        if (this.props.calls && this.props.calls.byId) {
+            return this.props.calls.byId.map((el)=> {
+                return el.district
+            })
+        } else {
+            return []
+        }
     }
 
     render() {

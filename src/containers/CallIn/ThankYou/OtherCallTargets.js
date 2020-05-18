@@ -36,6 +36,7 @@ const OtherCallTargets = ({ districts = [], trackingToken = null, callerId = nul
                 target="_blank"
                 href={link}
             >
+                {`Has Called? ${callTarget.alreadyCalled ? "yes": "no"}`}
                 <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
                 {`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
             </CallLink>   

@@ -96,12 +96,15 @@ class ThankYou extends Component {
             .filter(district => district && district.status === 'active')
             .map(district =>  {
                 const hasMadeCalls = this.props.calls && this.props.calls.byId
+                if (!hasMadeCalls) {
+                    return district
+                }
                 const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry)=>{
                     const districtId = entry[0]
                     const timestamp = entry[1]
                     return districtId === `${district.districtId}` && timestamp > callExpiry
                 })
-                district['alreadyCalled'] = hasMadeCalls && hasCalledThisDistrict
+                district['alreadyCalled'] = hasCalledThisDistrict
                 return district
             })
     }

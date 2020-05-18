@@ -84,6 +84,7 @@ class ThankYou extends Component {
     }
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
+        const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
         return [-1, -2, homeDistrictNumber]
             .filter(el => {
                 return `${el}` !== `${calledNumber}`
@@ -95,7 +96,11 @@ class ThankYou extends Component {
             .filter(district => district && district.status === 'active')
             .map(district =>  {
                 const hasMadeCalls = this.props.calls && this.props.calls.byId
-                const hasCalledThisDistrict = Object.keys(this.props.calls.byId).indexOf(`${district.districtId}`) !== -1
+                const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry)=>{
+                    const districtId = entry[0]
+                    const timestamp = entry[1]
+                    return districtId === `${district.districtId}` && timestamp > callExpiry
+                })
                 district['alreadyCalled'] = hasMadeCalls && hasCalledThisDistrict
                 return district
             })

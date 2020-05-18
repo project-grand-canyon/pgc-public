@@ -95,7 +95,7 @@ class ThankYou extends Component {
             .filter(district => district && district.status === 'active')
             .map(district =>  {
                 const hasMadeCalls = this.props.calls && this.props.calls.byId
-                const hasCalledThisDistrict = Object.keys(this.props.calls.byId).indexOf(district.districtId) !== -1
+                const hasCalledThisDistrict = Object.keys(this.props.calls.byId).indexOf(`${district.districtId}`) !== -1
                 district['alreadyCalled'] = hasMadeCalls && hasCalledThisDistrict
                 return district
             })

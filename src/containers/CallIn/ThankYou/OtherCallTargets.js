@@ -30,7 +30,6 @@ const OtherCallTargets = ({ districts = [], trackingToken = null, callerId = nul
     const callTargets = districts.map((callTarget, idx) => {
         const honorific = isSenatorDistrict(callTarget) ? "Senator" : "Representative"
         const name = `${honorific} ${callTarget.repLastName}`
-        const avatar = <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
             const link = `/call/${callTarget.state}/${callTarget.number}${queryParams}`
             return (
                 <CallLink
@@ -40,7 +39,7 @@ const OtherCallTargets = ({ districts = [], trackingToken = null, callerId = nul
                     href={link}
                     disabled={callTarget.alreadyCalled}
                 >
-                    {avatar}
+                    <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
                     {callTarget.alreadyCalled ? `${name} - Done ✅` : `Call ${name}`}
                 </CallLink>
             )

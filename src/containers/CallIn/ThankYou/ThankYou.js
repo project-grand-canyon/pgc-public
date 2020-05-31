@@ -100,8 +100,7 @@ class ThankYou extends Component {
                     return district
                 }
                 const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry)=>{
-                    const districtId = entry[0]
-                    const timestamp = entry[1]
+                    const [districtId, timestamp] = entry
                     return districtId === `${district.districtId}` && timestamp > callExpiry
                 })
                 district['alreadyCalled'] = hasCalledThisDistrict

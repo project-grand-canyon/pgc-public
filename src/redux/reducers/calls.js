@@ -9,10 +9,12 @@ export default function (state = initialState, action) {
     case LOG_CALL: {
       const { districtId, timestamp } = action.payload;
 
-      const lastCallTimestamp = state.byId[districtId];
-      // don't track more than one call per district per 24 hour period
-      if (timestamp < lastCallTimestamp + 1000 * 60 * 60 * 24) {
-        return state;
+      const lastCallTimestamp = state.byId && state.byId[districtId];
+      if (lastCallTimestamp) {
+        // don't track more than one call per district per 24 hour period
+        if (timestamp < lastCallTimestamp + 1000 * 60 * 60 * 24) {
+          return state;
+        }
       }
 
       return {

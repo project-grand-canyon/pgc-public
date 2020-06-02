@@ -11,7 +11,7 @@ import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
 
-class CallIn extends Component {
+export class CallIn extends Component {
 
     state = {
         repLastName: null,
@@ -135,8 +135,8 @@ class CallIn extends Component {
     }
 
     componentDidMount() {
-        this.saveIdentifier(this.props.location.search);
-        this.saveHomeDistrict(this.props.location.search);
+        this.saveIdentifier(this.props.history.location.search);
+        this.saveHomeDistrict(this.props.history.location.search);
         this.removeGetArgs();
         this.fetchCongressionalDistricts();
     }

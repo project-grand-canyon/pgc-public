@@ -1,0 +1,128 @@
+{
+    "created": "2019-05-27 19:14",
+    "lastModified": "2020-05-18 16:59",
+    "districtId": 566,
+    "state": "WA",
+    "number": 9,
+    "repFirstName": "Adam",
+    "repLastName": "Smith",
+    "repImageUrl": "https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/450x550/S000510.jpg",
+    "callTargets": [
+        {
+            "targetDistrictId": 566,
+            "percentage": 40
+        },
+        {
+            "targetDistrictId": 860,
+            "percentage": 50
+        },
+        {
+            "targetDistrictId": 915,
+            "percentage": 10
+        }
+    ],
+    "scriptModifiedTime": 1587058076000,
+    "lastStaleScriptNotification": 1589821164000,
+    "status": "active",
+    "info": null,
+    "offices": [
+        {
+            "created": "2019-09-04 05:06",
+            "lastModified": "2019-09-04 05:06",
+            "districtOfficeId": 2364,
+            "districtId": 566,
+            "phone": "202-225-8901",
+            "address": {
+                "addressLine1": "2264 Rayburn House Office Building;",
+                "addressLine2": null,
+                "city": "Washington",
+                "state": "DC",
+                "country": "US",
+                "zipCode": "20515"
+            },
+            "email": "",
+            "opensAt": "09:00:00",
+            "closesAt": "17:00:00"
+        }
+    ],
+    "script": [
+        {
+            "created": "2020-04-16 17:23",
+            "lastModified": "2020-04-16 17:23",
+            "talkingPointId": 417,
+            "themeId": 17,
+            "content": "Thanks for all you’re doing during the Coronavirus Crisis.  Thanks for reaching across the aisle for the COVID-19 relief package. Also, thanks for your COVID Town Hall on Apr 13th.  I hope that, when the pandemic has eased, you can turn your attention to climate change legislation with equal vigor.",
+            "scope": "district",
+            "enabled": true,
+            "districts": [
+                566
+            ],
+            "states": [],
+            "createdBy": 320,
+            "referenceUrl": null
+        },
+        {
+            "created": "2020-04-16 17:25",
+            "lastModified": "2020-04-16 17:25",
+            "talkingPointId": 418,
+            "themeId": 7,
+            "content": "Climate change will be the next crisis and *we know now* that it is coming. We also know that a carbon fee and dividend plan such as HR 763, the Energy Innovation & Carbon Dividend Act, will create millions of jobs and help us recover from the current COVID-19 crisis in a way that also helps to forestall the impending climate crisis. Please support HR 763!",
+            "scope": "national",
+            "enabled": true,
+            "districts": [],
+            "states": [],
+            "createdBy": 320,
+            "referenceUrl": null
+        },
+        {
+            "created": "2020-02-24 19:55",
+            "lastModified": "2020-02-24 20:05",
+            "talkingPointId": 290,
+            "themeId": 9,
+            "content": "We need a bill that can pass in both chambers of Congress and which will be fair to ALL American households.  Charging for carbon pollution and returning revenue to US households can produce both outcomes by avoiding government growth and by helping low income households.  Please co-sponsor the Energy Innovation Act, HR 763.",
+            "scope": "national",
+            "enabled": true,
+            "districts": [],
+            "states": [],
+            "createdBy": 280,
+            "referenceUrl": null
+        },
+        {
+            "created": "2020-02-24 19:59",
+            "lastModified": "2020-02-24 19:59",
+            "talkingPointId": 291,
+            "themeId": 9,
+            "content": "A carbon fee & dividend approach to climate legislation is the best first step toward the equitable vision in the Green New Deal.  By returning more to low income households in a standard dividend than they pay in carbon fees, the policy begins to undo accumulated climate injustices.  Please co-sponsor the Energy Innovation Act, HR 763.",
+            "scope": "national",
+            "enabled": true,
+            "districts": [],
+            "states": [],
+            "createdBy": 280,
+            "referenceUrl": null
+        }
+    ],
+    "requests": [
+        {
+            "created": "2019-06-05 02:17",
+            "lastModified": "2020-02-24 20:10",
+            "requestId": 158,
+            "districtId": 566,
+            "content": "Please cosponsor H.R. 763, The Energy Innovation and Carbon Dividend Act.  We need a bill that if effective at reducing greenhouse gas, fair to American families and can actually pass Congress."
+        },
+        {
+            "created": "2019-06-05 02:19",
+            "lastModified": "2020-01-09 19:51",
+            "requestId": 586,
+            "districtId": 566,
+            "content": "Please cosponsor H.R. 763, The Energy Innovation and Carbon Dividend Act."
+        },
+        {
+            "created": "2020-03-22 04:51",
+            "lastModified": "2020-03-22 04:51",
+            "requestId": 1427,
+            "districtId": 566,
+            "content": "Please keep climate change in mind while you are responding to the COVID-19 pandemic and economic recovery."
+        }
+    ],
+    "senatorDistrict": false
+}

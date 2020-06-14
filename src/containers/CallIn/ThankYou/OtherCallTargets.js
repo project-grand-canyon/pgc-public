@@ -27,19 +27,22 @@ const OtherCallTargets = ({ districts = [], trackingToken = null, callerId = nul
     const homeDistrictNumberParam = homeDistrictNumber ? `d=${homeDistrictNumber}` : null;
     const args = [trackingParam, callerParam, homeDistrictNumberParam].filter((el) => el)
     const queryParams = args.length > 0 ? "?".concat(args.join("&")) : "";
-    const callTargets = districts.map(callTarget => {
-        const link = `/call/${callTarget.state}/${callTarget.number}${queryParams}`
-        return (    
-            <CallLink
-                key={link}
-                type="primary"
-                target="_blank"
-                href={link}
-            >
-                <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
-                {`Call ${isSenatorDistrict(callTarget) ? "Senator" : "Representative"} ${callTarget.repLastName}`}
-            </CallLink>   
-        )
+    const callTargets = districts.map((callTarget, idx) => {
+        const honorific = isSenatorDistrict(callTarget) ? "Senator" : "Representative"
+        const name = `${honorific} ${callTarget.repLastName}`
+            const link = `/call/${callTarget.state}/${callTarget.number}${queryParams}`
+            return (
+                <CallLink
+                    key={idx}
+                    type="primary"
+                    target="_blank"
+                    href={link}
+                    disabled={callTarget.alreadyCalled}
+                >
+                    <StyledAvatar size={64} shape="square" src={callTarget.repImageUrl} />
+                    {callTarget.alreadyCalled ? `${name} - Done ✅` : `Call ${name}`}
+                </CallLink>
+            )
     })
 
     return (

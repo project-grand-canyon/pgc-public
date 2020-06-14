@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
 import { Redirect } from 'react-router-dom';
+import { connect } from "react-redux";
 
+import { logCall } from "../../redux/actions";
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
@@ -9,7 +11,7 @@ import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
 
-class CallIn extends Component {
+export class CallIn extends Component {
 
     state = {
         repLastName: null,
@@ -31,12 +33,16 @@ class CallIn extends Component {
     }
 
     handleICalled = () => {
+        const districtId = this.state.districtId;
         const reportBody = this.state.identifier ? { 
             callerId: parseInt(this.state.callerId),
             trackingId: this.state.identifier,
-            districtId: this.state.districtId,
+            districtId: districtId,
             talkingPointId: (this.state.selectedTalkingPoint && parseInt(this.state.selectedTalkingPoint.talkingPointId)) || 0
         } : {};
+
+        this.props.logCall(districtId);
+
         axios_api.post('calls', reportBody).then((response) => {
             // nothing for now
         }).catch((error) => {
@@ -129,8 +135,8 @@ class CallIn extends Component {
     }
 
     componentDidMount() {
-        this.saveIdentifier(this.props.location.search);
-        this.saveHomeDistrict(this.props.location.search);
+        this.saveIdentifier(this.props.history.location.search);
+        this.saveHomeDistrict(this.props.history.location.search);
         this.removeGetArgs();
         this.fetchCongressionalDistricts();
     }
@@ -393,4 +399,4 @@ class CallIn extends Component {
     }
 }
 
-export default CallIn;
+export default connect(null, {logCall})(CallIn);

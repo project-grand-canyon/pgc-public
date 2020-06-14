@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, Col, Icon, message, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import styled from '@emotion/styled'
+import { connect } from "react-redux";
 
 import SimpleLayout from '../../Layout/SimpleLayout/SimpleLayout';
 import axios from '../../../util/axios-api';
@@ -83,6 +84,7 @@ class ThankYou extends Component {
     }
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
+        const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
         return [-1, -2, homeDistrictNumber]
             .filter(el => {
                 return `${el}` !== `${calledNumber}`
@@ -92,6 +94,18 @@ class ThankYou extends Component {
             })
             // Filter out the `covid_paused` districts
             .filter(district => district && district.status === 'active')
+            .map(district =>  {
+                const hasMadeCalls = this.props.calls && this.props.calls.byId
+                if (!hasMadeCalls) {
+                    return district
+                }
+                const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry)=>{
+                    const [districtId, timestamp] = entry
+                    return districtId === `${district.districtId}` && timestamp > callExpiry
+                })
+                district['alreadyCalled'] = hasCalledThisDistrict
+                return district
+            })
     }
 
     fetchDistricts = (cb) => {
@@ -171,6 +185,16 @@ class ThankYou extends Component {
             console.error(error);
         }
         
+    }
+
+    alreadyCalledDistricts = () => {
+        if (this.props.calls && this.props.calls.byId) {
+            return this.props.calls.byId.map((el)=> {
+                return el.district
+            })
+        } else {
+            return []
+        }
     }
 
     render() {
@@ -256,4 +280,9 @@ class ThankYou extends Component {
     }
 }
 
-export default ThankYou;
+const mapStateToProps = state => {
+    const { calls } = state;
+    return { calls };
+};
+
+export default connect(mapStateToProps)(ThankYou);

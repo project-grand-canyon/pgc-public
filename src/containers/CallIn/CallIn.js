@@ -294,7 +294,7 @@ export class CallIn extends Component {
                 <section id="covid">
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                        <Alert showIcon style={{ marginBottom: 20}} type="warning" message="Calling During the COVID-19 Crisis" description="Many parts of the country are currently overwhelmed by this public health crisis. Please use your best judgment to decide whether the Member of Congress that represents your part of the country is receptive to our message during this sensitive time." />
+                        <Alert showIcon style={{ marginBottom: 20}} type="warning" message="Calling During the COVID-19 Crisis" description="Some parts of the country are beginning to emerge from the pandemic, but many are not. Please use your best judgment to decide whether the Member of Congress that represents your part of the country is receptive to our message during this sensitive time." />
                         </Col>
                     </Row>
                 </section>

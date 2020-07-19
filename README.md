@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Developing with pgc-api
 
-Run `./run.sh start`
+Run `npm run local`
 
 This will connect to the default pgc-api port on localhost (`http://localhost:8080/api`) and start the frontend service.
 

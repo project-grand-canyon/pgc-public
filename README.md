@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Developing with pgc-api
 
-To connect to a local instance of pgc-api, run `npm start` with the environment variable `REACT_APP_API_ENDPOINT=<url>`. By default, pgc-api listens on `http://localhost:8080/api`, so that would look like:
+Run `npm run local`
 
-`REACT_APP_API_ENDPOINT=http://localhost:8080//api/ npm start`
+This will connect to the default pgc-api port on localhost (`http://localhost:8080/api`) and start the frontend service.
 
 ## Available Scripts
 

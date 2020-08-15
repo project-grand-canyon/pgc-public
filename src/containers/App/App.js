@@ -15,6 +15,8 @@ import { initAmplitude, logPageView } from "../../util/amplitude";
 import styles from "./App.module.css";
 
 class App extends Component {
+  previousLocation = null;
+
   constructor(props) {
     super(props);
     initAmplitude();
@@ -24,33 +26,25 @@ class App extends Component {
     });
   }
 
-  state = {
-    previousLocation: null,
-  };
-
   pageWasViewed(location) {
-    console.log('pwv')
     if (
-      !this.state.previousLocation ||
-      location.pathname !== this.state.previousLocation.pathname
+      !this.previousLocation ||
+      location.pathname !== this.previousLocation.pathname
     ) {
-      console.log('pwv2')
+      this.previousLocation = location;
       logPageView(location.pathname);
-      this.setState({ previousLocation: location });
     }
   }
 
   componentDidMount() {
-    console.log('cdm')
-    console.log(this.props.history.location)
     this.pageWasViewed(this.props.location);
   }
 
   componentDidUpdate(prevProps) {
-    console.log('cdu')
-    console.log(this.props.history.location)
     if (this.props.location !== prevProps.location) {
-      this.pageWasViewed(this.props.location);
+      // if a page has been `history.push`ed, the location attribute gets nested. Unsure why
+      const location = this.props.location.location || this.props.location;
+      this.pageWasViewed(location);
     }
   }
 

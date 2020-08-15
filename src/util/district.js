@@ -18,6 +18,26 @@ const displayName = (district) => {
     return `${district.state}`
 }
 
+const analyticsName = (district) => {
+    if (!district) {
+        return null;
+    }
+
+    const number = parseInt(district.number)
+
+    if (number > 0) {
+        return `${district.state}-${number}`
+    } else if  (number === 0) {
+        return `${district.state}-At Large`
+    } else if (number === -1) {
+        return `${district.state}-Sr Senator`
+    } else if (number === -2) {
+        return `${district.state}-Jr Senator`
+    } 
+
+    return `${district.state}`
+}
+
 const comparator = (d1, d2) => {
     const state1 = d1.state;
     const state2 = d2.state;
@@ -59,6 +79,7 @@ export {
     isSenatorDistrict,
     isAtLargeDistrict,
     displayName,
+    analyticsName,
     comparator,
     getAssociatedSenators,
 };

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { logCall } from "../../redux/actions";
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
+import { logCall as logCallAmplitude } from "../../util/amplitude";
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 import styles from './CallIn.module.css';
@@ -42,6 +43,8 @@ export class CallIn extends Component {
         } : {};
 
         this.props.logCall(districtId);
+        const {state, number} = this.state;
+        logCallAmplitude({state, number});
 
         axios_api.post('calls', reportBody).then((response) => {
             // nothing for now

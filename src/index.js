@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactGA from 'react-ga'
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { store } from './redux/store'
@@ -21,5 +20,4 @@ const app = (
     </Provider>
 );
 
-ReactGA.initialize('UA-140402020-1'); // Google Analytics
 ReactDOM.render(app, document.getElementById('root'));

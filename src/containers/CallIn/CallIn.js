@@ -30,7 +30,8 @@ export class CallIn extends Component {
         callerId: null,
         selectedTalkingPoint: 0,
         officesLocked: false,
-        homeDistrict: null
+        homeDistrict: null,
+        tracked: false // whether the call was successfully tracked
     }
 
     handleICalled = () => {
@@ -47,12 +48,14 @@ export class CallIn extends Component {
         logCallAmplitude({state, number});
 
         axios_api.post('calls', reportBody).then((response) => {
-            // nothing for now
-        }).catch((error) => {
-            // nothing for now 
-        }).then(() => {
             this.setState({
-                didCall: true
+                didCall: true,
+                tracked: true
+            });
+        }).catch((error) => {
+            this.setState({
+                didCall: true,
+                tracked: false
             });
         });
     }
@@ -155,6 +158,9 @@ export class CallIn extends Component {
             }
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
+            }
+            if (this.state.tracked) {
+                search += `&m=1`
             }
             return <Redirect
                 to={{

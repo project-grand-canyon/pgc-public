@@ -46,7 +46,8 @@ class ThankYou extends Component {
         overallStats: null,
         statsError: null,
         signUpRedirect: false,
-        trackingToken: null
+        trackingToken: null,
+        callWasTracked: false
     }
 
     componentDidMount = () => {
@@ -56,6 +57,7 @@ class ThankYou extends Component {
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
+        const callWasTracked = getUrlParameter(params, 'm') || false;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
@@ -73,6 +75,7 @@ class ThankYou extends Component {
                     districts
                 )
                 this.setState({
+                    callWasTracked,
                     homeDistrictNumber,
                     trackingToken,
                     callerId,
@@ -176,6 +179,7 @@ class ThankYou extends Component {
             urlParams.delete('t');
             urlParams.delete('d');
             urlParams.delete('c');
+            urlParams.delete('m');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,
@@ -207,6 +211,10 @@ class ThankYou extends Component {
                 <ColorContentRow bg="#ececec">
                     <Col xs={24} align="center">
                         <Typography.Title level={1}>Thank You for Calling</Typography.Title>
+                        {   
+                            this.state.callWasTracked ?
+                                (<Typography.Text>Your call was added to our count! CCL members, your call was also added to the CCL Action Tracker.</Typography.Text>) : null
+                        }
                     </Col>
                     {this.state.district && this.state.localStats && (
                         <Col sm={24} md={12} lg={14}>

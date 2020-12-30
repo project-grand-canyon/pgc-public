@@ -237,35 +237,40 @@ class ThankYou extends Component {
                     )}
                 </ColorContentRow>
                 <ColorContentRow>
-                    {
-                        !this.state.identifier && (<Col xs={24} md={8} lg={6}>
-                            <Card
-                                cover={<img alt="US Captitol Building" src={capitol} />}
-                                actions={[]}
-                            >
-                                <Typography.Paragraph>
-                                    If you haven't done it already, sign up to get a monthly call reminder.
-                                </Typography.Paragraph>
-                                <Button
-                                    onClick={()=>{this.setState({signUpRedirect: true})}}
-                                >
-                                    <Icon type="notification" /> Get Reminders
-                                </Button>
-                            </Card>
-                        </Col>)
-                    }
+                    <Col xs={24} align="center">
+                        <Typography.Title level={3}>More Ways To Help</Typography.Title>
+                    </Col>
                     <Col xs={24} md={8} lg={6}>
                         <Card
-                            cover={<img alt="US Captitol Building" src={discussion} />}
+                            cover={<img alt="US Capitol Building" src={capitol} />}
+                        >
+                            <Typography.Paragraph>
+                                We need to double the number of calls we make to Congress every month and you can help.
+                            </Typography.Paragraph>
+                            <Typography.Paragraph>
+                            Do you know someone in the USA who might like to join our Monthly Calling Campaign? If so, send them the link and ask them to sign up today.
+                            </Typography.Paragraph>
+                            <Button
+                                onClick={()=>{this.handleShare('copyToClipboard')}}
+                            >
+                                <Icon type="copy" /> Copy link
+                            </Button>
+                        </Card>
+                    </Col>
+                    <Col xs={24} md={8} lg={6}>
+                        <Card
+                            cover={<img alt="People talking" src={discussion} />}
                             actions={[
                                 <Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, 
-                                <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />, 
-                                <Icon type="mail" onClick={()=>{this.handleShare('email')}} />
+                                <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />
                             ]}
                         >
-                            <Typography>
-                                The more people who call, the more our representatives listen.
-                            </Typography>
+                            <Typography.Paragraph>
+                            Share an easy way to help the climate with your friends and family.
+                            </Typography.Paragraph>
+                            <Typography.Paragraph>
+                            Post the Monthly Calling Campaign on social media!
+                            </Typography.Paragraph>
                         </Card>
                     </Col>
                     <Col xs={24} md={8} lg={6}>
@@ -273,12 +278,15 @@ class ThankYou extends Component {
                             cover={<img alt="Volunteer with clipboard" src={grassroots} />}
                         >
                             <Typography.Paragraph>
-                            Learn more about Citizens' Climate Lobby and what we do
+                            Citizens' Climate Lobby's consistently respectful, nonpartisan approach to climate education is designed to create a broad, sustainable foundation for climate action.
+                            </Typography.Paragraph>
+                            <Typography.Paragraph>
+                            Learn more about CCL and what we do.
                             </Typography.Paragraph>
                             <Button
                                 onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}
                             >
-                                <Icon type="team" /> Join CCL
+                                <Icon type="team" /> Visit CCL
                             </Button>
                         </Card>
                     </Col>

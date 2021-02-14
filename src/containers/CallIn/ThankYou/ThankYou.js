@@ -59,7 +59,6 @@ class ThankYou extends Component {
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
-        const callWasTracked = getUrlParameter(params, 'm') || false;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
@@ -207,7 +206,6 @@ class ThankYou extends Component {
             urlParams.delete('t');
             urlParams.delete('d');
             urlParams.delete('c');
-            urlParams.delete('m');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,

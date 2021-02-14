@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
-import { connect } from "react-redux";
 
-import { logCall } from "../../redux/actions";
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
-import { logCall as logCallAmplitude } from "../../util/amplitude";
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 import styles from './CallIn.module.css';
@@ -361,4 +358,4 @@ export class CallIn extends Component {
     }
 }
 
-export default connect(null, { logCall })(CallIn);
+export default CallIn;

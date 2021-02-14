@@ -14,6 +14,10 @@ import grassroots from '../../../assets/images/grassroots.jpg';
 import OtherCallTargets from './OtherCallTargets';
 import CallStats from './CallStats/CallStats'
 
+import { logCall as logCallAmplitude } from "../../../util/amplitude";
+import { logCall } from "../../../redux/actions";
+import axios_api from "../../../util/axios-api";
+
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
@@ -38,8 +42,8 @@ const ColorContentRow = ({ bg, children }) => (
 class ThankYou extends Component {
 
     state = {
-        calledState,
-        calledNumber,
+        calledState: null,
+        calledNumber: null,
         callerId: null,
         eligibleCallTargets: [],
         district: null,
@@ -77,7 +81,6 @@ class ThankYou extends Component {
                 this.setState({
                     calledState,
                     calledNumber,
-                    callWasTracked,
                     homeDistrictNumber,
                     trackingToken,
                     callerId,

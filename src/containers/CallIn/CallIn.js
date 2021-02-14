@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography} from 'antd';
+import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -28,7 +28,6 @@ export class CallIn extends Component {
         identifier: null,
         didCall: false,
         callerId: null,
-        selectedTalkingPoint: 0,
         officesLocked: false,
         homeDistrict: null,
         tracked: false // whether the call was successfully tracked
@@ -36,16 +35,15 @@ export class CallIn extends Component {
 
     handleICalled = () => {
         const districtId = this.state.districtId;
-        const reportBody = this.state.identifier ? { 
+        const reportBody = this.state.identifier ? {
             callerId: parseInt(this.state.callerId),
             trackingId: this.state.identifier,
             districtId: districtId,
-            talkingPointId: (this.state.selectedTalkingPoint && parseInt(this.state.selectedTalkingPoint.talkingPointId)) || 0
         } : {};
 
         this.props.logCall(districtId);
-        const {state, number} = this.state;
-        logCallAmplitude({state, number});
+        const { state, number } = this.state;
+        logCallAmplitude({ state, number });
 
         axios_api.post('calls', reportBody).then((response) => {
             this.setState({
@@ -64,8 +62,8 @@ export class CallIn extends Component {
         this.props.history.push({
             pathname: this.props.history.location.pathname,
             search: '',
-            state: {...this.state}
-          })
+            state: { ...this.state }
+        })
     }
 
     saveHomeDistrict = (params) => {
@@ -96,25 +94,25 @@ export class CallIn extends Component {
             return;
         }
 
-        axios_api.get('districts').then((response)=>{
+        axios_api.get('districts').then((response) => {
             const districts = response.data;
-            const foundDistrict = districts.find((el)=>{
+            const foundDistrict = districts.find((el) => {
                 return (state.toLowerCase() === el.state.toLowerCase()) && (parseInt(number) === parseInt(el.number))
             })
-            if(!foundDistrict){
+            if (!foundDistrict) {
                 throw Error(`No call-in details found for ${state}-${number}`)
             }
 
             Promise.all(
                 [
-                    axios_api.get(`districts/${foundDistrict.districtId}/hydrated`), 
+                    axios_api.get(`districts/${foundDistrict.districtId}/hydrated`),
                     axios_api.get(`themes`)
                 ])
                 .then(values => {
                     const hydrated = values[0].data
                     const themes = values[1].data
-                    const talkingPoints = [...hydrated.script].map(el=>{
-                        const theme = themes.find((el2)=>{return el2.themeId === el.themeId})
+                    const talkingPoints = [...hydrated.script].map(el => {
+                        const theme = themes.find((el2) => { return el2.themeId === el.themeId })
                         el.theme = (theme && theme.name) || "Talking Point"
                         return el
                     })
@@ -130,10 +128,10 @@ export class CallIn extends Component {
                         districtId: hydrated.districtId,
                         status: hydrated.status,
                     })
-                }).catch(e=>{
+                }).catch(e => {
                     throw e
                 });
-        }).catch(e=>{
+        }).catch(e => {
             this.setState({
                 fetchCallInError: e
             })
@@ -164,22 +162,22 @@ export class CallIn extends Component {
             }
             return <Redirect
                 to={{
-                pathname: "/call/thankyou",
-                search: search
+                    pathname: "/call/thankyou",
+                    search: search
                 }}
             />;
         }
 
         return (
             <SimpleLayout activeLinkKey="/">
-                {this.state.fetchCallInError ? this.getErrorJSX() : this.getCallInJSX() }
+                {this.state.fetchCallInError ? this.getErrorJSX() : this.getCallInJSX()}
             </SimpleLayout>
         );
     }
 
     getErrorJSX = () => {
         const error = (
-            <Empty style={{marginTop: '20px', marginBottom: '20px'}}description="There was an error fetching the call-in information. Please try again later." />
+            <Empty style={{ marginTop: '20px', marginBottom: '20px' }} description="There was an error fetching the call-in information. Please try again later." />
         );
         return error;
     }
@@ -187,9 +185,9 @@ export class CallIn extends Component {
     getCallInJSX = () => {
         const offices = this.state.offices;
         const yourLegislator = isSenatorDistrict(this.state) ? "Your Senator:" : " Your Representative:";
-        const title = isSenatorDistrict(this.state) ? 
-        `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
-        `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
+        const title = isSenatorDistrict(this.state) ?
+            `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})` :
+            `${this.state.repFirstName} ${this.state.repLastName} (${displayName(this.state)})`;
 
         if (!this.state.repLastName) {
             return (
@@ -226,36 +224,36 @@ export class CallIn extends Component {
                         </Col>
                     </Row>
                     <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
-                    <Row type="flex" align="middle">
-                        <Col xs={24} md={8} lg={6} xl={4}>
-                            <Row className={styles.ContentRow} type="flex" justify="center">
-                                <Col>
-                                    <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col xs={24} md={16} lg={18} xl={20}>
-                            <Row className={styles.HeaderRow}>
-                                <Col span={24}>
-                                    <Typography.Title level={4}>{yourLegislator}</Typography.Title>
-                                </Col>
-                            </Row>
-                            <Row className={styles.ContentRow}>
-                                <Col span={24}>
-                                    <Typography.Title level={2}>{ title }</Typography.Title>
-                                </Col>
-                            </Row>
-                            <Row className={styles.HeaderRow}>
-                                <Col className={styles.Offices}>
-                                    <Typography.Title level={4}>
-                                        {offices.length > 1 ? "Offices:" : "Office:"}
-                                    </Typography.Title>
-                                </Col>
-                            </Row>
-                            {/* Not using affix till I figure it out for desktop and mobile */}
-                            {/* <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}> */}
+                        <Row type="flex" align="middle">
+                            <Col xs={24} md={8} lg={6} xl={4}>
+                                <Row className={styles.ContentRow} type="flex" justify="center">
+                                    <Col>
+                                        <img src={`${this.state.repImageUrl}`} alt={`${this.state.repLastName} portrait`} className={styles.HeadShot} />
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col xs={24} md={16} lg={18} xl={20}>
+                                <Row className={styles.HeaderRow}>
+                                    <Col span={24}>
+                                        <Typography.Title level={4}>{yourLegislator}</Typography.Title>
+                                    </Col>
+                                </Row>
+                                <Row className={styles.ContentRow}>
+                                    <Col span={24}>
+                                        <Typography.Title level={2}>{title}</Typography.Title>
+                                    </Col>
+                                </Row>
+                                <Row className={styles.HeaderRow}>
+                                    <Col className={styles.Offices}>
+                                        <Typography.Title level={4}>
+                                            {offices.length > 1 ? "Offices:" : "Office:"}
+                                        </Typography.Title>
+                                    </Col>
+                                </Row>
+                                {/* Not using affix till I figure it out for desktop and mobile */}
+                                {/* <Affix offsetTop={0} onChange={(affixed)=>{this.setState({officesLocked: affixed})}}> */}
                                 <Row className={styles.ContentRow} style={
-                                    {borderBottom:  this.state.officesLocked ? "1px solid lightgrey" : "none" }
+                                    { borderBottom: this.state.officesLocked ? "1px solid lightgrey" : "none" }
                                 }>
                                     <Col>
                                         <List
@@ -265,22 +263,22 @@ export class CallIn extends Component {
                                             dataSource={offices}
                                             renderItem={item => (
                                                 <List.Item actions={[<a href={`tel:${item.phone}`}>{item.phone}</a>]}>
-                                                    <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>}/>
+                                                    <List.Item.Meta title={<Typography.Text>{item.address.city} {item.address.state}</Typography.Text>} />
                                                 </List.Item>
                                             )}
                                         />
                                     </Col>
                                 </Row>
-                            {/* </Affix> */}
-                        </Col>
-                    </Row>
+                                {/* </Affix> */}
+                            </Col>
+                        </Row>
                     </Col></Row>
                 </section>
 
                 <section id="instructions">
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                            <Collapse 
+                            <Collapse
                                 className={styles.WhatToExpect}
                                 bordered={true}
                                 accordion={true}
@@ -288,7 +286,7 @@ export class CallIn extends Component {
                                 expandIcon={({ isActive }) => <Icon type="info-circle" rotate={isActive ? 90 : 0} />}
                             >
                                 <Collapse.Panel
-                                    header={<Typography.Text style={{ margin: 0}} strong>What To Expect</Typography.Text>}
+                                    header={<Typography.Text style={{ margin: 0 }} strong>What To Expect</Typography.Text>}
                                     key={1}
                                 >
                                     <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
@@ -328,33 +326,24 @@ export class CallIn extends Component {
     getTalkingPointsJSX = () => {
         const talkingPoints = (this.state.talkingPoints) ? this.state.talkingPoints.map((talkingPoint, idx) => {
             const education = (
-                    <Typography.Paragraph>{talkingPoint.content}
-                    {talkingPoint.referenceUrl && 
+                <Typography.Paragraph>{talkingPoint.content}
+                    {talkingPoint.referenceUrl &&
                         <span> (<a rel="noopener noreferrer" target="_blank" href={talkingPoint.referenceUrl}>Background Info</a>)</span>
                     }
-                    </Typography.Paragraph>  
+                </Typography.Paragraph>
             );
             return (
-            <Collapse.Panel header={<Typography.Text strong>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
+                <Collapse.Panel header={<Typography.Text strong>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
                     {education}
                 </Collapse.Panel>);
         }) : null;
-        return(
+        return (
             <>
                 <Typography.Title level={3}>Talking Point:</Typography.Title>
-                <Typography.Text style={{fontStyle:"italic"}}>Talking points provide information that connects climate change to your local area. Choose one.</Typography.Text>
+                <Typography.Text style={{ fontStyle: "italic" }}>Talking points provide information that connects climate change to your local area. Choose one.</Typography.Text>
                 <Row>
                     <Col span={24}>
-                    <Collapse 
-                        accordion
-                        bordered={false}
-                        onChange={(index)=> {
-                            this.setState({
-                                selectedTalkingPoint: index
-                            })
-                    }} >
-                        { talkingPoints }
-                    </Collapse>
+                        <Collapse accordion bordered={false}>{talkingPoints}</Collapse>
                     </Col>
                 </Row>
             </>
@@ -371,7 +360,7 @@ export class CallIn extends Component {
     }
 
     getRequestJSX = () => {
-        const sorted = [...this.state.requests].sort((el1, el2)=> {
+        const sorted = [...this.state.requests].sort((el1, el2) => {
             if (el1.lastModified < el2.lastModified) {
                 return 1
             } else {
@@ -381,21 +370,21 @@ export class CallIn extends Component {
 
         const request = sorted.shift();
 
-        const subtitle = isSenatorDistrict(this.state) ? 
-        `A specific request for Senator ${this.state.repLastName}:` :
-        `A specific request for Rep. ${this.state.repLastName}:`;
+        const subtitle = isSenatorDistrict(this.state) ?
+            `A specific request for Senator ${this.state.repLastName}:` :
+            `A specific request for Rep. ${this.state.repLastName}:`;
 
         return request ? (
             <>
-                <Typography.Title style={{marginTop: "1em"}}level={3}>Request:</Typography.Title>
-                <Typography.Text style={{fontStyle:"italic"}}>{subtitle}</Typography.Text>
-                {this.state.requests[0] && 
+                <Typography.Title style={{ marginTop: "1em" }} level={3}>Request:</Typography.Title>
+                <Typography.Text style={{ fontStyle: "italic" }}>{subtitle}</Typography.Text>
+                {this.state.requests[0] &&
                     <Typography.Paragraph>{request.content}</Typography.Paragraph>
                 }
             </>
         ) : null;
-        
+
     }
 }
 
-export default connect(null, {logCall})(CallIn);
+export default connect(null, { logCall })(CallIn);

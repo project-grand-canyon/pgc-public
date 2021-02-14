@@ -33,31 +33,6 @@ export class CallIn extends Component {
         tracked: false // whether the call was successfully tracked
     }
 
-    handleICalled = () => {
-        const districtId = this.state.districtId;
-        const reportBody = this.state.identifier ? {
-            callerId: parseInt(this.state.callerId),
-            trackingId: this.state.identifier,
-            districtId: districtId,
-        } : {};
-
-        this.props.logCall(districtId);
-        const { state, number } = this.state;
-        logCallAmplitude({ state, number });
-
-        axios_api.post('calls', reportBody).then((response) => {
-            this.setState({
-                didCall: true,
-                tracked: true
-            });
-        }).catch((error) => {
-            this.setState({
-                didCall: true,
-                tracked: false
-            });
-        });
-    }
-
     removeGetArgs = () => {
         this.props.history.push({
             pathname: this.props.history.location.pathname,
@@ -156,9 +131,6 @@ export class CallIn extends Component {
             }
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
-            }
-            if (this.state.tracked) {
-                search += `&m=1`
             }
             return <Redirect
                 to={{
@@ -354,7 +326,9 @@ export class CallIn extends Component {
         return (
             <>
                 <Typography.Title level={3}>Report Your Call:</Typography.Title>
-                <Button type="primary" className={styles.ICalled} onClick={this.handleICalled}>I called!</Button>
+                <Button type="primary" className={styles.ICalled} onClick={this.setState({
+                    didCall: true
+                })}>I called!</Button>
             </>
         );
     }

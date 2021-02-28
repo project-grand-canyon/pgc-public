@@ -42,7 +42,7 @@ const ColorContentRow = ({ bg, children }) => (
 class ThankYou extends Component {
 
     state = {
-        calledState: null,
+        callWasReported: false,
         calledNumber: null,
         callerId: null,
         eligibleCallTargets: [],
@@ -57,8 +57,8 @@ class ThankYou extends Component {
     }
 
     componentDidMount = () => {
+        console.log("componentDidMount");
         const params = this.props.location.search;
-        const calledState = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
         const calledNumber = getUrlParameter(params, 'district');
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
@@ -87,13 +87,13 @@ class ThankYou extends Component {
                     district: calledDistrict,
                     eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,
                 });
-                this.reportCall()
                 this.setStats(calledDistrict);
             }
         })
     }
 
-    reportCall = () => {
+    reportCall = (calledState) => {
+        console.log("HELP12");
         const districtId = this.state.districtId;
         const reportBody = this.state.trackingToken ? {
             callerId: parseInt(this.state.callerId),
@@ -102,21 +102,26 @@ class ThankYou extends Component {
         } : {};
 
         this.props.logCall(districtId);
-        const state = this.calledState;
         const number = this.calledNumber;
-        logCallAmplitude({ state, number });
+        logCallAmplitude({
+            state: calledState,
+            number: number
+        });
         axios_api.post('calls', reportBody).then((response) => {
             this.setState({
+                callWasReported: true,
                 callWasTracked: true
             });
         }).catch((error) => {
             this.setState({
+                callWasReported: true,
                 callWasTracked: false
             });
         });
     }
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
+        console.log("eligibleCallTargetDistrictIds");
         const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
         return [-1, -2, homeDistrictNumber]
             .filter(el => {
@@ -142,6 +147,7 @@ class ThankYou extends Component {
     }
 
     fetchDistricts = (cb) => {
+        console.log("fetchDistricts");
         axios.get('districts').then((response) => {
             const districts = response.data;
             cb(districts)
@@ -149,12 +155,14 @@ class ThankYou extends Component {
     }
 
     findDistrictByStateNumber = (state, number, districts) => {
+        console.log("findDistrictByStateNumber");
         return districts.find(el => (
             state.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
         ))
     }
 
     setStats = (district) => {
+        console.log("setStats");
         Promise.all(
             [
                 axios.get(`stats/${district.districtId}`),
@@ -175,6 +183,7 @@ class ThankYou extends Component {
     }
 
     handleShare = (platform) => {
+        console.log("handleShare");
         switch (platform) {
             case 'facebook':
                 this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcitizensclimatelobby.org/monthly-calling-campaign')
@@ -190,6 +199,7 @@ class ThankYou extends Component {
     }
 
     copyToClipboard = str => {
+        console.log("copyToClipboard");
         const el = document.createElement('textarea');
         el.value = str;
         document.body.appendChild(el);
@@ -199,11 +209,13 @@ class ThankYou extends Component {
     };
 
     openInNewTab = (url) => {
+        console.log("openInNewTab");
         var win = window.open(url, '_blank');
         win.focus();
     }
 
     removeTrackingGetArgs = () => {
+        console.log("removeTrackingGetArgs");
         try {
             const urlParams = new URLSearchParams(this.props.location.search.slice(1));
             urlParams.delete('t');
@@ -221,6 +233,7 @@ class ThankYou extends Component {
     }
 
     alreadyCalledDistricts = () => {
+        console.log("alreadyCalledDistricts");
         if (this.props.calls && this.props.calls.byId) {
             return this.props.calls.byId.map((el) => {
                 return el.district
@@ -231,10 +244,13 @@ class ThankYou extends Component {
     }
 
     render() {
+        console.log("render");
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
         }
-
+        if (!this.state.callWasReported) {
+            this.reportCall(getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase())
+        }
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <ColorContentRow bg="#ececec">
@@ -326,6 +342,7 @@ class ThankYou extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log("mapStateToProps");
     const { calls } = state;
     return { calls };
 };

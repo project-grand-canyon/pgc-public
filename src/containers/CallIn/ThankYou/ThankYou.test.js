@@ -1,7 +1,7 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { Route, Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { render, fireEvent, waitFor, waitForDomChange } from "@testing-library/react";
+import { render, waitForDomChange } from "@testing-library/react";
 import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import "@testing-library/jest-dom/extend-expect";
 
@@ -10,26 +10,31 @@ import { ThankYou } from "./ThankYou";
 jest.mock("../../../util/axios-api");
 jest.mock("../../../util/amplitude");
 
-describe("CallIn", () => {
-  test("logCall() invoked when I Called is clicked", async () => {
+const state = "WA"
+const districtID = 9
+const trackingToken = 23456
+const callerId = 7890
 
-    // TODO: Make this test work!
+describe("ThankYou", () => {
+  test("logCall() invoked", async () => {
 
-    /*const history = createMemoryHistory();
-    history.push("/call/wa/-1?t=123456&d=9&c=1234");
+    const history = createMemoryHistory();
+
+    history.push(
+      "/call/thankyou?district=" + toString(districtID)
+      + "&state=" + state
+      + "&t=" + toString(trackingToken)
+      + "&d=" + toString(districtID)
+      + "&c=" + toString(callerId)
+    );
 
     const logCallMock = jest.fn();
     render(
-      <MemoryRouter>
-        <ThankYou history={history} logCall={logCallMock} />
-      </MemoryRouter>
+      <Router history={history}>
+        <Route path="/call/thankyou" logCall={logCallMock} component={ThankYou} />
+      </Router>
     );
 
-    await waitForDomChange({
-      timeout: 1000
-    });
-
-    expect(logCallMock.mock.calls.length).toBe(1);
-    expect(logCallAmplitude).toHaveBeenCalledWith({ number: 9, state: "WA" });*/
+    await waitForDomChange({ timeout: 1000 }).then(expect(logCallMock).toBeCalledTimes(1));
   });
 });

@@ -102,8 +102,7 @@ class ThankYou extends Component {
             trackingId: trackingToken,
             districtId: calledDistrict.districtId,
         } : {};
-        console.log("Calling logCall with district = " + toString(calledDistrict.districtId));
-        logCall(calledDistrict);
+        this.props.logCall(calledDistrict);
         logCallAmplitude(calledDistrict);
         axios_api.post('calls', reportBody).then((response) => {
             this.setState({

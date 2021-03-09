@@ -22,6 +22,7 @@ const callerId = "7890";
 jest.mock("../../../util/axios-api");
 jest.mock("../../../util/amplitude");
 jest.mock("../../../util/urlparams");
+jest.mock("../../../redux/actions");
 
 describe("ThankYou", () => {
   test("logCall() invoked", async () => {
@@ -42,18 +43,15 @@ describe("ThankYou", () => {
       }
     });
 
-    const logCallMock = jest.fn();
-
     const { findByText } = render(
       <Provider store={store}>
         <Router history={history}>
-          <Route path="/call/thankyou" logCall={logCallMock} component={ThankYou} />
+          <Route path="/call/thankyou" component={ThankYou} />
         </Router>
       </Provider>
     );
 
-    await findByText("Your call was added to our count!", {
-      timeout: 10000
-    }).then(expect(logCallMock).toBeCalledTimes(1));
+    const str = "Your call was added to our count!";
+    await findByText(str).then(expect(logCallMock).toBeCalledTimes(1));
   });
 });

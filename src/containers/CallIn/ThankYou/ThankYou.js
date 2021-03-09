@@ -39,7 +39,7 @@ const ColorContentRow = ({ bg, children }) => (
     </StyledRow>
 )
 
-class ThankYou extends Component {
+export class ThankYou extends Component {
 
     state = {
         district: null,
@@ -56,7 +56,6 @@ class ThankYou extends Component {
     }
 
     componentDidMount = () => {
-        console.log("componentDidMount");
         const params = this.props.location.search;
         const calledNumber = getUrlParameter(params, 'district') || undefined;
         const calledState = getUrlParameter(params, 'state') || undefined;
@@ -65,9 +64,7 @@ class ThankYou extends Component {
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
-            console.log("FetchDistricts inner function");
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
-            console.log(calledDistrict);
             if (!calledDistrict || !calledDistrict.districtId) {
                 this.setState({
                     statsError: Error("No district found")
@@ -96,7 +93,6 @@ class ThankYou extends Component {
     }
 
     reportCall = (trackingToken, callerId, calledDistrict) => {
-        console.log("reportCall");
         const reportBody = trackingToken ? {
             callerId: parseInt(callerId),
             trackingId: trackingToken,
@@ -118,7 +114,6 @@ class ThankYou extends Component {
     }
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
-        console.log("eligibleCallTargetDistrictIds");
         const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
         return [-1, -2, homeDistrictNumber]
             .filter(el => {
@@ -144,7 +139,6 @@ class ThankYou extends Component {
     }
 
     fetchDistricts = (cb) => {
-        console.log("fetchDistricts");
         axios.get('districts').then((response) => {
             const districts = response.data;
             cb(districts)
@@ -152,14 +146,12 @@ class ThankYou extends Component {
     }
 
     findDistrictByStateNumber = (calledState, number, districts) => {
-        console.log("findDistrictByStateNumber " + calledState + " " + number);
         return districts.find(el => (
             calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
         ))
     }
 
     setStats = (district) => {
-        console.log("setStats");
         Promise.all(
             [
                 axios.get(`stats/${district.districtId}`),
@@ -180,7 +172,6 @@ class ThankYou extends Component {
     }
 
     handleShare = (platform) => {
-        console.log("handleShare");
         switch (platform) {
             case 'facebook':
                 this.openInNewTab('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcitizensclimatelobby.org/monthly-calling-campaign')
@@ -196,7 +187,6 @@ class ThankYou extends Component {
     }
 
     copyToClipboard = str => {
-        console.log("copyToClipboard");
         const el = document.createElement('textarea');
         el.value = str;
         document.body.appendChild(el);
@@ -206,13 +196,11 @@ class ThankYou extends Component {
     };
 
     openInNewTab = (url) => {
-        console.log("openInNewTab");
         var win = window.open(url, '_blank');
         win.focus();
     }
 
     removeTrackingGetArgs = () => {
-        console.log("removeTrackingGetArgs");
         try {
             const urlParams = new URLSearchParams(this.props.location.search.slice(1));
             urlParams.delete('t');
@@ -230,7 +218,6 @@ class ThankYou extends Component {
     }
 
     alreadyCalledDistricts = () => {
-        console.log("alreadyCalledDistricts");
         if (this.props.calls && this.props.calls.byId) {
             return this.props.calls.byId.map((el) => {
                 return el.district
@@ -241,7 +228,6 @@ class ThankYou extends Component {
     }
 
     render() {
-        console.log("render");
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
         }
@@ -336,7 +322,6 @@ class ThankYou extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log("mapStateToProps");
     const { calls } = state;
     return { calls };
 };

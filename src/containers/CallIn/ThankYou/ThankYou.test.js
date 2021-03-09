@@ -1,17 +1,20 @@
 import React from "react";
-import { Route, Router } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { getByText, render, waitFor } from "@testing-library/react";
-import { logCall as logCallAmplitude } from "../../../util/amplitude";
-import getUrlParameter from "../../../util/urlparams"
+import { render } from "@testing-library/react";
+
+import { ThankYou } from "./ThankYou";
+
+import { Provider } from "react-redux";
+import { createStore } from 'redux';
+import rootReducer from "../../../redux/reducers"
+
+import { logCall, logCall as logCallAmplitude } from "../../../util/amplitude";
 import "@testing-library/jest-dom/extend-expect";
 
-import ThankYou from "./ThankYou";
-import { createStore } from 'redux';
-import { Provider } from "react-redux";
-
-import rootReducer from "../../../redux/reducers"
-import axios from "../../../util/urlparams"
+jest.mock("../../../util/axios-api");
+jest.mock("../../../util/amplitude");
+jest.mock("../../../util/urlparams");
 
 const state = "WA";
 const calledDistrictID = "9";
@@ -19,23 +22,15 @@ const callerDistrictID = "1";
 const trackingToken = "23456";
 const callerId = "7890";
 
-jest.mock("../../../util/axios-api");
-jest.mock("../../../util/amplitude");
-jest.mock("../../../util/urlparams");
-jest.mock("../../../redux/actions");
-
 describe("ThankYou", () => {
   test("logCall() invoked", async () => {
 
-    const history = createMemoryHistory();
-
-    history.push(
+    const location =
       "/call/thankyou?district=" + toString(calledDistrictID)
       + "&state=" + state
       + "&t=" + trackingToken
       + "&d=" + callerDistrictID
-      + "&c=" + callerId
-    );
+      + "&c=" + callerId;
 
     const store = createStore(rootReducer, {
       calls: {
@@ -43,15 +38,22 @@ describe("ThankYou", () => {
       }
     });
 
+    const logCallMock = jest.fn();
+
+    logCallMock.mockImplementationOnce(cb => {
+      return Promise.resolve();
+    })
+
     const { findByText } = render(
       <Provider store={store}>
-        <Router history={history}>
-          <Route path="/call/thankyou" component={ThankYou} />
-        </Router>
+        <MemoryRouter>
+          <ThankYou location={location} logCall={logCallMock} />
+        </MemoryRouter>
       </Provider>
     );
 
-    const str = "Your call was added to our count!";
-    await findByText(str).then(expect(logCallMock).toBeCalledTimes(1));
+    const str = "Your call was added to our count! CCL members, your call was also added to the CCL Action Tracker.";
+    await findByText(str);
+    expect(logCallMock).toBeCalledTimes(1);
   });
 });

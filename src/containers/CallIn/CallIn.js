@@ -119,6 +119,7 @@ export class CallIn extends Component {
     }
 
     render() {
+        console.log("render");
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {
@@ -130,6 +131,7 @@ export class CallIn extends Component {
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
             }
+            console.log("redirecting to /call/thankyou" + search)
             return <Redirect
                 to={{
                     pathname: "/call/thankyou",
@@ -320,13 +322,17 @@ export class CallIn extends Component {
         )
     }
 
+    clickIcalled = () => {
+        this.setState({
+            didCall: true
+        })
+    }
+
     getReportYourCallButtonJSX = () => {
         return (
             <>
                 <Typography.Title level={3}>Report Your Call:</Typography.Title>
-                <Button type="primary" className={styles.ICalled} onClick={this.setState({
-                    didCall: true
-                })}>I called!</Button>
+                <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>I called!</Button>
             </>
         );
     }

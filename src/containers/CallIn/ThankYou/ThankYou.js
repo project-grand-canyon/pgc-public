@@ -99,7 +99,10 @@ export class ThankYou extends Component {
             districtId: calledDistrict.districtId,
         } : {};
         this.props.logCall(calledDistrict);
-        logCallAmplitude(calledDistrict);
+        logCallAmplitude({
+            state: calledDistrict.state,
+            number: calledDistrict.number
+        });
         axios_api.post('calls', reportBody).then((response) => {
             this.setState({
                 callWasReported: true,

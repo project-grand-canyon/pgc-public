@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { createStore } from 'redux';
 import rootReducer from "../../../redux/reducers"
 
-import { logCall, logCall as logCallAmplitude } from "../../../util/amplitude";
+import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("../../../util/axios-api");
@@ -55,5 +55,6 @@ describe("ThankYou", () => {
     const str = "Your call was added to our count! CCL members, your call was also added to the CCL Action Tracker.";
     await findByText(str);
     expect(logCallMock).toBeCalledTimes(1);
+    expect(logCallAmplitude).toHaveBeenCalledWith({ number: 9, state: "WA" });
   });
 });

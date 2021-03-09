@@ -119,7 +119,6 @@ export class CallIn extends Component {
     }
 
     render() {
-        console.log("render");
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {
@@ -131,7 +130,6 @@ export class CallIn extends Component {
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
             }
-            console.log("redirecting to /call/thankyou" + search)
             return <Redirect
                 to={{
                     pathname: "/call/thankyou",

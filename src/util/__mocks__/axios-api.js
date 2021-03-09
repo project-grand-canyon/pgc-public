@@ -7,7 +7,7 @@ import themes from "../../test/fixtures/themes/themes.json";
 export default {
   get: jest.fn((path) => {
     var data;
-
+    console.log("mock axios.get")
     if (path === "themes") {
       data = themes;
     } else if (path === "districts") {
@@ -20,7 +20,7 @@ export default {
       data
     });
   }),
-  post: jest.fn(()=> {
-      return Promise.resolve({data:{}})
+  post: jest.fn(() => {
+    return Promise.resolve({ data: {} })
   })
 };

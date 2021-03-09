@@ -42,31 +42,33 @@ const ColorContentRow = ({ bg, children }) => (
 class ThankYou extends Component {
 
     state = {
-        callWasReported: false,
-        calledNumber: null,
-        callerId: null,
-        eligibleCallTargets: [],
         district: null,
+        callerId: null,
         homeDistrictNumber: null,
+        trackingToken: null,
+        eligibleCallTargets: [],
+        callWasTracked: false,
+        callWasReported: false,
         localStats: null,
         overallStats: null,
         statsError: null,
-        signUpRedirect: false,
-        trackingToken: null,
-        callWasTracked: false
+        signUpRedirect: false
     }
 
     componentDidMount = () => {
         console.log("componentDidMount");
         const params = this.props.location.search;
-        const calledNumber = getUrlParameter(params, 'district');
+        const calledNumber = getUrlParameter(params, 'district') || undefined;
+        const calledState = getUrlParameter(params, 'state') || undefined;
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
+            console.log("FetchDistricts inner function");
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
-            if (!calledDistrict && !calledDistrict.districtId) {
+            console.log(calledDistrict);
+            if (!calledDistrict || !calledDistrict.districtId) {
                 this.setState({
                     statsError: Error("No district found")
                 })
@@ -79,34 +81,30 @@ class ThankYou extends Component {
                     districts
                 );
                 this.setState({
-                    calledState,
-                    calledNumber,
+                    district: calledDistrict,
+                    callerId,
                     homeDistrictNumber,
                     trackingToken,
-                    callerId,
-                    district: calledDistrict,
                     eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,
                 });
+                if (!this.callWasReported) {
+                    this.reportCall(trackingToken, callerId, calledDistrict);
+                }
                 this.setStats(calledDistrict);
             }
-        })
+        });
     }
 
-    reportCall = (calledState) => {
-        console.log("HELP12");
-        const districtId = this.state.districtId;
-        const reportBody = this.state.trackingToken ? {
-            callerId: parseInt(this.state.callerId),
-            trackingId: this.state.trackingToken,
-            districtId: districtId,
+    reportCall = (trackingToken, callerId, calledDistrict) => {
+        console.log("reportCall");
+        const reportBody = trackingToken ? {
+            callerId: parseInt(callerId),
+            trackingId: trackingToken,
+            districtId: calledDistrict.districtId,
         } : {};
-
-        this.props.logCall(districtId);
-        const number = this.calledNumber;
-        logCallAmplitude({
-            state: calledState,
-            number: number
-        });
+        console.log("Calling logCall with district = " + toString(calledDistrict.districtId));
+        logCall(calledDistrict);
+        logCallAmplitude(calledDistrict);
         axios_api.post('calls', reportBody).then((response) => {
             this.setState({
                 callWasReported: true,
@@ -154,10 +152,10 @@ class ThankYou extends Component {
         });
     }
 
-    findDistrictByStateNumber = (state, number, districts) => {
-        console.log("findDistrictByStateNumber");
+    findDistrictByStateNumber = (calledState, number, districts) => {
+        console.log("findDistrictByStateNumber " + calledState + " " + number);
         return districts.find(el => (
-            state.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
+            calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
         ))
     }
 
@@ -247,9 +245,6 @@ class ThankYou extends Component {
         console.log("render");
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
-        }
-        if (!this.state.callWasReported) {
-            this.reportCall(getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase())
         }
         return (
             <SimpleLayout activeLinkKey="/signup">

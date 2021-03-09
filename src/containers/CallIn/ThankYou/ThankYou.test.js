@@ -1,19 +1,27 @@
 import React from "react";
 import { Route, Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { render, waitForDomChange } from "@testing-library/react";
+import { getByText, render, waitFor } from "@testing-library/react";
 import { logCall as logCallAmplitude } from "../../../util/amplitude";
+import getUrlParameter from "../../../util/urlparams"
 import "@testing-library/jest-dom/extend-expect";
 
-import { ThankYou } from "./ThankYou";
+import ThankYou from "./ThankYou";
+import { createStore } from 'redux';
+import { Provider } from "react-redux";
+
+import rootReducer from "../../../redux/reducers"
+import axios from "../../../util/urlparams"
+
+const state = "WA";
+const calledDistrictID = "9";
+const callerDistrictID = "1";
+const trackingToken = "23456";
+const callerId = "7890";
 
 jest.mock("../../../util/axios-api");
 jest.mock("../../../util/amplitude");
-
-const state = "WA"
-const districtID = 9
-const trackingToken = 23456
-const callerId = 7890
+jest.mock("../../../util/urlparams");
 
 describe("ThankYou", () => {
   test("logCall() invoked", async () => {
@@ -21,20 +29,31 @@ describe("ThankYou", () => {
     const history = createMemoryHistory();
 
     history.push(
-      "/call/thankyou?district=" + toString(districtID)
+      "/call/thankyou?district=" + toString(calledDistrictID)
       + "&state=" + state
-      + "&t=" + toString(trackingToken)
-      + "&d=" + toString(districtID)
-      + "&c=" + toString(callerId)
+      + "&t=" + trackingToken
+      + "&d=" + callerDistrictID
+      + "&c=" + callerId
     );
+
+    const store = createStore(rootReducer, {
+      calls: {
+        byId: trackingToken
+      }
+    });
 
     const logCallMock = jest.fn();
-    render(
-      <Router history={history}>
-        <Route path="/call/thankyou" logCall={logCallMock} component={ThankYou} />
-      </Router>
+
+    const { findByText } = render(
+      <Provider store={store}>
+        <Router history={history}>
+          <Route path="/call/thankyou" logCall={logCallMock} component={ThankYou} />
+        </Router>
+      </Provider>
     );
 
-    await waitForDomChange({ timeout: 1000 }).then(expect(logCallMock).toBeCalledTimes(1));
+    await findByText("Your call was added to our count!", {
+      timeout: 10000
+    }).then(expect(logCallMock).toBeCalledTimes(1));
   });
 });

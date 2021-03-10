@@ -3,10 +3,8 @@ import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography 
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
-import { logCall } from "../../redux/actions";
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
-import { logCall as logCallAmplitude } from "../../util/amplitude";
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 
 import styles from './CallIn.module.css';
@@ -31,31 +29,6 @@ export class CallIn extends Component {
         officesLocked: false,
         homeDistrict: null,
         tracked: false // whether the call was successfully tracked
-    }
-
-    handleICalled = () => {
-        const districtId = this.state.districtId;
-        const reportBody = this.state.identifier ? {
-            callerId: parseInt(this.state.callerId),
-            trackingId: this.state.identifier,
-            districtId: districtId,
-        } : {};
-
-        this.props.logCall(districtId);
-        const { state, number } = this.state;
-        logCallAmplitude({ state, number });
-
-        axios_api.post('calls', reportBody).then((response) => {
-            this.setState({
-                didCall: true,
-                tracked: true
-            });
-        }).catch((error) => {
-            this.setState({
-                didCall: true,
-                tracked: false
-            });
-        });
     }
 
     removeGetArgs = () => {
@@ -156,9 +129,6 @@ export class CallIn extends Component {
             }
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
-            }
-            if (this.state.tracked) {
-                search += `&m=1`
             }
             return <Redirect
                 to={{
@@ -350,11 +320,17 @@ export class CallIn extends Component {
         )
     }
 
+    clickIcalled = () => {
+        this.setState({
+            didCall: true
+        })
+    }
+
     getReportYourCallButtonJSX = () => {
         return (
             <>
                 <Typography.Title level={3}>Report Your Call:</Typography.Title>
-                <Button type="primary" className={styles.ICalled} onClick={this.handleICalled}>I called!</Button>
+                <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>I called!</Button>
             </>
         );
     }
@@ -387,4 +363,4 @@ export class CallIn extends Component {
     }
 }
 
-export default connect(null, { logCall })(CallIn);
+export default connect(null)(CallIn);

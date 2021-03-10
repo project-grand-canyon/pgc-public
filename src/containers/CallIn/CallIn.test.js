@@ -1,7 +1,7 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, waitForDomChange } from "@testing-library/react";
 import { logCall as logCallAmplitude } from "../../util/amplitude";
 import "@testing-library/jest-dom/extend-expect";
 
@@ -15,19 +15,19 @@ describe("CallIn", () => {
     const history = createMemoryHistory();
     history.push("/call/wa/-1?t=123456&d=9&c=1234");
 
-    const logCallMock = jest.fn();
-    const { findByText } = render(
+    const path = "/call/thankyou";
+
+    const { queryByText, findByText } = render(
       <MemoryRouter>
-        <CallIn history={history} logCall={logCallMock} />
+        <CallIn history={history} />
+        <Route path={path} render={() => { return <h1>It Worked</h1> }} />
       </MemoryRouter>
     );
 
-    expect(logCallMock.mock.calls.length).toBe(0);
-    const reportButton = await waitFor(() => findByText("I called!"), {
-      timeout: 1000,
-    });
+    const reportButton = await waitFor(() => findByText("I called!"));
+    expect(queryByText("It Worked")).toBeNull();
     fireEvent.click(reportButton);
-    expect(logCallMock.mock.calls.length).toBe(1);
-    expect(logCallAmplitude).toHaveBeenCalledWith({ number: 9, state: "WA" });
+    const itWorked = await waitFor(() => findByText("It Worked"));
+    expect(queryByText("It Worked")).toBeDefined();
   });
 });

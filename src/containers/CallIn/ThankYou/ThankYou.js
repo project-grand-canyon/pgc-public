@@ -14,6 +14,10 @@ import grassroots from '../../../assets/images/grassroots.jpg';
 import OtherCallTargets from './OtherCallTargets';
 import CallStats from './CallStats/CallStats'
 
+import { logCall as logCallAmplitude } from "../../../util/amplitude";
+import { logCall } from "../../../redux/actions";
+import axios_api from "../../../util/axios-api";
+
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
@@ -24,66 +28,92 @@ const StyledRow = styled(Row)`
         padding: 2em calc(50vw - ${CONTENT_WIDTH_PX / 2}px);
     }
 `
-const ColorContentRow = ({ bg, children}) => (
-    <StyledRow 
-        bg={bg || 'transparent'} 
-        type="flex" 
-        justify="center" 
+const ColorContentRow = ({ bg, children }) => (
+    <StyledRow
+        bg={bg || 'transparent'}
+        type="flex"
+        justify="center"
         gutter={[20, 20]}
     >
         {children}
     </StyledRow>
 )
 
-class ThankYou extends Component {
+export class ThankYou extends Component {
 
     state = {
-        callerId: null,
-        eligibleCallTargets: [],
         district: null,
+        callerId: null,
         homeDistrictNumber: null,
+        trackingToken: null,
+        eligibleCallTargets: [],
+        callWasTracked: false,
+        callWasReported: false,
         localStats: null,
         overallStats: null,
         statsError: null,
-        signUpRedirect: false,
-        trackingToken: null,
-        callWasTracked: false
+        signUpRedirect: false
     }
 
     componentDidMount = () => {
         const params = this.props.location.search;
-        const calledState = getUrlParameter(params, 'state') && getUrlParameter(params, 'state').toUpperCase();
-        const calledNumber = getUrlParameter(params, 'district');
+        const calledNumber = getUrlParameter(params, 'district') || undefined;
+        const calledState = getUrlParameter(params, 'state') || undefined;
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
-        const callWasTracked = getUrlParameter(params, 'm') || false;
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
-            if(!calledDistrict && !calledDistrict.districtId){
+            if (!calledDistrict || !calledDistrict.districtId) {
                 this.setState({
                     statsError: Error("No district found")
                 })
                 return;
             } else {
-                this.setStats(calledDistrict);
                 const eligibleCallTargets = this.eligibleCallTargetDistrictIds(
-                    homeDistrictNumber, 
-                    calledState, 
-                    calledNumber, 
+                    homeDistrictNumber,
+                    calledState,
+                    calledNumber,
                     districts
-                )
+                );
                 this.setState({
-                    callWasTracked,
+                    district: calledDistrict,
+                    callerId,
                     homeDistrictNumber,
                     trackingToken,
-                    callerId,
-                    district: calledDistrict,
-                    eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,                    
-                })
+                    eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,
+                });
+                if (!this.callWasReported) {
+                    this.reportCall(trackingToken, callerId, calledDistrict);
+                }
+                this.setStats(calledDistrict);
             }
-        })
+        });
+    }
+
+    reportCall = (trackingToken, callerId, calledDistrict) => {
+        const reportBody = trackingToken ? {
+            callerId: parseInt(callerId),
+            trackingId: trackingToken,
+            districtId: calledDistrict.districtId,
+        } : {};
+        this.props.logCall(calledDistrict);
+        logCallAmplitude({
+            state: calledDistrict.state,
+            number: calledDistrict.number
+        });
+        axios_api.post('calls', reportBody).then((response) => {
+            this.setState({
+                callWasReported: true,
+                callWasTracked: true
+            });
+        }).catch((error) => {
+            this.setState({
+                callWasReported: true,
+                callWasTracked: false
+            });
+        });
     }
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
@@ -97,12 +127,12 @@ class ThankYou extends Component {
             })
             // Filter out the `covid_paused` districts
             .filter(district => district && district.status === 'active')
-            .map(district =>  {
+            .map(district => {
                 const hasMadeCalls = this.props.calls && this.props.calls.byId
                 if (!hasMadeCalls) {
                     return district
                 }
-                const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry)=>{
+                const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry) => {
                     const [districtId, timestamp] = entry
                     return districtId === `${district.districtId}` && timestamp > callExpiry
                 })
@@ -112,22 +142,22 @@ class ThankYou extends Component {
     }
 
     fetchDistricts = (cb) => {
-        axios.get('districts').then((response)=>{
+        axios.get('districts').then((response) => {
             const districts = response.data;
             cb(districts)
         });
     }
 
-    findDistrictByStateNumber = (state, number, districts) => {
+    findDistrictByStateNumber = (calledState, number, districts) => {
         return districts.find(el => (
-            state.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
+            calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
         ))
     }
 
     setStats = (district) => {
         Promise.all(
             [
-                axios.get(`stats/${district.districtId}`), 
+                axios.get(`stats/${district.districtId}`),
                 axios.get(`stats`)
             ])
             .then(values => {
@@ -155,7 +185,7 @@ class ThankYou extends Component {
             default:
                 this.copyToClipboard('https://citizensclimatelobby.org/monthly-calling-campaign')
                 message.success('A shareable link has been copied to your clipboard.')
-            break;
+                break;
         }
     }
 
@@ -166,12 +196,12 @@ class ThankYou extends Component {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-      };
+    };
 
     openInNewTab = (url) => {
         var win = window.open(url, '_blank');
         win.focus();
-      }
+    }
 
     removeTrackingGetArgs = () => {
         try {
@@ -179,21 +209,20 @@ class ThankYou extends Component {
             urlParams.delete('t');
             urlParams.delete('d');
             urlParams.delete('c');
-            urlParams.delete('m');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,
-                state: {...this.state}
+                state: { ...this.state }
             })
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
-        
+
     }
 
     alreadyCalledDistricts = () => {
         if (this.props.calls && this.props.calls.byId) {
-            return this.props.calls.byId.map((el)=> {
+            return this.props.calls.byId.map((el) => {
                 return el.district
             })
         } else {
@@ -205,29 +234,28 @@ class ThankYou extends Component {
         if (this.state.signUpRedirect) {
             return <Redirect to="/signup" />
         }
-
         return (
             <SimpleLayout activeLinkKey="/signup">
                 <ColorContentRow bg="#ececec">
                     <Col xs={24} align="center">
                         <Typography.Title level={1}>Thank You for Calling</Typography.Title>
-                        {   
+                        {
                             this.state.callWasTracked ?
                                 (<Typography.Text>Your call was added to our count! CCL members, your call was also added to the CCL Action Tracker.</Typography.Text>) : null
                         }
                     </Col>
                     {this.state.district && this.state.localStats && (
                         <Col sm={24} md={12} lg={14}>
-                            <CallStats 
-                                district={this.state.district} 
-                                localStats={this.state.localStats} 
-                                overallStats={this.state.overallStats} 
-                            /> 
+                            <CallStats
+                                district={this.state.district}
+                                localStats={this.state.localStats}
+                                overallStats={this.state.overallStats}
+                            />
                         </Col>
                     )}
                     {this.state.eligibleCallTargets && (
                         <Col sm={24} md={12} lg={10}>
-                            <OtherCallTargets 
+                            <OtherCallTargets
                                 homeDistrictNumber={this.state.homeDistrictNumber}
                                 callerId={this.state.callerId}
                                 trackingToken={this.state.trackingToken}
@@ -248,10 +276,10 @@ class ThankYou extends Component {
                                 We need to double the number of calls we make to Congress every month and you can help.
                             </Typography.Paragraph>
                             <Typography.Paragraph>
-                            Do you know someone in the USA who might like to join our Monthly Calling Campaign? If so, send them the link and ask them to sign up today.
+                                Do you know someone in the USA who might like to join our Monthly Calling Campaign? If so, send them the link and ask them to sign up today.
                             </Typography.Paragraph>
                             <Button
-                                onClick={()=>{this.handleShare('copyToClipboard')}}
+                                onClick={() => { this.handleShare('copyToClipboard') }}
                             >
                                 <Icon type="copy" /> Copy link
                             </Button>
@@ -261,15 +289,15 @@ class ThankYou extends Component {
                         <Card
                             cover={<img alt="People talking" src={discussion} />}
                             actions={[
-                                <Icon type="facebook" onClick={()=>{this.handleShare('facebook')}} />, 
-                                <Icon type="twitter" onClick={()=>{this.handleShare('twitter')}} />
+                                <Icon type="facebook" onClick={() => { this.handleShare('facebook') }} />,
+                                <Icon type="twitter" onClick={() => { this.handleShare('twitter') }} />
                             ]}
                         >
                             <Typography.Paragraph>
-                            Share an easy way to help the climate with your friends and family.
+                                Share an easy way to help the climate with your friends and family.
                             </Typography.Paragraph>
                             <Typography.Paragraph>
-                            Post the Monthly Calling Campaign on social media!
+                                Post the Monthly Calling Campaign on social media!
                             </Typography.Paragraph>
                         </Card>
                     </Col>
@@ -278,13 +306,13 @@ class ThankYou extends Component {
                             cover={<img alt="Volunteer with clipboard" src={grassroots} />}
                         >
                             <Typography.Paragraph>
-                            Citizens' Climate Lobby's consistently respectful, nonpartisan approach to climate education is designed to create a broad, sustainable foundation for climate action.
+                                Citizens' Climate Lobby's consistently respectful, nonpartisan approach to climate education is designed to create a broad, sustainable foundation for climate action.
                             </Typography.Paragraph>
                             <Typography.Paragraph>
-                            Learn more about CCL and what we do.
+                                Learn more about CCL and what we do.
                             </Typography.Paragraph>
                             <Button
-                                onClick={()=>{this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/')}}
+                                onClick={() => { this.openInNewTab('https://citizensclimatelobby.org/join-citizens-climate-lobby/') }}
                             >
                                 <Icon type="team" /> Visit CCL
                             </Button>
@@ -301,4 +329,4 @@ const mapStateToProps = state => {
     return { calls };
 };
 
-export default connect(mapStateToProps)(ThankYou);
+export default connect(mapStateToProps, { logCall })(ThankYou);

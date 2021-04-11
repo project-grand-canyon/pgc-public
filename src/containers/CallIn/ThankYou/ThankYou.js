@@ -98,7 +98,7 @@ export class ThankYou extends Component {
             trackingId: trackingToken,
             districtId: calledDistrict.districtId,
         } : {};
-        this.props.logCall(calledDistrict);
+        this.props.logCall(calledDistrict.districtId);
         logCallAmplitude({
             state: calledDistrict.state,
             number: calledDistrict.number

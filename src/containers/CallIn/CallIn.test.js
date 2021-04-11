@@ -24,7 +24,7 @@ describe("CallIn", () => {
       </MemoryRouter>
     );
 
-    const reportButton = await waitFor(() => findByText("I called!"));
+    const reportButton = await waitFor(() => findByText("Report Your Call"))
     expect(queryByText("It Worked")).toBeNull();
     fireEvent.click(reportButton);
     const itWorked = await waitFor(() => findByText("It Worked"));

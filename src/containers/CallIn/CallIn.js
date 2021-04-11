@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography } from 'antd';
+import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -20,7 +20,6 @@ export class CallIn extends Component {
         number: null,
         districtId: null,
         status: null,
-        talkingPoints: null,
         offices: null,
         fetchCallInError: null,
         identifier: null,
@@ -76,19 +75,9 @@ export class CallIn extends Component {
                 throw Error(`No call-in details found for ${state}-${number}`)
             }
 
-            Promise.all(
-                [
-                    axios_api.get(`districts/${foundDistrict.districtId}/hydrated`),
-                    axios_api.get(`themes`)
-                ])
-                .then(values => {
-                    const hydrated = values[0].data
-                    const themes = values[1].data
-                    const talkingPoints = [...hydrated.script].map(el => {
-                        const theme = themes.find((el2) => { return el2.themeId === el.themeId })
-                        el.theme = (theme && theme.name) || "Talking Point"
-                        return el
-                    })
+             axios_api.get(`districts/${foundDistrict.districtId}/hydrated`)
+                .then(resp => {
+                    const hydrated = resp.data
                     this.setState({
                         repLastName: hydrated.repLastName,
                         repFirstName: hydrated.repFirstName,
@@ -96,7 +85,6 @@ export class CallIn extends Component {
                         requests: hydrated.requests,
                         state: hydrated.state,
                         number: hydrated.number,
-                        talkingPoints: talkingPoints,
                         offices: hydrated.offices,
                         districtId: hydrated.districtId,
                         status: hydrated.status,
@@ -167,30 +155,19 @@ export class CallIn extends Component {
             )
         }
 
-        if (this.state.status === 'covid_paused') {
-            return (
-                <Row className={styles.CallIn} type="flex" justify="center">
-                    <Col xs={24} md={20} lg={18} xl={12}>
-                        <Alert
-                            message="Please don't call this Member of Congress"
-                            description={`
-                                We are asking you to not call your Member of Congress at this time 
-                                so that they can focus on the COVID-19 outbreak. Your monthly
-                                call-in notifications will resume when the crisis abates.
-                            `}
-                            type="warning"
-                        />
-                    </Col>
-                </Row>
-            )
-        }
-
         return (
             <div className={styles.CallIn}>
                 <section>
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                         <Col xs={24} md={20} lg={18} xl={12}>
                             <Typography.Title level={2}>Call-In Guide:</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row type="flex" justify="center">
+                        <Col xs={24} md={20} lg={18} xl={12} className={styles.Announcement}>
+                            <Typography.Title level={3}>Welcome To Our New Call In Guide</Typography.Title>
+                            <Typography.Paragraph>To make calling more convenient, we've slimmed down the script for a quicker conversation (but feel welcome to share your own message, if you'd like). We hope you like it, and thank you for calling!</Typography.Paragraph>
+                            <Typography.Paragraph>-The Monthly Calling Campaign Team</Typography.Paragraph>
                         </Col>
                     </Row>
                     <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
@@ -260,14 +237,14 @@ export class CallIn extends Component {
                                     key={1}
                                 >
                                     <Typography.Paragraph>Calling is simple, fast and non-threatening. You will either talk to a staff member (not {isSenatorDistrict(this.state) ? 'Senator' : 'Rep.'} {this.state.repLastName}) or you will get a recording. Staff will not quiz you.</Typography.Paragraph>
-                                    <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your talking points. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
+                                    <Typography.Paragraph>They just want to know your name and address so they can confirm you live in {isSenatorDistrict(this.state) || isAtLargeDistrict(this.state) ? this.state.state : ` district ${this.state.number}`}. Then they will listen and make notes while you tell them your request. They will thank you, and you’re done. Simple as that.</Typography.Paragraph>
                                 </Collapse.Panel>
                             </Collapse>
                         </Col>
                     </Row>
                 </section>
 
-                <section id="talking-points">
+                <section id="Script">
                     <Row type="flex" justify="center" className={styles.HeaderRow}>
                         <Col xs={24} md={20} lg={18} xl={12}>
                             <Typography.Title level={2}>Call-In Script:</Typography.Title>
@@ -276,9 +253,19 @@ export class CallIn extends Component {
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
                             {this.getIntroJSX()}
-                            {this.getTalkingPointsJSX()}
                             {this.getRequestJSX()}
-                            {this.getReportYourCallButtonJSX()}
+                        </Col>
+                    </Row>
+                </section>
+                <section id="Report">
+                    <Row type="flex" justify="center" className={styles.HeaderRow}>
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                            <Typography.Title level={2}>After Your Call:</Typography.Title>
+                        </Col>
+                    </Row>
+                    <Row type="flex" justify="center">
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                            <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>Report Your Call</Button>
                         </Col>
                     </Row>
                 </section>
@@ -293,46 +280,10 @@ export class CallIn extends Component {
         </>
     }
 
-    getTalkingPointsJSX = () => {
-        const talkingPoints = (this.state.talkingPoints) ? this.state.talkingPoints.map((talkingPoint, idx) => {
-            const education = (
-                <Typography.Paragraph>{talkingPoint.content}
-                    {talkingPoint.referenceUrl &&
-                        <span> (<a rel="noopener noreferrer" target="_blank" href={talkingPoint.referenceUrl}>Background Info</a>)</span>
-                    }
-                </Typography.Paragraph>
-            );
-            return (
-                <Collapse.Panel header={<Typography.Text strong>{`${talkingPoint.theme}`}</Typography.Text>} key={idx}>
-                    {education}
-                </Collapse.Panel>);
-        }) : null;
-        return (
-            <>
-                <Typography.Title level={3}>Talking Point:</Typography.Title>
-                <Typography.Text style={{ fontStyle: "italic" }}>Talking points provide information that connects climate change to your local area. Choose one.</Typography.Text>
-                <Row>
-                    <Col span={24}>
-                        <Collapse accordion bordered={false}>{talkingPoints}</Collapse>
-                    </Col>
-                </Row>
-            </>
-        )
-    }
-
     clickIcalled = () => {
         this.setState({
             didCall: true
         })
-    }
-
-    getReportYourCallButtonJSX = () => {
-        return (
-            <>
-                <Typography.Title level={3}>Report Your Call:</Typography.Title>
-                <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>I called!</Button>
-            </>
-        );
     }
 
     getRequestJSX = () => {

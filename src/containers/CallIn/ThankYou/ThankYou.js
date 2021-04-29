@@ -63,6 +63,13 @@ export class ThankYou extends Component {
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
+        if (!calledState || !calledNumber)
+        {
+            this.setState({
+                statsError: Error("No district found")
+            })
+            return;
+        }
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
@@ -93,7 +100,7 @@ export class ThankYou extends Component {
     }
 
     reportCall = (trackingToken, callerId, calledDistrict) => {
-        const reportBody = trackingToken ? {
+        const reportBody = trackingToken && callerId ? {
             callerId: parseInt(callerId),
             trackingId: trackingToken,
             districtId: calledDistrict.districtId,
@@ -132,7 +139,7 @@ export class ThankYou extends Component {
                 if (!hasMadeCalls) {
                     return district
                 }
-                const hasCalledThisDistrict = Object.entries(this.props.calls.byId).find((entry) => {
+                const hasCalledThisDistrict = this.props.calls.byId.map((entry) => {
                     const [districtId, timestamp] = entry
                     return districtId === `${district.districtId}` && timestamp > callExpiry
                 })
@@ -211,7 +218,7 @@ export class ThankYou extends Component {
             urlParams.delete('c');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
-                search: `${urlParams.toString()}`,
+                search: `${urlParams ? urlParams.toString() : ""}`,
                 state: { ...this.state }
             })
         } catch (error) {
@@ -222,9 +229,7 @@ export class ThankYou extends Component {
 
     alreadyCalledDistricts = () => {
         if (this.props.calls && this.props.calls.byId) {
-            return this.props.calls.byId.map((el) => {
-                return el.district
-            })
+            return this.props.calls.byId.map(el => el.district)
         } else {
             return []
         }

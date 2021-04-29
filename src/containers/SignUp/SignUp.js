@@ -38,28 +38,30 @@ class SignUp extends Component {
         caller['contactMethods'] = communicationMethods;
         axios.post('callers', caller).then((response)=>{
             this.process_happy_signup(district, communicationMethods)
-        }).catch((error)=>{            
-            const errMessage = error.response.data.message;
-            const isDupe = errMessage.includes('Duplicate entry');
-            if (isDupe) {
-                Modal.warning({
-                    title: 'There was an error with your submission',
-                    content: (
-                        <div>
-                          <p>The contact information you provided already exists in our database. This means you are already registered with the Monthly Calling Campaign.<br/><br/>No action is required from you.</p>
-                        </div>
-                      )
-                  });
-            } else {
-                Modal.error({
-                    title: 'There was an error submitting the form',
-                    content: (
-                        <div>
-                          <p>{`${errMessage}`}</p>
-                        </div>
-                      )
-                  });
+        }).catch((error)=>{
+            if (error) {          
+                const errMessage = error.response.data.message;
+                const isDupe = errMessage.includes('Duplicate entry');
+                if (isDupe) {
+                    Modal.warning({
+                        title: 'There was an error with your submission',
+                        content: (
+                            <div>
+                                <p>The contact information you provided already exists in our database. This means you are already registered with the Monthly Calling Campaign.<br/><br/>No action is required from you.</p>
+                            </div>
+                            )
+                        });
+                } 
+                return;
             }
+            Modal.error({
+                title: 'There was an error submitting the form',
+                content: (
+                    <div>
+                        <p>{`${errMessage}`}</p>
+                    </div>
+                    )
+                });
         });
     }
 

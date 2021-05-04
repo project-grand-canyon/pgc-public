@@ -34,6 +34,14 @@ jobs:
           root: "."
           paths:
             - build
+  upload-source-maps:
+    docker:
+      - image: circleci/node:12.6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run uploadSourceMaps
 
   deploy-to-prod:
     docker:
@@ -52,7 +60,6 @@ jobs:
           from: build/
           overwrite: true
           to: 's3://cclcalls.org/'
-      - run: npm run uploadSourceMaps
 
 workflows:
   version: 2
@@ -70,6 +77,8 @@ workflows:
           requires: ["build"]
       - deploy-to-prod: # Deploys to prod
           requires: ["hold"]
+      - upload-source-maps:
+          requires: ["deploy-to-prod"]
 
   pr-build:
     jobs:

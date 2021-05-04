@@ -5,11 +5,11 @@
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "@sentry/browser": "^5.15.4",
+    "@sentry/browser": "^6.3.5",
     "@sentry/cli": "^1.64.1",
     "amplitude-js": "^7.1.0",
     "antd": "^3.25.2",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "babel-plugin-import": "^1.12.1",
     "color": "^3.1.2",
     "customize-cra": "^0.9.1",

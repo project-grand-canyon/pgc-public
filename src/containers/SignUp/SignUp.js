@@ -51,17 +51,18 @@ class SignUp extends Component {
                             </div>
                             )
                         });
-                } 
-                return;
+                    return;
+                } else {
+                Modal.error({
+                    title: 'There was an error submitting the form',
+                    content: (
+                        <div>
+                            <p>{`${errMessage}`}</p>
+                        </div>
+                        )
+                    });
+                }
             }
-            Modal.error({
-                title: 'There was an error submitting the form',
-                content: (
-                    <div>
-                        <p>{`${errMessage}`}</p>
-                    </div>
-                    )
-                });
         });
     }
 

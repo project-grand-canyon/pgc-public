@@ -26,14 +26,11 @@ jobs:
 
       - run: npm run build
       - run: npm test
-
-      # Store the `./build` directory to be used by subsequent steps; this way we don't risk
-      # having the deploy step fail on some npm hiccup or accidentally deploy something different
-      # from what's been tested. We build the artifacts once and use the same set throughout.
       - persist_to_workspace:
           root: "."
           paths:
-            - build
+            - .
+
   upload-source-maps:
     docker:
       - image: circleci/node:12.6

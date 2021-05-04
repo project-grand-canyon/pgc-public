@@ -39,8 +39,8 @@ jobs:
       - image: circleci/node:12.6
     working_directory: ~/repo
     steps:
-      - checkout
-      - run: npm install
+      - attach_workspace
+          at: "."
       - run: npm run uploadSourceMaps
 
   deploy-to-prod:
@@ -71,7 +71,7 @@ workflows:
           filters:
             branches:
               only: 
-                - master
+                - sourcemap
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

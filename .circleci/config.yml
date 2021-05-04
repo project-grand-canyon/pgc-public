@@ -52,7 +52,7 @@ jobs:
           from: build/
           overwrite: true
           to: 's3://cclcalls.org/'
-      - run: ./scripts/release.sh
+      - run: npm run uploadSourceMaps
 
 workflows:
   version: 2

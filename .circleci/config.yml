@@ -34,6 +34,13 @@ jobs:
           root: "."
           paths:
             - build
+  build:
+  docker:
+    - image: circleci/node:12.6
+  working_directory: ~/repo
+
+  steps:
+    - run: npm run uploadSourceMaps
 
   deploy-to-prod:
     docker:
@@ -52,7 +59,6 @@ jobs:
           from: build/
           overwrite: true
           to: 's3://cclcalls.org/'
-      - run: npm run uploadSourceMaps
 
 workflows:
   version: 2
@@ -64,12 +70,14 @@ workflows:
           filters:
             branches:
               only: 
-                - master
+                - fix_source_map_step
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]
       - deploy-to-prod: # Deploys to prod
           requires: ["hold"]
+      - upload-source-maps:
+          requires: ["deploy-to-prod"]
 
   pr-build:
     jobs:

@@ -70,7 +70,7 @@ workflows:
           filters:
             branches:
               only: 
-                - fix_source_map_step
+                - master
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

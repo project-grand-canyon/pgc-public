@@ -40,6 +40,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run: npm install
       - run: npm run uploadSourceMaps
 
   deploy-to-prod:

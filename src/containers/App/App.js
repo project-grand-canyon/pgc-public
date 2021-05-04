@@ -60,7 +60,7 @@ class App extends Component {
             <Route path="/call" component={CallIn} />
             <Route
               render={() => {
-                return <h2>404</h2>;
+                return <h2>404 Not Found</h2>;
               }}
             />
           </Switch>

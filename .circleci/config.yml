@@ -68,7 +68,7 @@ workflows:
           filters:
             branches:
               only: 
-                - sourcemap
+                - master
       - hold: # Require manual action to pass this step
           type: approval
           requires: ["build"]

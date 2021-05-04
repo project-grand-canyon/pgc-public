@@ -39,7 +39,7 @@ jobs:
       - image: circleci/node:12.6
     working_directory: ~/repo
     steps:
-      - attach_workspace
+      - attach_workspace:
           at: "."
       - run: npm run uploadSourceMaps
 

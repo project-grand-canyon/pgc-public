@@ -34,13 +34,12 @@ jobs:
           root: "."
           paths:
             - build
-  build:
-  docker:
-    - image: circleci/node:12.6
-  working_directory: ~/repo
-
-  steps:
-    - run: npm run uploadSourceMaps
+  upload-source-maps:
+    docker:
+      - image: circleci/node:12.6
+    working_directory: ~/repo
+    steps:
+      - run: npm run uploadSourceMaps
 
   deploy-to-prod:
     docker:

@@ -218,7 +218,7 @@ export class ThankYou extends Component {
             urlParams.delete('c');
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
-                search: `${urlParams.toString()}`,
+                search: `${urlParams ? urlParams.toString() : ""}`,
                 state: { ...this.state }
             })
         } catch (error) {

@@ -229,9 +229,7 @@ export class ThankYou extends Component {
 
     alreadyCalledDistricts = () => {
         if (this.props.calls && this.props.calls.byId) {
-            return this.props.calls.byId.map((el) => {
-                return el.district
-            })
+            return this.props.calls.byId.map(el => el.district)
         } else {
             return []
         }

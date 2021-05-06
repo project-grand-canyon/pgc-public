@@ -139,10 +139,7 @@ export class ThankYou extends Component {
                 if (!hasMadeCalls) {
                     return district
                 }
-                const hasCalledThisDistrict = this.props.calls.byId.map((entry) => {
-                    const [districtId, timestamp] = entry
-                    return districtId === `${district.districtId}` && timestamp > callExpiry
-                })
+                const hasCalledThisDistrict = this.props.calls.byId[Object.keys(this.props.calls.byId).find(districtId => districtId === `${district.districtId}`)] > callExpiry 
                 district['alreadyCalled'] = hasCalledThisDistrict
                 return district
             })

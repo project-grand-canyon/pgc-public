@@ -271,7 +271,7 @@ export class CallIn extends Component {
                     </Row>
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                            <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>Report Your Call</Button>
+                            <Button type="primary" className={styles.ICalled} onClick={this.clickICalled}>Report Your Call</Button>
                         </Col>
                     </Row>
                 </section>
@@ -286,7 +286,7 @@ export class CallIn extends Component {
         </>
     }
 
-    clickIcalled = () => {
+    clickICalled = () => {
         this.setState({
             didCall: true
         })

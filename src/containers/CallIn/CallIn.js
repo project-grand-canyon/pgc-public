@@ -78,17 +78,23 @@ export class CallIn extends Component {
              axios_api.get(`districts/${foundDistrict.districtId}/hydrated`)
                 .then(resp => {
                     const hydrated = resp.data
-                    this.setState({
-                        repLastName: hydrated.repLastName,
-                        repFirstName: hydrated.repFirstName,
-                        repImageUrl: hydrated.repImageUrl,
-                        requests: hydrated.requests,
-                        state: hydrated.state,
-                        number: hydrated.number,
-                        offices: hydrated.offices,
-                        districtId: hydrated.districtId,
-                        status: hydrated.status,
-                    })
+                    if (hydrated) {
+                        this.setState({
+                            repLastName: hydrated.repLastName,
+                            repFirstName: hydrated.repFirstName,
+                            repImageUrl: hydrated.repImageUrl,
+                            requests: hydrated.requests,
+                            state: hydrated.state,
+                            number: hydrated.number,
+                            offices: hydrated.offices,
+                            districtId: hydrated.districtId,
+                            status: hydrated.status,
+                        })
+                    } else {
+                        this.setState({
+                            fetchCallInError: Error("Hydrated Data was Null")
+                        })
+                    }
                 }).catch(e => {
                     throw e
                 });
@@ -265,7 +271,7 @@ export class CallIn extends Component {
                     </Row>
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                            <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>Report Your Call</Button>
+                            <Button type="primary" className={styles.ICalled} onClick={this.clickICalled}>Report Your Call</Button>
                         </Col>
                     </Row>
                 </section>
@@ -280,7 +286,7 @@ export class CallIn extends Component {
         </>
     }
 
-    clickIcalled = () => {
+    clickICalled = () => {
         this.setState({
             didCall: true
         })

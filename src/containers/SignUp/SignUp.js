@@ -38,7 +38,8 @@ class SignUp extends Component {
         caller['contactMethods'] = communicationMethods;
         axios.post('callers', caller).then((response)=>{
             this.process_happy_signup(district, communicationMethods)
-        }).catch((error)=>{            
+        }).catch((error)=>{     
+            if (error && error.response && error.response.data){   
             const errMessage = error.response.data.message;
             const isDupe = errMessage.includes('Duplicate entry');
             if (isDupe) {
@@ -60,6 +61,16 @@ class SignUp extends Component {
                       )
                   });
             }
+        } else {
+            Modal.error({
+                title: 'There was an error submitting the form',
+                content: (
+                    <div>
+                      <p>An Unknown Error Occurred</p>
+                    </div>
+                  )
+              });
+        }
         });
     }
 

@@ -94,8 +94,7 @@ export class ThankYou extends Component {
     }
 
     reportCall = (trackingToken, callerId, calledDistrict) => {
-        const reportBody = {}
-        if (!trackingToken, !callerId) {
+        if (!trackingToken || !callerId) {
             if (!trackingToken) {
                 //Send Sentry Breadcrumb
                 Sentry.addBreadcrumb({
@@ -113,13 +112,11 @@ export class ThankYou extends Component {
                 });
             }
         }
-        else {
-            reportBody = {
-                callerId: parseInt(callerId),
-                trackingId: trackingToken,
-                districtId: calledDistrict.districtId,
-            };
-        }
+        const reportBody = (trackingToken && callerId) ? {
+            callerId: parseInt(callerId),
+            trackingId: trackingToken,
+            districtId: calledDistrict.districtId,
+        } : {};
         this.props.logCall(calledDistrict.districtId);
         logCallAmplitude({
             state: calledDistrict.state,

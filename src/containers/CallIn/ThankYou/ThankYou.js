@@ -74,11 +74,18 @@ export class ThankYou extends Component {
         .filter(p=> !p[1])
         .map(p=>p[0])
         .join()
-        if (missingParams != '') {
+        if (missingParams !== '') {
             Sentry.addBreadcrumb({
                 category: "Call In Thank You",
                 message: "missing parameters: " + missingParams,
                 level: Sentry.Severity.Warning,
+            });
+        }
+        else {
+            Sentry.addBreadcrumb({
+                category: "Call In Thank You",
+                message: "all url parameters provided",
+                level: Sentry.Severity.Info,
             });
         }
         this.fetchDistricts((districts) => {

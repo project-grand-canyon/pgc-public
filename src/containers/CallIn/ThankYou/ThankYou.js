@@ -18,6 +18,7 @@ import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import { logCall } from "../../../redux/actions";
 import axios_api from "../../../util/axios-api";
 
+import * as Sentry from "@sentry/browser";
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
@@ -93,11 +94,32 @@ export class ThankYou extends Component {
     }
 
     reportCall = (trackingToken, callerId, calledDistrict) => {
-        const reportBody = trackingToken ? {
-            callerId: parseInt(callerId),
-            trackingId: trackingToken,
-            districtId: calledDistrict.districtId,
-        } : {};
+        const reportBody = {}
+        if (!trackingToken, !callerId) {
+            if (!trackingToken) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without tracking token argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+            if (!callerId) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without caller id argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+        }
+        else {
+            reportBody = {
+                callerId: parseInt(callerId),
+                trackingId: trackingToken,
+                districtId: calledDistrict.districtId,
+            };
+        }
         this.props.logCall(calledDistrict.districtId);
         logCallAmplitude({
             state: calledDistrict.state,

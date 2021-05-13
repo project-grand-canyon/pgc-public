@@ -18,6 +18,7 @@ import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import { logCall } from "../../../redux/actions";
 import axios_api from "../../../util/axios-api";
 
+import * as Sentry from "@sentry/browser";
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
@@ -63,6 +64,34 @@ export class ThankYou extends Component {
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
+        if (!calledState || !calledNumber) {
+            if (!calledState) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without state argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+            if (!calledNumber) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without calledNumber argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+            //Set Error State
+            this.setState({
+                district: null,
+                callerId,
+                homeDistrictNumber,
+                trackingToken,
+                statsError: Error("Missing argument"),
+                signUpRedirect: false
+            });
+            return;
+        }
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {

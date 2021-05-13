@@ -51,7 +51,6 @@ export class ThankYou extends Component {
         callWasReported: false,
         localStats: null,
         overallStats: null,
-        statsError: null,
         signUpRedirect: false
     }
 
@@ -66,9 +65,6 @@ export class ThankYou extends Component {
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
-                this.setState({
-                    statsError: Error("No district found")
-                })
                 return;
             } else {
                 const eligibleCallTargets = this.eligibleCallTargetDistrictIds(
@@ -168,9 +164,11 @@ export class ThankYou extends Component {
                     overallStats: overall
                 })
             }).catch((error) => {
-                this.setState({
-                    statsError: error
-                })
+                Sentry.addBreadcrumb({
+                    category: "Call In Thank You",
+                    message: "Could not fetch stats",
+                    level: Sentry.Severity.Warning,
+                });
             });
     }
 

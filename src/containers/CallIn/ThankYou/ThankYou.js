@@ -18,6 +18,7 @@ import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import { logCall } from "../../../redux/actions";
 import axios_api from "../../../util/axios-api";
 
+import * as Sentry from "@sentry/browser";
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
@@ -63,11 +64,34 @@ export class ThankYou extends Component {
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
+        const missingParams = [
+            ['district', calledNumber],
+            ['state', calledState],
+            ['d', homeDistrictNumber],
+            ['t', trackingToken],
+            ['c', callerId]
+        ]
+        .filter(p=> !p[1])
+        .map(p=>p[0])
+        .join()
+        if (missingParams != '') {
+            Sentry.addBreadcrumb({
+                category: "Call In Thank You",
+                message: "missing parameters: " + missingParams,
+                level: Sentry.Severity.Warning,
+            });
+        }
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
+                const msg = "No district found with state = " + calledState.toLowerCase() + " and number = " + calledNumber.toString();
+                Sentry.addBreadcrumb({
+                    category: "Call In Thank You",
+                    message: msg,
+                    level: Sentry.Severity.Warning,
+                });
                 this.setState({
-                    statsError: Error("No district found")
+                    statsError: Error(msg)
                 })
                 return;
             } else {
@@ -91,7 +115,6 @@ export class ThankYou extends Component {
             }
         });
     }
-
     reportCall = (trackingToken, callerId, calledDistrict) => {
         const reportBody = trackingToken ? {
             callerId: parseInt(callerId),

@@ -18,6 +18,7 @@ import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import { logCall } from "../../../redux/actions";
 import axios_api from "../../../util/axios-api";
 
+import * as Sentry from "@sentry/browser";
 
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`

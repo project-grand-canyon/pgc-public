@@ -163,13 +163,6 @@ export class CallIn extends Component {
                             <Typography.Title level={2}>Call-In Guide:</Typography.Title>
                         </Col>
                     </Row>
-                    <Row type="flex" justify="center">
-                        <Col xs={24} md={20} lg={18} xl={12} className={styles.Announcement}>
-                            <Typography.Title level={3}>Welcome To Our New Call In Guide</Typography.Title>
-                            <Typography.Paragraph>To make calling more convenient, we've slimmed down the script for a quicker conversation (but feel welcome to share your own message, if you'd like). We hope you like it, and thank you for calling!</Typography.Paragraph>
-                            <Typography.Paragraph>-The Monthly Calling Campaign Team</Typography.Paragraph>
-                        </Col>
-                    </Row>
                     <Row type="flex" justify="center"><Col xs={24} md={20} lg={18} xl={12}>
                         <Row type="flex" align="middle">
                             <Col xs={24} md={8} lg={6} xl={4}>

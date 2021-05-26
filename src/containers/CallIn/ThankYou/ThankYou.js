@@ -64,30 +64,17 @@ export class ThankYou extends Component {
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
+        Sentry.addBreadcrumb({
+            category: "Thank You Arguments",
+            message: `GET Arguments: ${params}`,
+            level: Sentry.Severity.Info,
+        });
         if (!calledState || !calledNumber) {
-            if (!calledState) {
-                //Send Sentry Breadcrumb
-                Sentry.addBreadcrumb({
-                    category: "Missing Thank You Arguments",
-                    message: "Thank you page accessed without state argument",
-                    level: Sentry.Severity.Info,
-                });
-            }
-            if (!calledNumber) {
-                //Send Sentry Breadcrumb
-                Sentry.addBreadcrumb({
-                    category: "Missing Thank You Arguments",
-                    message: "Thank you page accessed without calledNumber argument",
-                    level: Sentry.Severity.Info,
-                });
-            }
-            //Set Error State
             this.setState({
                 district: null,
                 callerId,
                 homeDistrictNumber,
                 trackingToken,
-                statsError: Error("Missing argument"),
                 signUpRedirect: false
             });
             return;

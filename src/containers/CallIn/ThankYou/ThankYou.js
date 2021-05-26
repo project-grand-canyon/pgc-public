@@ -70,6 +70,7 @@ export class ThankYou extends Component {
             level: Sentry.Severity.Info,
         });
         if (!calledState || !calledNumber) {
+            Sentry.captureMessage("state or district missing");
             this.setState({
                 district: null,
                 callerId,

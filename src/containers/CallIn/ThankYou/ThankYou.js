@@ -120,7 +120,25 @@ export class ThankYou extends Component {
         });
     }
     reportCall = (trackingToken, callerId, calledDistrict) => {
-        const reportBody = trackingToken ? {
+        if (!trackingToken || !callerId) {
+            if (!trackingToken) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without tracking token argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+            if (!callerId) {
+                //Send Sentry Breadcrumb
+                Sentry.addBreadcrumb({
+                    category: "Missing Thank You Arguments",
+                    message: "Thank you page accessed without caller id argument",
+                    level: Sentry.Severity.Info,
+                });
+            }
+        }
+        const reportBody = (trackingToken && callerId) ? {
             callerId: parseInt(callerId),
             trackingId: trackingToken,
             districtId: calledDistrict.districtId,

@@ -20,6 +20,7 @@ import axios_api from "../../../util/axios-api";
 
 import * as Sentry from "@sentry/browser";
 
+
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
     background: ${props => props.bg};
@@ -148,7 +149,14 @@ export class ThankYou extends Component {
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
         const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
-        return [-1, -2, homeDistrictNumber]
+        if (!homeDistrictNumber) {
+            Sentry.addBreadcrumb({
+                category: "Missing Thank You Arguments",
+                message: "Thank you page accessed without caller district argument",
+                level: Sentry.Severity.Info,
+              });
+        }
+        return homeDistrictNumber ? [-1, -2, homeDistrictNumber] : [-1, -2]
             .filter(el => {
                 return `${el}` !== `${calledNumber}`
             })

@@ -20,6 +20,7 @@ import axios_api from "../../../util/axios-api";
 
 import * as Sentry from "@sentry/browser";
 
+
 const CONTENT_WIDTH_PX = 900
 const StyledRow = styled(Row)`
     background: ${props => props.bg};
@@ -52,7 +53,6 @@ export class ThankYou extends Component {
         callWasReported: false,
         localStats: null,
         overallStats: null,
-        statsError: null,
         signUpRedirect: false
     }
 
@@ -64,12 +64,39 @@ export class ThankYou extends Component {
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
         this.removeTrackingGetArgs();
+        const missingParams = [
+            ['district', calledNumber],
+            ['state', calledState],
+            ['d', homeDistrictNumber],
+            ['t', trackingToken],
+            ['c', callerId]
+        ]
+        .filter(p=> !p[1])
+        .map(p=>p[0])
+        .join()
+        if (missingParams !== '') {
+            Sentry.addBreadcrumb({
+                category: "Call In Thank You",
+                message: "missing parameters: " + missingParams,
+                level: Sentry.Severity.Warning,
+            });
+        }
+        else {
+            Sentry.addBreadcrumb({
+                category: "Call In Thank You",
+                message: "all url parameters provided",
+                level: Sentry.Severity.Info,
+            });
+        }
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
-                this.setState({
-                    statsError: Error("No district found")
-                })
+                const msg = "No district found with state = " + calledState.toLowerCase() + " and number = " + calledNumber.toString();
+                Sentry.addBreadcrumb({
+                    category: "Call In Thank You",
+                    message: msg,
+                    level: Sentry.Severity.Warning,
+                });
                 return;
             } else {
                 const eligibleCallTargets = this.eligibleCallTargetDistrictIds(
@@ -92,7 +119,6 @@ export class ThankYou extends Component {
             }
         });
     }
-
     reportCall = (trackingToken, callerId, calledDistrict) => {
         if (!trackingToken || !callerId) {
             if (!trackingToken) {
@@ -137,7 +163,14 @@ export class ThankYou extends Component {
 
     eligibleCallTargetDistrictIds = (homeDistrictNumber, calledState, calledNumber, districts) => {
         const callExpiry = Date.now() - (1000 * 60 * 60) // 1 hour in milliseconds
-        return [-1, -2, homeDistrictNumber]
+        if (!homeDistrictNumber) {
+            Sentry.addBreadcrumb({
+                category: "Missing Thank You Arguments",
+                message: "Thank you page accessed without caller district argument",
+                level: Sentry.Severity.Info,
+              });
+        }
+        return homeDistrictNumber ? [-1, -2, homeDistrictNumber] : [-1, -2]
             .filter(el => {
                 return `${el}` !== `${calledNumber}`
             })
@@ -187,9 +220,11 @@ export class ThankYou extends Component {
                     overallStats: overall
                 })
             }).catch((error) => {
-                this.setState({
-                    statsError: error
-                })
+                Sentry.addBreadcrumb({
+                    category: "Call In Thank You",
+                    message: "Could not fetch stats",
+                    level: Sentry.Severity.Warning,
+                });
             });
     }
 

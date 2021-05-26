@@ -202,11 +202,7 @@ export class ThankYou extends Component {
                     overallStats: overall
                 })
             }).catch((error) => {
-                Sentry.addBreadcrumb({
-                    category: "Call In Thank You",
-                    message: "Could not fetch stats",
-                    level: Sentry.Severity.Warning,
-                });
+                Sentry.captureException(error);
             });
     }
 

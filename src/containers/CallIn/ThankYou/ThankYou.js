@@ -170,8 +170,8 @@ export class ThankYou extends Component {
                 level: Sentry.Severity.Info,
               });
         }
-        return homeDistrictNumber ? [-1, -2, homeDistrictNumber] : [-1, -2]
-            .filter(el => {
+        const eligibleDistricts = homeDistrictNumber !== undefined ? [-1, -2, parseInt(homeDistrictNumber)] : [-1, -2]
+            return eligibleDistricts.filter(el => {
                 return `${el}` !== `${calledNumber}`
             })
             .map(districtNumber => {

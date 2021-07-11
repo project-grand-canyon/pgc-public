@@ -63,7 +63,6 @@ export class ThankYou extends Component {
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
-        this.removeTrackingGetArgs();
         const missingParams = [
             ['district', calledNumber],
             ['state', calledState],
@@ -88,6 +87,7 @@ export class ThankYou extends Component {
                 level: Sentry.Severity.Info,
             });
         }
+        this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
@@ -201,6 +201,11 @@ export class ThankYou extends Component {
     }
 
     findDistrictByStateNumber = (calledState, number, districts) => {
+        
+        if (!calledState || !number) {
+            return undefined
+        }
+        
         return districts.find(el => (
             calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
         ))

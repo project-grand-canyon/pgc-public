@@ -91,7 +91,7 @@ export class ThankYou extends Component {
         this.fetchDistricts((districts) => {
             const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
-                const msg = "No district found with state = " + calledState.toLowerCase() + " and number = " + calledNumber.toString();
+                const msg = "No district found with state = " + calledState + " and number = " + calledNumber;
                 Sentry.addBreadcrumb({
                     category: "Call In Thank You",
                     message: msg,

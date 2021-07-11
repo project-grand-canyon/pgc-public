@@ -6,9 +6,11 @@ import { connect } from "react-redux";
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
+import InfoPanel from './InfoPanel';
 
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
+import gavelImage from '../../assets/images/gavel.png';
 
 export class CallIn extends Component {
 
@@ -259,6 +261,20 @@ export class CallIn extends Component {
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
                             <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>Report Your Call</Button>
+                        </Col>
+                    </Row>
+                </section>
+                <section id={styles.info}>
+                    <Row type="flex" justify="center">
+                        <Col  xs={24} md={20} lg={18} xl={12}>
+                            <InfoPanel 
+                            title="Why call?" 
+                            subtitle="Advocate for Carbon Pricing" 
+                            blurb="Citizens' Climate Lobby and its 100,000+ volunteers support carbon pricing legislation as a key tool for slowing climate change."
+                            ctaText="Read our carbon pricing explainer page"
+                            ctaURL="https://citizensclimatelobby.org/carbon-pricing-congress/"
+                            image={gavelImage} 
+                            />
                         </Col>
                     </Row>
                 </section>

@@ -25,12 +25,13 @@ const callerId = "7890";
 describe("ThankYou", () => {
   test("logCall() invoked", async () => {
 
-    const location =
-      "/call/thankyou?district=" + toString(calledDistrictID)
-      + "&state=" + state
-      + "&t=" + trackingToken
-      + "&d=" + callerDistrictID
-      + "&c=" + callerId;
+    const location = {
+      path: `/call/thankyou`,
+      search: `?district=${calledDistrictID}&state=${state}&t=${trackingToken}&d=${callerDistrictID}&c=${callerId}`
+    }
+
+  const history = createMemoryHistory();
+  history.push(`${location.path}${location.search}`);
 
     const store = createStore(rootReducer, {
       calls: {
@@ -47,7 +48,7 @@ describe("ThankYou", () => {
     const { findByText } = render(
       <Provider store={store}>
         <MemoryRouter>
-          <ThankYou location={location} logCall={logCallMock} />
+          <ThankYou logCall={logCallMock} history={history} location={location} />
         </MemoryRouter>
       </Provider>
     );

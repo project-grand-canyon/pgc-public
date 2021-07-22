@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typography } from 'antd';
+
+import { Button, Col, Collapse, Empty, Icon, List, Modal, Row, Spin, Tooltip, Typography } from 'antd';
+
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -29,7 +31,8 @@ export class CallIn extends Component {
         callerId: null,
         officesLocked: false,
         homeDistrict: null,
-        tracked: false, // whether the call was successfully tracked,
+        tracked: false, // whether the call was successfully tracked
+        hasSeenSenateModal: false,
         skipReport: false
     }
 
@@ -110,6 +113,37 @@ export class CallIn extends Component {
     }
 
     render() {
+
+//=================================remove below after senate reconciliation push===================
+        const now = new Date()
+        if (
+            this.state.repLastName &&
+            this.state.number < 0 &&
+            this.state.hasSeenSenateModal === false &&
+            now.getMonth() < 8 &&
+            now.getFullYear() < 2022
+            ) {
+              this.setState({
+                hasSeenSenateModal: true
+              }, () => {
+                  
+                  const month = [];
+                    month[6] = "July";
+                    month[7] = "August";
+                Modal.warning({
+                    title: (<Typography.Title level={3}>{`Already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
+                    content: (
+                        <>
+                        <Typography.Title level={4}>Thank You!</Typography.Title>
+                        <Typography.Text>CCL is making a big push for everybody to contact their Senator about carbon pricing. If you already called, you can skip this one.</Typography.Text>
+                        </>
+                      )
+                  })
+              })
+        }
+
+//=================================remove above after senate reconciliation push=================== 
+
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {

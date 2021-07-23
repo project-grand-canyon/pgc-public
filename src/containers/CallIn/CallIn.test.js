@@ -11,7 +11,7 @@ jest.mock("../../util/axios-api");
 jest.mock("../../util/amplitude");
 
 describe("CallIn", () => {
-  test("logCall() invoked when I Called is clicked", async () => {
+  test("advance() invoked when I Called is clicked", async () => {
     const history = createMemoryHistory();
     history.push("/call/wa/-1?t=123456&d=9&c=1234");
 
@@ -20,14 +20,41 @@ describe("CallIn", () => {
     const { queryByText, findByText } = render(
       <MemoryRouter>
         <CallIn history={history} />
-        <Route path={path} render={() => { return <h1>It Worked</h1> }} />
+        <Route path={path} render={(props) => { 
+          return <h1>{props.location.search}</h1>
+        }} />
       </MemoryRouter>
     );
 
     const reportButton = await waitFor(() => findByText("Report Your Call"))
-    expect(queryByText("It Worked")).toBeNull();
+    const search = "?state=WA&district=9&t=123456&d=9&c=1234"
+    expect(queryByText(search)).toBeNull();
     fireEvent.click(reportButton);
-    const itWorked = await waitFor(() => findByText("It Worked"));
-    expect(queryByText("It Worked")).toBeDefined();
+    await waitFor(() => findByText(search));
+    expect(queryByText(search)).toBeDefined();
   });
+
+  test("advance() invoked when Skip is clicked", async () => {
+    const history = createMemoryHistory();
+    history.push("/call/wa/-1?t=123456&d=9&c=1234");
+
+    const path = "/call/thankyou";
+
+    const { queryByText, findByText } = render(
+      <MemoryRouter>
+        <CallIn history={history} />
+        <Route path={path} render={(props) => { 
+          return <h1>{props.location.search}</h1>
+        }} />
+      </MemoryRouter>
+    );
+
+    const skipButton = await waitFor(() => findByText("Skip this call"))
+    const search = "?state=WA&district=9&t=123456&d=9&c=1234&s=1"
+    expect(queryByText(search)).toBeNull();
+    fireEvent.click(skipButton);
+    await waitFor(() => findByText(search));
+    expect(queryByText(search)).toBeDefined();
+  });
+
 });

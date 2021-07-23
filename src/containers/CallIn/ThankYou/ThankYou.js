@@ -52,6 +52,7 @@ export class ThankYou extends Component {
         callWasTracked: false,
         callWasReported: false,
         localStats: null,
+        ignoreCall: false,
         overallStats: null,
         signUpRedirect: false
     }
@@ -63,6 +64,8 @@ export class ThankYou extends Component {
         const homeDistrictNumber = getUrlParameter(params, 'd') || undefined;
         const trackingToken = getUrlParameter(params, 't') || undefined;
         const callerId = getUrlParameter(params, 'c') || undefined;
+        const ignoreCall = getUrlParameter(params, 's') === "1";
+
         const missingParams = [
             ['district', calledNumber],
             ['state', calledState],
@@ -109,17 +112,23 @@ export class ThankYou extends Component {
                     district: calledDistrict,
                     callerId,
                     homeDistrictNumber,
+                    ignoreCall,
                     trackingToken,
                     eligibleCallTargets: eligibleCallTargets.length ? eligibleCallTargets : null,
                 });
                 if (!this.callWasReported) {
-                    this.reportCall(trackingToken, callerId, calledDistrict);
+                    this.reportCall(trackingToken, callerId, calledDistrict, ignoreCall);
                 }
                 this.setStats(calledDistrict);
             }
         });
     }
-    reportCall = (trackingToken, callerId, calledDistrict) => {
+    reportCall = (trackingToken, callerId, calledDistrict, ignoreCall = false) => {
+        
+        if (ignoreCall) {
+            return;
+        }
+        
         if (!trackingToken || !callerId) {
             if (!trackingToken) {
                 //Send Sentry Breadcrumb
@@ -264,6 +273,7 @@ export class ThankYou extends Component {
             urlParams.delete('t');
             urlParams.delete('d');
             urlParams.delete('c');
+            urlParams.delete('s')
             this.props.history.push({
                 pathname: this.props.history.location.pathname,
                 search: `${urlParams.toString()}`,
@@ -293,10 +303,14 @@ export class ThankYou extends Component {
             <SimpleLayout activeLinkKey="/signup">
                 <ColorContentRow bg="#ececec">
                     <Col xs={24} align="center">
-                        <Typography.Title level={1}>Thank You for Calling</Typography.Title>
+                        <Typography.Title level={1}>Thank You for {this.state.ignoreCall ? "Participating" : "Calling"}</Typography.Title>
                         {
                             this.state.callWasTracked ?
                                 (<Typography.Text>Your call was added to our count! CCL members, your call was also added to the CCL Action Tracker.</Typography.Text>) : null
+                        }
+                        {
+                            this.state.ignoreCall ?
+                            (<Typography.Text>How about calling your other Members of Congress?</Typography.Text>) : null
                         }
                     </Col>
                     {this.state.district && this.state.localStats && (

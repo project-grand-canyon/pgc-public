@@ -112,7 +112,7 @@ export class CallIn extends Component {
                     month[6] = "July";
                     month[7] = "August";
                 Modal.info({
-                    title: (<Typography.Title level={3}>{`Already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
+                    title: (<Typography.Title level={3}>{`Have you already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
                     content: (
                         <>
                         <Typography.Title level={4}>Thank You!</Typography.Title>

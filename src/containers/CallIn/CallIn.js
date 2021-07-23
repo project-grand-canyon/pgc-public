@@ -94,6 +94,37 @@ export class CallIn extends Component {
                         offices: hydrated.offices,
                         districtId: hydrated.districtId,
                         status: hydrated.status,
+                    }, () => {
+                        //=================================remove below after senate reconciliation push===================
+        const now = new Date()
+        if (
+            this.state.repLastName &&
+            this.state.number < 0 &&
+            this.state.hasSeenSenateModal === false &&
+            now.getMonth() < 8 &&
+            now.getFullYear() < 2022
+            ) {
+              this.setState({
+                hasSeenSenateModal: true
+              }, () => {
+                  
+                  const month = [];
+                    month[6] = "July";
+                    month[7] = "August";
+                Modal.info({
+                    title: (<Typography.Title level={3}>{`Already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
+                    content: (
+                        <>
+                        <Typography.Title level={4}>Thank You!</Typography.Title>
+                        <Typography.Paragraph>If you already called, you can skip this call.</Typography.Paragraph>
+                        <Typography.Paragraph>Background: We don't want to overdo it with CCL's current, big push for contacting Senators about carbon pricing.</Typography.Paragraph>
+                        </>
+                    ),                      
+                  })
+              })
+        }
+
+//=================================remove above after senate reconciliation push===================
                     })
                 }).catch(e => {
                     throw e
@@ -113,37 +144,6 @@ export class CallIn extends Component {
     }
 
     render() {
-
-//=================================remove below after senate reconciliation push===================
-        const now = new Date()
-        if (
-            this.state.repLastName &&
-            this.state.number < 0 &&
-            this.state.hasSeenSenateModal === false &&
-            now.getMonth() < 8 &&
-            now.getFullYear() < 2022
-            ) {
-              this.setState({
-                hasSeenSenateModal: true
-              }, () => {
-                  
-                  const month = [];
-                    month[6] = "July";
-                    month[7] = "August";
-                Modal.warning({
-                    title: (<Typography.Title level={3}>{`Already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
-                    content: (
-                        <>
-                        <Typography.Title level={4}>Thank You!</Typography.Title>
-                        <Typography.Text>CCL is making a big push for everybody to contact their Senator about carbon pricing. If you already called, you can skip this one.</Typography.Text>
-                        </>
-                      )
-                  })
-              })
-        }
-
-//=================================remove above after senate reconciliation push=================== 
-
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
             if (this.state.identifier) {

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typography } from 'antd';
+
+import { Button, Col, Collapse, Empty, Icon, List, Modal, Row, Spin, Tooltip, Typography } from 'antd';
+
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -29,7 +31,8 @@ export class CallIn extends Component {
         callerId: null,
         officesLocked: false,
         homeDistrict: null,
-        tracked: false, // whether the call was successfully tracked,
+        tracked: false, // whether the call was successfully tracked
+        hasSeenSenateModal: false,
         skipReport: false
     }
 
@@ -91,6 +94,37 @@ export class CallIn extends Component {
                         offices: hydrated.offices,
                         districtId: hydrated.districtId,
                         status: hydrated.status,
+                    }, () => {
+                        //=================================remove below after senate reconciliation push===================
+        const now = new Date()
+        if (
+            this.state.repLastName &&
+            this.state.number < 0 &&
+            this.state.hasSeenSenateModal === false &&
+            now.getMonth() < 8 &&
+            now.getFullYear() < 2022
+            ) {
+              this.setState({
+                hasSeenSenateModal: true
+              }, () => {
+                  
+                  const month = [];
+                    month[6] = "July";
+                    month[7] = "August";
+                Modal.info({
+                    title: (<Typography.Title level={3}>{`Already called Senator ${this.state.repLastName} in ${month[now.getMonth()]}?`}</Typography.Title>),
+                    content: (
+                        <>
+                        <Typography.Title level={4}>Thank You!</Typography.Title>
+                        <Typography.Paragraph>If you already called, you can skip this call.</Typography.Paragraph>
+                        <Typography.Paragraph>Background: We don't want to overdo it with CCL's current, big push for contacting Senators about carbon pricing.</Typography.Paragraph>
+                        </>
+                    ),                      
+                  })
+              })
+        }
+
+//=================================remove above after senate reconciliation push===================
                     })
                 }).catch(e => {
                     throw e

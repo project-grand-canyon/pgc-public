@@ -60,3 +60,7 @@
 #info {
     margin: 1rem 0;
 }
+
+.topSpacing {
+    margin-top: 0.5rem;
+}

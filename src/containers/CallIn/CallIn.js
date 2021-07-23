@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Typography } from 'antd';
+import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -29,7 +29,8 @@ export class CallIn extends Component {
         callerId: null,
         officesLocked: false,
         homeDistrict: null,
-        tracked: false // whether the call was successfully tracked
+        tracked: false, // whether the call was successfully tracked,
+        skipReport: false
     }
 
     removeGetArgs = () => {
@@ -119,6 +120,9 @@ export class CallIn extends Component {
             }
             if (this.state.callerId) {
                 search += `&c=${this.state.callerId}`
+            }
+            if (this.state.skipReport) {
+                search += `&s=1`
             }
             return <Redirect
                 to={{
@@ -260,7 +264,12 @@ export class CallIn extends Component {
                     </Row>
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                            <Button type="primary" className={styles.ICalled} onClick={this.clickIcalled}>Report Your Call</Button>
+                            <Button type="primary" className={styles.ICalled} onClick={(e) => this.advance(false)}>Report Your Call</Button>
+                        </Col>
+                    </Row>
+                    <Row type="flex" justify="center" className={styles.topSpacing}>
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                            <Typography.Text><Button type="link" onClick={(e) => this.advance(true)}>Skip this call</Button> <Tooltip position="top" title="Use this to advance to the next page when the voice mail is full, you've already called this particular person this month, or similar situations."><Icon type="question-circle" /></Tooltip></Typography.Text>
                         </Col>
                     </Row>
                 </section>
@@ -289,9 +298,10 @@ export class CallIn extends Component {
         </>
     }
 
-    clickIcalled = () => {
+    advance = (skipReport = false) => {
         this.setState({
-            didCall: true
+            didCall: true,
+            skipReport
         })
     }
 

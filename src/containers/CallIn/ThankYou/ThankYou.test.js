@@ -14,7 +14,6 @@ import "@testing-library/jest-dom/extend-expect";
 
 jest.mock("../../../util/axios-api");
 jest.mock("../../../util/amplitude");
-jest.mock("../../../util/urlparams");
 
 const state = "WA";
 const calledDistrictID = "9";
@@ -27,7 +26,7 @@ describe("ThankYou", () => {
 
     const location = {
       path: `/call/thankyou`,
-      search: `?district=${calledDistrictID}&state=${state}&t=${trackingToken}&d=${callerDistrictID}&c=${callerId}`
+      search: `?district=${calledDistrictID}&state=${state}&t=${trackingToken}&d=${callerDistrictID}&c=${callerId}&s=invalid`
     }
 
   const history = createMemoryHistory();
@@ -57,5 +56,40 @@ describe("ThankYou", () => {
     await findByText(str);
     expect(logCallMock).toBeCalledTimes(1);
     expect(logCallAmplitude).toHaveBeenCalledWith({ number: 9, state: "WA" });
+  });
+
+  test("logCall() not invoked", async () => {
+
+    const location = {
+      path: `/call/thankyou`,
+      search: `?district=${calledDistrictID}&state=${state}&t=${trackingToken}&d=${callerDistrictID}&c=${callerId}&s=1`
+    }
+
+  const history = createMemoryHistory();
+  history.push(`${location.path}${location.search}`);
+
+    const store = createStore(rootReducer, {
+      calls: {
+        byId: trackingToken
+      }
+    });
+
+    const logCallMock = jest.fn();
+
+    logCallMock.mockImplementationOnce(cb => {
+      return Promise.resolve();
+    })
+
+    const { findByText } = render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <ThankYou logCall={logCallMock} history={history} location={location} />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const str = "How about calling your other Members of Congress?";
+    await findByText(str);
+    expect(logCallMock).toBeCalledTimes(0);
   });
 });

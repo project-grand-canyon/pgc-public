@@ -1,20 +1,34 @@
-export const loadCalls = () => {
-    try {
-      const serializedState = localStorage.getItem('calls');
-      if (serializedState === null) {
-        return undefined;
-      }
-      return JSON.parse(serializedState);
-    } catch (err) {
+export const loadCallsAndNotifications = () => {
+  const calls = _load("calls")
+  const notification = _load("notification")
+  return { calls, notification }
+};
+
+export const saveNotification = (notification) => {
+  _save("notification", notification)
+};
+
+export const saveCalls = (calls) => {
+  _save("calls", calls)
+};
+
+const _load = (itemType) => {
+  try {
+    const serializedState = localStorage.getItem(itemType);
+    if (serializedState === null) {
       return undefined;
     }
-  };
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+}
 
-  export const saveCalls = (calls) => {
-    try {
-      const serializedState = JSON.stringify(calls);
-      localStorage.setItem('calls', serializedState);
-    } catch {
-      // ignore write errors
-    }
-  };
+const _save = (itemType, items) => {
+  try {
+    const serializedState = JSON.stringify(items);
+    localStorage.setItem(itemType, serializedState);
+  } catch {
+    // ignore write errors
+  }
+}

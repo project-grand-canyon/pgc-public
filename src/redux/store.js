@@ -1,16 +1,16 @@
 import { createStore } from 'redux';
 import rootReducer from './reducers';
-import { loadCalls, saveCalls } from '../util/localStorage'
+import { loadCallsAndNotifications, saveCalls, saveNotification } from '../util/localStorage'
 
-const localStorageCalls = loadCalls();
+const load = loadCallsAndNotifications();
 
 export const store = createStore(
     rootReducer,
-    localStorageCalls
+    load
 );
 
 store.subscribe(() => {
-    saveCalls({
-      calls: store.getState().calls
-    });
+    console.log(store.getState())
+    saveCalls(store.getState().calls);
+    saveNotification(store.getState().notification)
   });

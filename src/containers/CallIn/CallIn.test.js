@@ -19,7 +19,7 @@ describe("CallIn", () => {
 
     const { queryByText, findByText } = render(
       <MemoryRouter>
-        <CallIn history={history} />
+        <CallIn history={history} logNotification={() => {}} />
         <Route path={path} render={(props) => { 
           return <h1>{props.location.search}</h1>
         }} />
@@ -42,7 +42,7 @@ describe("CallIn", () => {
 
     const { queryByText, findByText } = render(
       <MemoryRouter>
-        <CallIn history={history} />
+        <CallIn history={history} logNotification={() => {}} />
         <Route path={path} render={(props) => { 
           return <h1>{props.location.search}</h1>
         }} />
@@ -55,6 +55,34 @@ describe("CallIn", () => {
     fireEvent.click(skipButton);
     await waitFor(() => findByText(search));
     expect(queryByText(search)).toBeDefined();
+  });
+
+  test("logNotification() invoked on page load", async () => {
+    const history = createMemoryHistory();
+    history.push("/call/wa/-1?t=123456&d=9&c=1234");
+
+    const expectedCaller = "1234"
+    const expectedTrackingId = "123456"
+    const expectedDistrict = "9"
+
+    let actualCaller = null;
+    let actualTrackingId = null;
+    let actualDistrict = null;
+
+    render(
+      <MemoryRouter>
+        <CallIn history={history} logNotification={(caller, identifier, homeDistrict) => { 
+          actualCaller = caller
+          actualTrackingId = identifier
+          actualDistrict = homeDistrict
+         }} />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => actualCaller != null);
+    expect(actualCaller).toBe(expectedCaller)
+    expect(actualDistrict).toBe(expectedDistrict)
+    expect(actualTrackingId).toBe(expectedTrackingId)
   });
 
 });

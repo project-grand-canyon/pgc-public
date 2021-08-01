@@ -173,11 +173,11 @@ export class ThankYou extends Component {
                 content: (
                     <>
                         <Typography.Title level={3}>If you want credit for this call:</Typography.Title>
-                        <Typography.Title level={4}>📱 Text Message Subscribers:</Typography.Title>
+                        <Typography.Title level={4}><span role="img" aria-label="smartphone">📱</span> Text Message Subscribers:</Typography.Title>
                         <Typography.Text>
                             Open the link in the most recent text message and click the "Report your call" button from that page.
                         </Typography.Text>
-                        <Typography.Title level={4}>✉️ Email Subscribers:</Typography.Title>
+                        <Typography.Title level={4}><span role="img" aria-label="envelope">✉️</span> Email Subscribers:</Typography.Title>
                         <Typography.Text>
                             Find the most recent email from MCC and click the "Report your call" button from that email.
                         </Typography.Text>

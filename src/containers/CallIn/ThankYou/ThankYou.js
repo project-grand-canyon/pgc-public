@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Col, Icon, message, Row, Typography } from 'antd';
+import { Button, Card, Col, Icon, message, Modal, Row, Typography } from 'antd';
 import { Redirect } from 'react-router-dom';
 import styled from '@emotion/styled'
 import { connect } from "react-redux";
@@ -167,6 +167,24 @@ export class ThankYou extends Component {
                 callWasReported: true,
                 callWasTracked: false
             });
+
+            Modal.error({
+                title: <Typography.Title level={2}>Your call was not tracked by CCL</Typography.Title>,
+                content: (
+                    <>
+                        <Typography.Title level={3}>If you want credit for this call:</Typography.Title>
+                        <Typography.Title level={4}>📱 Text Message Subscribers:</Typography.Title>
+                        <Typography.Text>
+                            Open the link in the most recent text message and click the "Report your call" button from that page.
+                        </Typography.Text>
+                        <Typography.Title level={4}>✉️ Email Subscribers:</Typography.Title>
+                        <Typography.Text>
+                            Find the most recent email from MCC and click the "Report your call" button from that email.
+                        </Typography.Text>
+                    </>
+                  )
+              });
+
         });
     }
 

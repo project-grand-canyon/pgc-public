@@ -10,6 +10,8 @@ import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/di
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
 import InfoPanel from './InfoPanel';
 
+import { logNotification } from "../../redux/actions";
+
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
 import gavelImage from '../../assets/images/gavel.png';
@@ -44,34 +46,16 @@ export class CallIn extends Component {
         })
     }
 
-    saveHomeDistrict = (params) => {
-        const homeDistrict = getUrlParameter(params, 'd');
-        this.setState({
-            homeDistrict: homeDistrict
-        });
-    }
-
-    saveIdentifier = (params) => {
-        const identifier = getUrlParameter(params, 't');
-        const caller = getUrlParameter(params, 'c');
-        this.setState({
-            identifier: identifier,
-            callerId: caller
-        });
-    }
 
     fetchCongressionalDistricts = () => {
         const pathComponents = this.props.history.location.pathname.split('/');
         const state = pathComponents[2]
         const number = pathComponents[3]
-
         if (!state || !number) {
             this.setState({
                 fetchCallInError: "No district specified"
             })
-            return;
         }
-
         axios_api.get('districts').then((response) => {
             const districts = response.data;
             const foundDistrict = districts.find((el) => {
@@ -80,7 +64,6 @@ export class CallIn extends Component {
             if (!foundDistrict) {
                 throw Error(`No call-in details found for ${state}-${number}`)
             }
-
              axios_api.get(`districts/${foundDistrict.districtId}/hydrated`)
                 .then(resp => {
                     const hydrated = resp.data
@@ -137,23 +120,39 @@ export class CallIn extends Component {
     }
 
     componentDidMount() {
-        this.saveIdentifier(this.props.history.location.search);
-        this.saveHomeDistrict(this.props.history.location.search);
+        const params = this.props.history.location.search
+        const homeDistrict = getUrlParameter(params, 'd');
+        const identifier = getUrlParameter(params, 't');
+        const caller = getUrlParameter(params, 'c');
+        this.props.logNotification(caller, identifier, homeDistrict);
+        this.setState({
+            homeDistrict: homeDistrict,
+            identifier: identifier,
+            callerId: caller
+        }, () => {
+            this.fetchCongressionalDistricts();
+        });
         this.removeGetArgs();
-        this.fetchCongressionalDistricts();
     }
 
     render() {
         if (this.state.didCall) {
             let search = `?state=${this.state.state}&district=${this.state.number}`
-            if (this.state.identifier) {
-                search += `&t=${this.state.identifier}`
+
+            const notificationExpiry = Date.now() - (1000 * 60 * 10) // 10 minutes in milliseconds
+            const isLiveNotification = this.props.notification && this.props.notification.timestamp > notificationExpiry
+
+            const identifier = this.state.identifier || (isLiveNotification && this.props.notification.trackingId)
+            if (identifier) {
+                search += `&t=${identifier}`
             }
-            if (this.state.homeDistrict) {
-                search += `&d=${this.state.homeDistrict}`
+            const homeDistrict = this.state.homeDistrict || (isLiveNotification && this.props.notification.homeDistrict)
+            if (homeDistrict) {
+                search += `&d=${homeDistrict}`
             }
-            if (this.state.callerId) {
-                search += `&c=${this.state.callerId}`
+            const callerId = this.state.callerId || (isLiveNotification && this.props.notification.callerId)
+            if (callerId) {
+                search += `&c=${callerId}`
             }
             if (this.state.skipReport) {
                 search += `&s=1`
@@ -367,4 +366,9 @@ export class CallIn extends Component {
     }
 }
 
-export default connect(null)(CallIn);
+const mapStateToProps = state => {
+    const { notification } = state;
+    return { notification };
+};
+
+export default connect(mapStateToProps, { logNotification })(CallIn);

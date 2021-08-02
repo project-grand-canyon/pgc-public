@@ -1,7 +1,7 @@
 import { LOG_CALL } from "../actionTypes";
 
 const initialState = {
-  byId: {},
+    byId: {}
 };
 
 export default function (state = initialState, action) {

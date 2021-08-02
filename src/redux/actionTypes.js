@@ -1,1 +1,2 @@
 export const LOG_CALL = "LOG_CALL";
+export const LOG_NOTIFICATION = "LOG_NOTIFICATION";

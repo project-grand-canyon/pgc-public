@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Button, Col, Collapse, Empty, Icon, List, Modal, Row, Spin, Tooltip, Typography } from 'antd';
+import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typography } from 'antd';
 
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
@@ -34,7 +34,6 @@ export class CallIn extends Component {
         officesLocked: false,
         homeDistrict: null,
         tracked: false, // whether the call was successfully tracked
-        hasSeenSenateModal: false,
         skipReport: false
     }
 

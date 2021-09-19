@@ -18,26 +18,22 @@ class SignUp extends Component {
     }
 
     handleFormSubmit = (fieldsValues) => {
-        const { district, zipCode, firstName, lastName, phone, email } = fieldsValues
+        const { contactMethods, district, zipCode, firstName, lastName, phone, email } = fieldsValues
         const caller = {
             districtId: district.districtId,
             zipCode,
             firstName,
             lastName,
+            contactMethods,
+            email
         }
         
-        const communicationMethods = [];
         if (phone) {
-            communicationMethods.push('sms');
             caller['phone'] = phone;
         }
-        if (email) {
-            communicationMethods.push('email');
-            caller['email'] = email;
-        }
-        caller['contactMethods'] = communicationMethods;
+
         axios.post('callers', caller).then((response)=>{
-            this.process_happy_signup(district, communicationMethods)
+            this.process_happy_signup(district, contactMethods)
         }).catch((error)=>{            
             const errMessage = error.response.data.message;
             const isDupe = errMessage.includes('Duplicate entry');

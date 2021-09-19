@@ -124,7 +124,7 @@ class SignUpForm extends Component {
             },
           };
 
-        const emailInput = this.state.communicationMethods.has('email') ? (
+        const emailInput = (
         <Form.Item {...formItemLayout} label="Email">
             {getFieldDecorator('email', {
                 validateTrigger: 'onBlur',
@@ -132,7 +132,7 @@ class SignUpForm extends Component {
                     {type: 'email', message: 'The input is not a valid email.'},
                     {required: true, message: 'Please input your email.'}]
             })(<Input />)}
-        </Form.Item>) : null;
+        </Form.Item>);
 
         const phoneInput = this.state.communicationMethods.has('sms') ? (
         <Form.Item {...formItemLayout} label="Phone Number" >
@@ -158,7 +158,7 @@ class SignUpForm extends Component {
                             })(<Input />)}
                         </Form.Item>
                         <Form.Item {...formItemLayout} label="How should we contact you?">
-                        {getFieldDecorator("checkbox-group", {
+                        {getFieldDecorator("contactMethods", {
                             initialValue: [],
                             rules: [{required: true, message: 'Please select at least one communication method.'}]
                         })(

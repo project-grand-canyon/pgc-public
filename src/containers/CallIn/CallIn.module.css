@@ -15,9 +15,9 @@
 }
 
 .ICalled {
-    width: 100%;
     background-color: #9bc23b;
-    color: black;
+    color: white;
+    font-weight: 800;
 }
 
 @media (min-width: 768px) {

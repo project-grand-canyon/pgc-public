@@ -265,7 +265,7 @@ export class CallIn extends Component {
                     </Row>
                     <Row type="flex" justify="center">
                         <Col xs={24} md={20} lg={18} xl={12}>
-                            <Button type="primary" className={styles.ICalled} onClick={(e) => this.advance(false)}>Report Your Call</Button>
+                            <Button type="primary" size="large" className={styles.ICalled} onClick={(e) => this.advance(false)}>Report Your Call <span role="img" aria-label="jsx-a11y/accessible-emoji">&nbsp;☎️</span></Button>
                         </Col>
                     </Row>
                     <Row type="flex" justify="center" className={styles.topSpacing}>

@@ -5,6 +5,9 @@ import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typograph
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
+import styled from '@emotion/styled'
+
+
 import axios_api from '../../util/axios-api';
 import { isSenatorDistrict, isAtLargeDistrict, displayName } from '../../util/district';
 import SimpleLayout from '../Layout/SimpleLayout/SimpleLayout';
@@ -15,6 +18,13 @@ import { logNotification } from "../../redux/actions";
 import styles from './CallIn.module.css';
 import getUrlParameter from '../../util/urlparams';
 import gavelImage from '../../assets/images/gavel.png';
+
+
+const InfoBlurb = styled.div`
+    background: ${props => props.bg};
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+`
 
 export class CallIn extends Component {
 
@@ -328,6 +338,7 @@ export class CallIn extends Component {
                 {this.state.requests[0] &&
                     <Typography.Paragraph>{request.content}</Typography.Paragraph>
                 }
+                <InfoBlurb bg="transparent"><Typography.Text > <Icon type="info-circle" /> Learn more about the bills we support on our <a target="_blank" rel="noopener noreferrer" href="https://community.citizensclimate.org/resources/item/19/240">supporting asks page</a>.</Typography.Text></InfoBlurb>
             </>
         ) : null;
 

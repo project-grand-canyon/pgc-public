@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Empty, Form, Icon, Skeleton, Typography } from "antd";
+import { Button, Empty, Form, Skeleton, Typography } from "antd";
 
 import ContactMethodsFormInput from "../../../components/FormInputs/ContactMethodsFormInput";
 import EmailFormInput from "../../../components/FormInputs/EmailFormInput";

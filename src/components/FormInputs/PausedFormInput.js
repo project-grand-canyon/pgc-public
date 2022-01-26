@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Checkbox, Col, Row } from "antd";
+import { Form, Checkbox } from "antd";
 
 const input = (props) => {
   return (

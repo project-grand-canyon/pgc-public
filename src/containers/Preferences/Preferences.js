@@ -78,8 +78,8 @@ class Preferences extends Component {
 
     let notes = this.state.caller.notes || "";
 
-    if (paused != this.state.caller.paused) {
-      if (paused == true) {
+    if (paused !== this.state.caller.paused) {
+      if (paused === true) {
         notes =
           `${new Date().toDateString()} caller self-serve paused\n` + notes;
       } else {

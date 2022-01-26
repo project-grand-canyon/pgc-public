@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import styles from "./Preferences.module.css";
+import { Modal, Typography } from "antd";
 
 import axios_api from "../../util/axios-api";
+import SimpleLayout from "../Layout/SimpleLayout/SimpleLayout";
 
 import getUrlParameter from "../../util/urlparams";
+import PreferencesForm from "./PreferencesForm/PreferencesForm";
 
 class Preferences extends Component {
   state = {
+    caller: null,
+    districts: null,
     callerId: "",
     trackingId: "",
+    isFetching: true
   };
 
   componentDidMount() {
@@ -24,16 +30,7 @@ class Preferences extends Component {
         this.fetchCallerDetails();
       }
     );
-    // this.removeGetArgs();
   }
-
-  removeGetArgs = () => {
-    this.props.history.push({
-      pathname: this.props.history.location.pathname,
-      search: "",
-      state: { ...this.state },
-    });
-  };
 
   fetchCallerDetails = () => {
     const callerRequest = axios_api.get(`callers/${this.state.callerId}`, {
@@ -61,18 +58,80 @@ class Preferences extends Component {
           districts: null,
           fetchError: error,
         });
+      })
+      .finally(() => {
+          this.setState({isFetching: false});
+      })
+  };
+
+  handleFormSubmit = (fieldsValues) => {
+    const {
+      contactMethods,
+      district,
+      zipCode,
+      firstName,
+      lastName,
+      phone,
+      email,
+    } = fieldsValues;
+    const caller = {
+      districtId: district.districtId,
+      zipCode,
+      firstName,
+      lastName,
+      contactMethods,
+      email,
+    };
+
+    if (phone) {
+      caller["phone"] = phone;
+    }
+
+    this.setState({ isFetching: true }, () => {
+
+        axios_api
+      .put(`callers/${this.state.callerId}`, caller, {
+        auth: {
+          username: this.state.callerId,
+          password: this.state.trackingId,
+        },
+      })
+      .then((response) => {
+        this.setState({caller: response.data})
+      })
+      .catch((error) => {
+        const errMessage = error.response.data.message;
+
+        Modal.error({
+          title: "There was an error submitting the form",
+          content: (
+            <div>
+              <p>{`${errMessage}`}</p>
+            </div>
+          ),
+        });
+      }).finally(() => {
+          this.setState({isFetching: false});
       });
+    });
   };
 
   render() {
     return (
-      <>
-        <p>{this.state.trackingId ? this.state.trackingId : "No tracking id provided"}</p>
-        <p>{this.state.callerId ? this.state.callerId : "No caller id provided"}</p>
-        <p>{this.state.caller ? JSON.stringify(this.state.caller) : "No caller info yet"}</p>
-        <p>{this.state.districts ? JSON.stringify(this.state.districts).substring(0,100) : "No districts info yet"}</p>
-        <p>{this.state.fetchError ? this.state.fetchError.message : "Fetching..."}</p>
-      </>
+      <SimpleLayout>
+        <div>
+          <Typography.Title level={2} className={styles.Title}>
+            Edit Your Preferences
+          </Typography.Title>
+          <PreferencesForm
+            isFetching={this.state.isFetching}
+            fetchError={this.state.fetchError}
+            districts={this.state.districts}
+            caller={this.state.caller}
+            onSuccessfulSubmit={this.handleFormSubmit}
+          />
+        </div>
+      </SimpleLayout>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, Skeleton, Typography } from "antd";
+import { Button, Empty, Form, Icon, Skeleton, Typography } from "antd";
 
 import ContactMethodsFormInput from "../../../components/FormInputs/ContactMethodsFormInput";
 import EmailFormInput from "../../../components/FormInputs/EmailFormInput";
@@ -9,16 +9,15 @@ import LastNameFormInput from "../../../components/FormInputs/LastNameFormInput"
 import ZIPFormInput from "../../../components/FormInputs/ZIPFormInput";
 import DistrictFormInput from "../../../components/FormInputs/DistrictFormInput";
 import PausedFormInput from "../../../components/FormInputs/PausedFormInput";
-import emotion from '@emotion/styled';
+import emotion from "@emotion/styled";
 
 const ErrorWrapper = emotion.div`
     margin: 1rem;
     padding 1rem 0;
     text-align: center;
-`
+`;
 
 class PreferencesForm extends Component {
-
   state = {
     communicationMethods: null,
   };
@@ -29,7 +28,7 @@ class PreferencesForm extends Component {
         communicationMethods: new Set(this.props.caller.contactMethods),
       });
     }
-  }
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -79,16 +78,52 @@ class PreferencesForm extends Component {
     if (this.props.isFetching) {
       return <Skeleton active />;
     } else if (this.props.fetchError) {
-        return (
-<ErrorWrapper>
-            <Typography.Title level={3}>Error</Typography.Title>
+      return (
+        <ErrorWrapper>
+          <Typography.Title level={3}>Error</Typography.Title>
 
-        <Typography.Text type="danger">{this.props.fetchError.message}</Typography.Text>
-        <Typography.Paragraph>Are you certain you clicked the "settings page" link from your latest call-in guide?</Typography.Paragraph>
+          <Typography.Text type="danger">
+            {this.props.fetchError.message}
+          </Typography.Text>
+          <Typography.Paragraph>
+            Are you certain you clicked the "settings page" link from your
+            latest call-in guide?
+          </Typography.Paragraph>
         </ErrorWrapper>
-        );
-    } else if (!this.props.districts || !this.props.caller || !this.state.communicationMethods) {
+      );
+    } else if (
+      !this.props.districts ||
+      !this.props.caller ||
+      !this.state.communicationMethods
+    ) {
+      return (
+        <ErrorWrapper>
+          <Typography.Title level={3}>Error</Typography.Title>
 
+          <Typography.Text type="danger">
+            There was an error loading the page.
+          </Typography.Text>
+          <Typography.Paragraph>
+            Are you certain you clicked the "settings page" link from your
+            latest call-in guide?
+          </Typography.Paragraph>
+        </ErrorWrapper>
+      );
+    } else if (this.props.caller && this.props.caller.unsubscribed) {
+      return (
+        <Empty
+          description={
+            <>
+              <Typography.Title level={4}>
+                Cannot Load Preferences
+              </Typography.Title>
+              <Typography.Text>
+                This caller has unsubscribed from all notifications.
+              </Typography.Text>
+            </>
+          }
+        ></Empty>
+      );
     }
 
     const { getFieldDecorator } = this.props.form;
@@ -162,11 +197,7 @@ class PreferencesForm extends Component {
             paused={this.props.caller.paused}
           />
           <Form.Item {...tailFormItemLayout}>
-            <Button
-              block
-              type="primary"
-              htmlType="submit"
-            >
+            <Button block type="primary" htmlType="submit">
               Update Preferences
             </Button>
           </Form.Item>

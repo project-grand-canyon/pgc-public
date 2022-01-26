@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Button, Col, Collapse, Empty, Icon, List, Row, Spin, Tooltip, Typography } from 'antd';
 
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
 import styled from '@emotion/styled'
@@ -298,6 +298,19 @@ export class CallIn extends Component {
                         </Col>
                     </Row>
                 </section>
+                {
+                    this.state.callerId && this.state.identifier ? (
+                        <section id="settings">
+                             <Row type="flex" justify="center" className={styles.HeaderRow}>
+                        <Col xs={24} md={20} lg={18} xl={12}>
+                        <Typography.Title level={3}>Update your notification preferences</Typography.Title>
+                            <Typography.Paragraph>To update your notification preferences, visit the <Link to={{pathname: "/my_settings", search: `?c=${this.state.callerId}&t=${this.state.identifier}`}}>settings page</Link>.</Typography.Paragraph>
+                        </Col>
+                    </Row> 
+                    </section>
+                    ) : null
+                }
+                
             </div>
         );
     }

@@ -73,7 +73,19 @@ class Preferences extends Component {
       lastName,
       phone,
       email,
+      paused
     } = fieldsValues;
+
+    let notes = this.state.caller.notes || "";
+
+    if (paused != this.state.caller.paused) {
+        if (paused == true) {
+            notes = `${new Date().toDateString()} caller self-serve paused\n` + notes;
+        } else {
+            notes = `${new Date().toDateString()} caller self-serve unpaused\n` + notes;
+        }
+    }
+
     const caller = {
       districtId: district.districtId,
       zipCode,
@@ -81,6 +93,8 @@ class Preferences extends Component {
       lastName,
       contactMethods,
       email,
+      paused,
+      notes: notes,
     };
 
     if (phone) {

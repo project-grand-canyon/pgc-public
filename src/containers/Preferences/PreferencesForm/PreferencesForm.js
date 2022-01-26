@@ -8,6 +8,7 @@ import FirstNameFormInput from "../../../components/FormInputs/FirstNameFormInpu
 import LastNameFormInput from "../../../components/FormInputs/LastNameFormInput";
 import ZIPFormInput from "../../../components/FormInputs/ZIPFormInput";
 import DistrictFormInput from "../../../components/FormInputs/DistrictFormInput";
+import PausedFormInput from "../../../components/FormInputs/PausedFormInput";
 import emotion from '@emotion/styled';
 
 const ErrorWrapper = emotion.div`
@@ -154,6 +155,11 @@ class PreferencesForm extends Component {
             getFieldDecorator={getFieldDecorator}
             districts={this.props.districts}
             districtId={this.props.caller.districtId}
+          />
+          <PausedFormInput
+            formItemLayout={formItemLayout}
+            getFieldDecorator={getFieldDecorator}
+            paused={this.props.caller.paused}
           />
           <Form.Item {...tailFormItemLayout}>
             <Button

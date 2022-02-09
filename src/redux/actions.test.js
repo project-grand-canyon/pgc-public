@@ -8,6 +8,6 @@ describe("actions", () => {
     expect(actualAction.type).toBe(types.LOG_CALL);
     expect(actualAction.payload).toBeDefined();
     expect(actualAction.payload.districtId).toBe(districtId);
-    expect(actualAction.payload.timestamp).toBeCloseTo(Date.now(), -1);
+    expect(Date.now() - actualAction.payload.timestamp).toBeLessThan(100);
   });
 });

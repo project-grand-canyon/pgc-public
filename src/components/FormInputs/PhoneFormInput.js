@@ -13,7 +13,7 @@ const input = (props) => {
           },
           { required: true, message: "Please input your phone number." },
         ],
-        initialValue: props.phone.replace(/-/g, "") || "",
+        initialValue: (props.phone && props.phone.replace(/-/g, "")) || "",
       })(<Input />)}
     </Form.Item>
   );

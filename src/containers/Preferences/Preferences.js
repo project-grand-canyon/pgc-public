@@ -70,6 +70,7 @@ class Preferences extends Component {
       district,
       zipCode,
       firstName,
+      reminderDayOfMonth,
       lastName,
       phone,
       email,
@@ -96,6 +97,7 @@ class Preferences extends Component {
       contactMethods,
       email,
       paused,
+      reminderDayOfMonth,
       notes: notes,
     };
 
@@ -117,7 +119,8 @@ class Preferences extends Component {
       phone,
       email,
       paused,
-      notes
+      notes,
+      reminderDayOfMonth
     } = this.state.caller;
 
     const caller = {
@@ -128,6 +131,7 @@ class Preferences extends Component {
         email,
         phone,
         districtId,
+        reminderDayOfMonth,
         paused,
         notes,
       };

@@ -9,6 +9,7 @@ import LastNameFormInput from "../../../components/FormInputs/LastNameFormInput"
 import ZIPFormInput from "../../../components/FormInputs/ZIPFormInput";
 import DistrictFormInput from "../../../components/FormInputs/DistrictFormInput";
 import PausedFormInput from "../../../components/FormInputs/PausedFormInput";
+import ReminderDayOfMonthFormInput from "../../../components/FormInputs/ReminderDayOfMonthFormInput";
 import emotion from "@emotion/styled";
 
 const ErrorWrapper = emotion.div`
@@ -190,6 +191,11 @@ class PreferencesForm extends Component {
             getFieldDecorator={getFieldDecorator}
             districts={this.props.districts}
             districtId={this.props.caller.districtId}
+          />
+          <ReminderDayOfMonthFormInput
+            formItemLayout={formItemLayout}
+            getFieldDecorator={getFieldDecorator}
+            day={this.props.caller.reminderDayOfMonth}
           />
           <PausedFormInput
             formItemLayout={formItemLayout}

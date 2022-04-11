@@ -290,7 +290,7 @@ export class CallIn extends Component {
                             <InfoPanel 
                             title="Why call?" 
                             subtitle="Advocate for Carbon Pricing" 
-                            blurb="Citizens' Climate Lobby and its 100,000+ volunteers support carbon pricing legislation as a key tool for slowing climate change."
+                            blurb="Citizens' Climate Lobby and its 200,000+ volunteers support carbon pricing legislation as a key tool for slowing climate change."
                             ctaText="Read our carbon pricing explainer page"
                             ctaURL="https://citizensclimatelobby.org/carbon-pricing-congress/"
                             image={gavelImage} 

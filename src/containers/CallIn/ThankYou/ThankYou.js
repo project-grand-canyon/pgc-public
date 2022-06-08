@@ -17,6 +17,7 @@ import CallStats from './CallStats/CallStats'
 import { logCall as logCallAmplitude } from "../../../util/amplitude";
 import { logCall } from "../../../redux/actions";
 import axios_api from "../../../util/axios-api";
+import { findDistrictByStateNumber } from "../../../util/district";
 
 import * as Sentry from "@sentry/browser";
 
@@ -92,7 +93,7 @@ export class ThankYou extends Component {
         }
         this.removeTrackingGetArgs();
         this.fetchDistricts((districts) => {
-            const calledDistrict = this.findDistrictByStateNumber(calledState, calledNumber, districts);
+            const calledDistrict = findDistrictByStateNumber(calledState, calledNumber, districts);
             if (!calledDistrict || !calledDistrict.districtId) {
                 const msg = "No district found with state = " + calledState + " and number = " + calledNumber;
                 Sentry.addBreadcrumb({
@@ -202,7 +203,7 @@ export class ThankYou extends Component {
                 return `${el}` !== `${calledNumber}`
             })
             .map(districtNumber => {
-                return this.findDistrictByStateNumber(calledState, districtNumber, districts)
+                return findDistrictByStateNumber(calledState, districtNumber, districts)
             })
             // Filter out the `covid_paused` districts
             .filter(district => district && district.status === 'active')
@@ -225,17 +226,6 @@ export class ThankYou extends Component {
             const districts = response.data;
             cb(districts)
         });
-    }
-
-    findDistrictByStateNumber = (calledState, number, districts) => {
-        
-        if (!calledState || !number) {
-            return undefined
-        }
-        
-        return districts.find(el => (
-            calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
-        ))
     }
 
     setStats = (district) => {

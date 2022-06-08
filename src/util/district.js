@@ -75,6 +75,17 @@ const getAssociatedSenators = (district, districts) => {
     })
 }
 
+const findDistrictByStateNumber = (calledState, number, districts) => {
+        
+    if (!calledState || (number === undefined || number === null)) {
+        return undefined
+    }
+    
+    return districts.find(el => (
+        calledState.toLowerCase() === el.state.toLowerCase() && parseInt(number) === parseInt(el.number)
+    ))
+}
+
 export {
     isSenatorDistrict,
     isAtLargeDistrict,
@@ -82,4 +93,5 @@ export {
     analyticsName,
     comparator,
     getAssociatedSenators,
+    findDistrictByStateNumber
 };

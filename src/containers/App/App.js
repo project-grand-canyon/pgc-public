@@ -10,6 +10,7 @@ import SignUpThankYou from "../SignUp/ThankYou/ThankYou";
 import CallThankYou from "../CallIn/ThankYou/ThankYou";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import Preferences from "../Preferences/Preferences";
+import Closing from "../Closing/Closing";
 
 import { initAmplitude, logPageView } from "../../util/amplitude";
 
@@ -60,6 +61,7 @@ class App extends Component {
             <Route path="/call/thankyou" component={CallThankYou} />
             <Route path="/call" component={CallIn} />
             <Route path="/my_settings" component={Preferences} />
+            <Route path="/closing" component={Closing} />
             <Route
               render={() => {
                 return <h2>404 Not Found</h2>;

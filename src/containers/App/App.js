@@ -51,26 +51,38 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <ScrollToTop>
+    const now = new Date();
+    const thisYear = now.getFullYear();
+    if (thisYear >= 2023) {
+      return (<ScrollToTop>
         <div className={styles.App}>
           <Switch>
-            <Route path="/" exact component={Landing} />
-            <Route path="/signup/thankyou" component={SignUpThankYou} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/call/thankyou" component={CallThankYou} />
-            <Route path="/call" component={CallIn} />
-            <Route path="/my_settings" component={Preferences} />
-            <Route path="/closing" component={Closing} />
-            <Route
-              render={() => {
-                return <h2>404 Not Found</h2>;
-              }}
-            />
+            <Route component={Closing} />
           </Switch>
         </div>
-      </ScrollToTop>
-    );
+      </ScrollToTop>)
+    } else {
+      return (
+        <ScrollToTop>
+          <div className={styles.App}>
+            <Switch>
+              <Route path="/" exact component={Landing} />
+              <Route path="/signup/thankyou" component={SignUpThankYou} />
+              <Route path="/signup" component={SignUp} />
+              <Route path="/call/thankyou" component={CallThankYou} />
+              <Route path="/call" component={CallIn} />
+              <Route path="/my_settings" component={Preferences} />
+              <Route path="/closing" component={Closing} />
+              <Route
+                render={() => {
+                  return <h2>404 Not Found</h2>;
+                }}
+              />
+            </Switch>
+          </div>
+        </ScrollToTop>
+      );
+    }
   }
 }
 
